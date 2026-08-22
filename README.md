@@ -75,16 +75,44 @@ noch leer und sollten vor der ersten Offerte ausgefüllt werden.
 
 ---
 
+## Rechnungen und Buchhaltung
+
+Der Bereich **Buchhaltung** unten auf der Seite führt Rechnungen, Belege und
+Auswertungen. Vor der ersten Rechnung muss unter **Buchhaltung → Konto** die
+**IBAN** eingetragen werden — ohne sie lässt sich kein QR-Zahlteil erzeugen.
+
+Rechnungen entstehen mit einem Knopfdruck aus der aktuellen Kalkulation und
+tragen den Schweizer QR-Zahlteil auf den unteren 105 mm: Empfangsschein links,
+Zahlteil mit QR-Code rechts. Die Kundschaft kann den Code direkt in der
+Banking-App einlesen.
+
+Wird eine Rechnung als bezahlt gebucht, entsteht automatisch ein Beleg über den
+Zahlungseingang. Ausgaben werden von Hand erfasst, wahlweise mit Belegfoto.
+
+Die Übersicht zeigt Umsatz, Aufwand, Gewinn, Monatsverlauf, Aufwand nach
+Kategorie, offene und überfällige Rechnungen sowie die Vermögenslage. Für die
+Treuhand gibt es das Belegjournal als CSV und eine Jahresübersicht als PDF.
+
+**Rechtlicher Rahmen:** Einzelunternehmen mit weniger als CHF 500'000 Umsatz
+führen nach Art. 957 Abs. 2 OR eine vereinfachte Buchhaltung aus Einnahmen,
+Ausgaben und Vermögenslage — eine doppelte Buchhaltung mit Bilanz ist nicht
+vorgeschrieben. Genau das bildet der Bereich ab. Die Mehrwertsteuer ist
+ausgeschaltet und wird erst ab CHF 100'000 Jahresumsatz obligatorisch; ein
+Balken in der Übersicht zeigt den Abstand zu dieser Grenze. Belege sind zehn
+Jahre aufzubewahren. Das Werkzeug ersetzt keine Steuer- oder Rechtsberatung.
+
+---
+
 ## Aktualisieren
 
 Geänderte Dateien im Repository ersetzen. Damit die iPhones die neue Fassung laden,
 in `sw.js` die Zeile
 
 ```js
-const VERSION = 'shb-v1';
+const VERSION = 'shb-v3';
 ```
 
-auf `'shb-v2'` erhöhen (und so weiter). Beim nächsten Öffnen aktualisiert sich die
+auf `'shb-v4'` erhöhen (und so weiter). Beim nächsten Öffnen aktualisiert sich die
 App dann von selbst.
 
 ---
@@ -98,6 +126,13 @@ App dann von selbst.
 | `style-light.css` | helle Fassung, bei Bedarf umbenennen |
 | `app.js` | Übersetzungen, Rechenkern, Bedienung, Projektverwaltung |
 | `pdf.js` | Offerten-PDF |
+| `design.js` | Zeichnung der Torte als SVG, Muster, Dekorationselemente |
+| `photo.js` | Fotos laden, zuschneiden, korrigieren, freistellen |
+| `design-ui.js` | Bedienung des Design-Konfigurators, Export der Vorlage |
+| `buch.js` | Buchhaltung: Rechnungen, Belege, Auswertungen, QR-Nutzdaten |
+| `invoice.js` | Rechnung mit Schweizer QR-Zahlteil |
+| `buch-ui.js` | Bedienung der Buchhaltung, CSV- und Jahresexport |
+| `qrcode.js` | QR-Code-Erzeugung für den Zahlteil |
 | `pdf-fonts.js` | Schriften für das PDF (Latein + Kyrillisch) |
 | `jspdf.umd.min.js` | PDF-Bibliothek |
 | `sw.js` | Offline-Betrieb |

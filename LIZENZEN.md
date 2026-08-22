@@ -7,6 +7,7 @@
 | [Carlito](https://github.com/googlefonts/carlito) | Fliesstext im PDF | SIL Open Font License 1.1 |
 | [Cormorant Garamond](https://fonts.google.com/specimen/Cormorant+Garamond) | Bildschirmschrift | SIL Open Font License 1.1 |
 | [Inter](https://fonts.google.com/specimen/Inter) | Bildschirmschrift | SIL Open Font License 1.1 |
+| [qrcode-generator](https://github.com/kazuhikoarase/qrcode-generator) | QR-Code im Zahlteil der Rechnung | MIT |
 
 Die beiden PDF-Schriften liegen als Teilmenge in `pdf-fonts.js` (nur lateinische
 und kyrillische Zeichen). Cormorant Garamond und Inter werden von Google Fonts

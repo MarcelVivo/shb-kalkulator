@@ -130,6 +130,24 @@
       </div>
     </section>
 
+    <!-- TORTEN-DESIGN -->
+    <section class="card" data-section="design">
+      <button class="card-head" type="button" aria-expanded="true">
+        <span class="card-num card-num-ico" aria-hidden="true">✎</span>
+        <span class="card-title" data-i18n="secDesign">Torten-Design</span>
+        <span class="card-badge" id="badgeDesign"></span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <p class="hint" data-i18n="designHint">Entwirf die Torte, lege Fotos und Schriftzug fest und schicke der Kundschaft eine Vorschau.</p>
+        <div class="design-preview" id="designPreview"></div>
+        <div class="row-tools">
+          <button class="btn btn-primary" id="btnDesign" type="button" data-i18n="designOpen">Design öffnen</button>
+          <button class="btn btn-outline" id="btnDesignToCalc" type="button" data-i18n="dToCalc">Dekoration in die Kalkulation übernehmen</button>
+        </div>
+      </div>
+    </section>
+
     <!-- 3 · ZUTATEN -->
     <section class="card" data-section="zutaten">
       <button class="card-head" type="button" aria-expanded="true">
@@ -349,6 +367,24 @@
       </div>
     </section>
 
+    <!-- BUCHHALTUNG -->
+    <section class="card" data-section="buch">
+      <button class="card-head" type="button" aria-expanded="true">
+        <span class="card-num card-num-ico" aria-hidden="true">▦</span>
+        <span class="card-title" data-i18n="secBuch">Buchhaltung</span>
+        <span class="card-badge" id="badgeBuch"></span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <p class="hint" data-i18n="buchHint">Rechnungen stellen, Ausgaben erfassen und jederzeit sehen, was unter dem Strich bleibt.</p>
+        <div id="buchSummary"></div>
+        <div class="row-tools">
+          <button class="btn btn-primary" id="btnBuch" type="button" data-i18n="buchOpen">Buchhaltung öffnen</button>
+          <button class="btn btn-outline" id="btnBuchInvoice" type="button" data-i18n="bNewInvoice">Rechnung aus dieser Kalkulation</button>
+        </div>
+      </div>
+    </section>
+
     <!-- 23 · INTERNE ANSICHT (nur Druck/Detail) -->
     <section class="card" data-section="intern">
       <button class="card-head" type="button" aria-expanded="false">
@@ -521,7 +557,14 @@
 <div class="toast" id="toast" role="status" hidden></div>
 
 <script src="pdf.js"></script>
+<script src="design.js"></script>
+<script src="photo.js"></script>
+<script src="qrcode.js"></script>
+<script src="buch.js"></script>
+<script src="invoice.js"></script>
 <script src="app.js"></script>
+<script src="design-ui.js"></script>
+<script src="buch-ui.js"></script>
 <script>
 /* Service Worker: nach dem ersten Aufruf funktioniert die App auch ohne Empfang.
    Läuft nur über https bzw. localhost – bei einer lokalen Datei wird er still übersprungen. */

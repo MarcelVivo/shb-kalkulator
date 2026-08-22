@@ -334,7 +334,9 @@ var SHB_PDF = (function(){
     return 'saved';
   }
 
-  return { ensure, build, save, share, filename };
+  /* Für andere Bausteine (Design-Vorlage) mit veröffentlicht, damit dort
+     dieselben Schriften und Farben verwendet werden können. */
+  return { ensure, build, save, share, filename, registerFonts, C, F, PAGE, M, dateStr, safeName };
 })();
 
 if(typeof module !== 'undefined' && module.exports) module.exports = SHB_PDF;

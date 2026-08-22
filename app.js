@@ -239,9 +239,9 @@ const translations = {
 
     /* 1 Замовлення */
     secOrder:'Замовлення',
-    fCustomer:'Імʼя клієнта', phCustomer:'напр. родина Маєр',
+    fCustomer:'Ім’я клієнта', phCustomer:'напр. родина Маєр',
     fOrderNo:'Номер замовлення', fOrderDate:'Дата замовлення', fDeliveryDate:'Дата доставки',
-    fOccasion:'Привід', fWishPrice:'Бажана ціна клієнта (необовʼязково)',
+    fOccasion:'Привід', fWishPrice:'Бажана ціна клієнта (необов’язково)',
     fNotes:'Примітки', phNotes:'Побажання, кольори, алергії …',
     occasions:['День народження','Весілля','Дитячий день народження','Ювілей','Хрестини','Корпоративна подія','Заручини','Baby Shower','Інше'],
 
@@ -396,7 +396,7 @@ const translations = {
     /* PDF пропозиції */
     actPdfShare:'Надіслати пропозицію у PDF', actPdfSave:'Зберегти PDF',
     pdfBusy:'PDF створюється …', msgPdfSaved:'PDF збережено.', msgPdfShared:'PDF надіслано.',
-    errPdf:'Не вдалося створити PDF. Перевір зʼєднання з інтернетом і спробуй ще раз.',
+    errPdf:'Не вдалося створити PDF. Перевір з’єднання з інтернетом і спробуй ще раз.',
     pdfTagline:'Індивідуальні торти та кондитерські вироби',
     pdfCustomer:'Клієнт', pdfOfferNo:'Номер пропозиції', pdfDateOrder:'Дата', pdfDateDelivery:'Дата доставки',
     pdfOfferLabel:'Пропозиція', pdfDetails:'Виконання', pdfPosition:'Позиція', pdfAmount:'Сума',
@@ -414,8 +414,8 @@ const translations = {
 
     /* Дані компанії */
     setCompany:'Дані компанії для пропозиції',
-    setCompanyHint:'Ці дані зʼявляються у шапці та в нижньому колонтитулі PDF-пропозиції.',
-    coName:'Назва компанії', coOwner:'Імʼя кондитерки', coStreet:'Вулиця та номер',
+    setCompanyHint:'Ці дані з’являються у шапці та в нижньому колонтитулі PDF-пропозиції.',
+    coName:'Назва компанії', coOwner:'Ім’я кондитерки', coStreet:'Вулиця та номер',
     coZip:'Індекс', coCity:'Місто', coPhone:'Телефон', coMail:'Електронна пошта', coInsta:'Instagram',
     coValidity:'Термін дії (днів)', coDeposit:'Передоплата (%)',
     coAllergen:'Застереження щодо алергенів', coTaxNote:'Примітка щодо ціни / ПДВ',
@@ -587,7 +587,8 @@ function newState(){
     betriebProzent: settings.betriebProzent,
     profit:{ modus:'aufschlag', aufschlag:settings.aufschlag, betrag:80,
              margeSelect:String(settings.marge), marge:settings.marge },
-    rundung: settings.rundung
+    rundung: settings.rundung,
+    design: null            // Entwurf aus dem Design-Konfigurator
   };
 }
 function blankIngredient(){ return {name:'',menge:'',einheit:'g',pack:'',packEinheit:'g',preis:''}; }
@@ -1068,6 +1069,12 @@ function update(){
   $('#badgeDeko').textContent    = fmt(c.deco);
   $('#badgeNeben').textContent   = fmt(c.neben);
   $('#badgeGewinn').textContent  = c.margeFinal>0 ? c.margeFinal.toFixed(1)+' %' : '';
+  const bd = $('#badgeDesign');
+  if(bd){
+    const d = state.design;
+    const n = d ? (d.elements||[]).length + (d.texts||[]).length + (d.photos||[]).length : 0;
+    bd.textContent = n ? n + ' ×' : '';
+  }
 
   /* Portionen-Richtwert */
   const est = estimatePortions(state.cake);
