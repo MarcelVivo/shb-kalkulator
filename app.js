@@ -32,7 +32,15 @@ const translations = {
     navProjects:'Meine Kalkulationen', navSettings:'Einstellungen',
     actSave:'Kalkulation speichern', actOffer:'Kundenangebot erstellen',
     actPrintCalc:'Kalkulation drucken', actPrintOffer:'Kundenangebot drucken',
-    actDemo:'Beispiel laden', actReset:'Zurücksetzen',
+    actDemo:'Beispiel laden', actReset:'Zurücksetzen', actUndo:'Rückgängig',
+    undoNone:'Nichts zum Rückgängigmachen.',
+    undoReady:'{n} Schritte können zurückgenommen werden.',
+    undoDone:'Rückgängig gemacht.',
+    undoOffer:'Rückgängig',
+    msgRowDeleted:'Zeile entfernt.',
+    askResetSafe:'Alle Eingaben zurücksetzen? Die aktuelle Kalkulation wird vorher automatisch gesichert.',
+    autoBackup:'Automatische Sicherung',
+    msgBackupSaved:'Vorherige Kalkulation unter «Meine Kalkulationen» gesichert.',
 
     /* 1 Auftrag */
     secOrder:'Auftrag',
@@ -46,6 +54,39 @@ const translations = {
     secCake:'Torte',
     fShape:'Form', fSize:'Durchmesser / Grösse', fSizeCustom:'Individuelle Grösse (cm)',
     fHeight:'Höhe (cm)', fTiers:'Anzahl Etagen', fPortions:'Portionen (Personen)',
+    fWeight:'Gewicht (kg)',
+    hintWeight:'Portionen und Gewicht hängen zusammen: {g} g pro Person. Ändere das eine, das andere folgt. Aus dem Gewicht entsteht der Preis.',
+    secCakeDesc:'Angaben für Offerte und Entwurf',
+    hintCakeDesc:'Diese Angaben beeinflussen den Preis nicht. Sie erscheinen in der Offerte und legen im Design-Konfigurator die Etagen an.',
+    portionsCheck:'Zur Kontrolle: Eine Torte dieser Grösse ergibt üblicherweise etwa {n} Portionen.',
+    portionsCheckOff:'Zur Kontrolle: Eine Torte dieser Grösse ergibt üblicherweise etwa {n} Portionen – eingetragen sind {p}. Prüfe Grösse oder Gewicht.',
+
+    /* Preisbildung */
+    kKiloBase:'Tortenbasis · {kg} kg × {p}', kKiloDeco:'Dekoration', kKiloTravel:'Lieferung',
+    kKiloTotal:'Verkaufspreis', kKiloBaseShort:'Tortenbasis', kWeight:'Gewicht',
+    hintOrderNo:'Wird automatisch vergeben, kann überschrieben werden.',
+    basisLabel:'Tortenbasis · {kg} kg × {p}',
+    setGram:'Gramm pro Person', setKilo:'Kilopreis (CHF/kg)',
+
+    /* Kostenkontrolle */
+    secCosts:'Was es dich kostet',
+    fSimpleMat:'Material und Zutaten',
+    fSimpleHours:'Arbeitszeit (Stunden)',
+    hintSimple:'Zwei Zahlen genügen. Wenn du es einmal genau wissen willst, schalte unten auf die ausführliche Erfassung um.',
+    toDetail:'Genauer erfassen',
+    toSimple:'Einfach erfassen',
+    actNew:'Neue Torte',
+    askNew:'Neue Torte beginnen? Die aktuelle Kalkulation wird vorher gesichert.',
+    msgNew:'Neue Torte begonnen. Die vorherige liegt unter «Meine Kalkulationen».',
+    hintCosts:'Diese Angaben ändern den Preis nicht. Sie zeigen, ob der Preis deine Kosten und deine Zeit deckt.',
+    kCostsShort:'Kosten',
+
+    /* Ergebnis in Klartext */
+    okAll:'Der Preis deckt Material, Zeit und Nebenkosten. Es bleiben {g} bei {l} pro Stunde.',
+    warnThin:'Es bleibt wenig übrig: {g} — das sind {l} pro Stunde. Prüfe die Dekoration oder den Kilopreis.',
+    badLoss:'Dieser Preis deckt deine Kosten nicht. Du legst {g} drauf.',
+    badWage:'Bei diesem Preis arbeitest du für {l} pro Stunde.',
+    hintNoCosts:'Trage unter «Was es dich kostet» Zutaten und Arbeitszeit ein, dann siehst du, was wirklich übrig bleibt.',
     shapes:['Rund','Quadratisch','Rechteckig','Herz','Sonderform'],
     tiers:['1','2','3','4','5+'],
     sizeCustom:'Individuelle Grösse',
@@ -70,11 +111,13 @@ const translations = {
     rActivity:'Tätigkeit', rHours:'Stunden', rMinutes:'Minuten',
     rBillable:'verrechenbar', rRate:'Stundenansatz', rWorkCost:'Arbeitskosten',
     phases:{
-      einkauf:'Einkauf', vorbereitung:'Vorbereitung', backen:'Backen',
-      abkuehlen:'Abkühlen / Ruhezeit', creme:'Creme / Füllung', zusammen:'Zusammensetzen',
-      grundierung:'Grundierung', dekoration:'Dekoration', verpackung:'Verpackung',
-      reinigung:'Reinigung', kommunikation:'Kommunikation / Bestellung',
-      lieferung:'Lieferung', sonstige:'Sonstige Arbeit'
+      vorbereitung:'Vorbereitung und Einkauf', backen:'Backen und Abkühlen',
+      creme:'Creme und Füllung', zusammen:'Zusammensetzen',
+      dekoration:'Dekorieren', lieferung:'Verpacken und Liefern',
+      /* weiterhin unterstützt, falls in gespeicherten Kalkulationen vorhanden */
+      einkauf:'Einkauf', abkuehlen:'Abkühlen', grundierung:'Grundierung',
+      verpackung:'Verpackung', reinigung:'Reinigung',
+      kommunikation:'Kommunikation', sonstige:'Sonstige Arbeit'
     },
 
     /* 9 Effizienz */
@@ -100,15 +143,39 @@ const translations = {
       schrift:'Schrift', krone:'Krone', bilder:'essbare Bilder',
       spezial:'Spezialanfertigung', sonstiges:'Sonstiges'
     },
-    decoModes:{ material:'Materialpreis', stueck:'Stückpreis', zeit:'Zeitaufwand', kombi:'Material + Zeit' },
+    decoModes:{
+      anteil:'Anteil einer Packung', stueck:'Stückpreis', material:'Pauschale',
+      werkzeug:'Werkzeug anteilig', zeit:'Zeitaufwand', kombi:'Material + Zeit'
+    },
+    rDecoUse:'Verbraucht', rDecoPack:'Packungsgrösse', rDecoPackPrice:'Preis der Packung',
+    rDecoTool:'Anschaffungspreis', rDecoUses:'Reicht für (Einsätze)',
+    rDecoFlat:'Betrag',
+    hintDecoTypes:'Am schnellsten geht es über die Vorlage – sie bringt die richtige Rechenart gleich mit. Anteil einer Packung für Ganache und Velours · Stückpreis für Kronen und Topper · Werkzeug anteilig für Stempel und Formen, die viele Torten überleben.',
+    hintDecoPack:'Schachteln, Bänder und Unterlagen gehören nicht hierher, sondern unter Nebenkosten zu «Verpackung» und «Cake Board» – sie fallen bei jeder Torte an.',
+    fDecoTemplate:'Vorlage',
+    decoTplChoose:'Vorlage wählen …',
+    decoTpl:{
+      ganache:'Ganache-Glasur', velours:'Veloursbeschichtung', fondantdecke:'Fondantdecke',
+      stempel:'Zuckerstempel', krone:'Krone', topper:'Cake Topper', zuckerblume:'Zuckerblume',
+      blattgold:'Blattgold', essbild:'Essbares Bild', perlen:'Zuckerperlen',
+      farben:'Lebensmittelfarben', airbrush:'Airbrush-Farbe', schrift:'Schriftzug von Hand',
+      form:'Silikonform'
+    },
 
     /* 6 Nebenkosten */
     secOverhead:'Nebenkosten',
-    neben:{
-      verpackung:'Verpackung', cakeboard:'Cake Board', strom:'Strom', wasser:'Wasser', gas:'Gas',
-      kueche:'Küchenverbrauch', werkzeug:'Werkzeugverschleiss', lieferung:'Lieferung',
-      zahlung:'Zahlungsgebühren', marketing:'Marketinganteil', sonstige:'Sonstige Kosten'
-    },
+    neben:{ energie:'Strom, Wasser, Gas', sonstige:'Sonstiges' },
+    pack:{ schachtel:'Tortenschachtel', band:'Band, Schleife',
+           unterlage:'Cake Board, Unterlage', sonstiges:'Sonstiges' },
+    secPack:'Verpackung',
+    hintPack:'Was bei jeder Torte an Verpackung anfällt. Wird dem Kunden weiterverrechnet.',
+    sumPack:'Verpackung total',
+    secDelivery:'Lieferung',
+    hintDelivery:'Nur ausfüllen, wenn du lieferst. Bei Abholung alles auf 0 lassen – denk an Hin- und Rückweg.',
+    fDriveTime:'Fahrzeit hin und zurück (Minuten)',
+    sumDelivery:'Lieferung total',
+    kKiloPack:'Verpackung',
+    secOther:'Weitere Kosten',
     secTravel:'Fahrtkosten', fKm:'Kilometer', fKmPrice:'Kosten pro km', fTravelCost:'Fahrtkosten',
     hintTravelTime:'Die Fahrzeit erfasst du als Tätigkeit «Lieferung» im Bereich Arbeitszeit.',
     fOverheadPct:'Betriebskosten-Zuschlag', fOverheadPctShort:'Betriebskosten (%)', fOverheadAmount:'Betrag',
@@ -128,8 +195,8 @@ const translations = {
     /* 8 Ergebnis */
     secResult:'Ergebnis',
     kMaterial:'Materialkosten', kLabour:'Arbeitskosten', kDeco:'Dekorationskosten',
-    kOverhead:'Nebenkosten', kCost:'Selbstkosten', kProfit:'Gewinn',
-    kPrice:'Empfohlener Verkaufspreis', kPriceShort:'Empfohlener Preis',
+    kOverhead:'Nebenkosten', kCost:'Deine Kosten', kProfit:'Es bleibt',
+    kPrice:'Verkaufspreis', kPriceShort:'Verkaufspreis',
     kPerPortion:'Preis pro Portion', kPerPortionShort:'Pro Portion',
     kMinAbs:'Absoluter Mindestpreis', kMinAbsSub:'Nur Sachkosten gedeckt – deine Arbeit ist gratis.',
     kMinSus:'Nachhaltiger Mindestpreis', kMinSusSub:'Kosten + faire Bezahlung deiner Arbeit, ohne Gewinn.',
@@ -148,7 +215,7 @@ const translations = {
     cmpUnderCost:'Achtung: Dieser Preis liegt unter deinen Selbstkosten von {s}.',
 
     /* Interne Ansicht */
-    secInternal:'Interne Ansicht',
+    secInternal:'Alle Zahlen im Detail',
     iOrder:'Auftrag', iCosts:'Kosten', iTime:'Zeit', iPricing:'Preisbildung',
     iHoursActual:'Tatsächliche Stunden', iHoursBillable:'Verrechenbare Stunden',
     iHoursCalc:'Kalkulatorische Stunden', iRate:'Ø Stundenansatz',
@@ -235,7 +302,15 @@ const translations = {
     navProjects:'Мої розрахунки', navSettings:'Налаштування',
     actSave:'Зберегти розрахунок', actOffer:'Створити пропозицію для клієнта',
     actPrintCalc:'Друк розрахунку', actPrintOffer:'Друк пропозиції',
-    actDemo:'Завантажити приклад', actReset:'Скинути',
+    actDemo:'Завантажити приклад', actReset:'Скинути', actUndo:'Скасувати дію',
+    undoNone:'Немає що скасовувати.',
+    undoReady:'Можна скасувати кроків: {n}.',
+    undoDone:'Дію скасовано.',
+    undoOffer:'Скасувати',
+    msgRowDeleted:'Рядок видалено.',
+    askResetSafe:'Скинути всі дані? Поточний розрахунок буде автоматично збережено.',
+    autoBackup:'Автоматичне збереження',
+    msgBackupSaved:'Попередній розрахунок збережено в «Мої розрахунки».',
 
     /* 1 Замовлення */
     secOrder:'Замовлення',
@@ -249,6 +324,39 @@ const translations = {
     secCake:'Торт',
     fShape:'Форма', fSize:'Діаметр / розмір', fSizeCustom:'Індивідуальний розмір (см)',
     fHeight:'Висота (см)', fTiers:'Кількість ярусів', fPortions:'Порції (осіб)',
+    fWeight:'Вага (кг)',
+    hintWeight:'Порції та вага пов’язані: {g} г на особу. Зміни одне — друге підлаштується. Ціна рахується з ваги.',
+    secCakeDesc:'Дані для пропозиції та ескізу',
+    hintCakeDesc:'Ці дані не впливають на ціну. Вони зʼявляються у пропозиції та задають яруси в конфігураторі дизайну.'.replace('ʼ','’'),
+    portionsCheck:'Для перевірки: торт такого розміру зазвичай дає близько {n} порцій.',
+    portionsCheckOff:'Для перевірки: торт такого розміру зазвичай дає близько {n} порцій — внесено {p}. Перевір розмір або вагу.',
+
+    /* Формування ціни */
+    kKiloBase:'Основа торта · {kg} кг × {p}', kKiloDeco:'Декор', kKiloTravel:'Доставка',
+    kKiloTotal:'Ціна продажу', kKiloBaseShort:'Основа торта', kWeight:'Вага',
+    hintOrderNo:'Присвоюється автоматично, можна змінити.',
+    basisLabel:'Основа торта · {kg} кг × {p}',
+    setGram:'Грамів на особу', setKilo:'Ціна за кілограм (CHF/кг)',
+
+    /* Контроль витрат */
+    secCosts:'Скільки це коштує тобі',
+    fSimpleMat:'Матеріали та інгредієнти',
+    fSimpleHours:'Робочий час (годин)',
+    hintSimple:'Досить двох чисел. Якщо колись захочеш порахувати точно, унизу можна перемкнутися на докладний облік.',
+    toDetail:'Порахувати точно',
+    toSimple:'Порахувати просто',
+    actNew:'Новий торт',
+    askNew:'Почати новий торт? Поточний розрахунок буде збережено.',
+    msgNew:'Новий торт розпочато. Попередній лежить у «Мої розрахунки».',
+    hintCosts:'Ці дані не змінюють ціну. Вони показують, чи покриває ціна твої витрати й твій час.',
+    kCostsShort:'Витрати',
+
+    /* Результат простими словами */
+    okAll:'Ціна покриває матеріали, час і супутні витрати. Залишається {g} — це {l} на годину.',
+    warnThin:'Залишається небагато: {g} — це {l} на годину. Перевір декор або ціну за кілограм.',
+    badLoss:'Ця ціна не покриває твоїх витрат. Ти доплачуєш {g}.',
+    badWage:'За цією ціною ти працюєш за {l} на годину.',
+    hintNoCosts:'Внеси у розділі «Скільки це коштує тобі» інгредієнти та робочий час — тоді побачиш, скільки справді залишається.',
     shapes:['Круглий','Квадратний','Прямокутний','Серце','Особлива форма'],
     tiers:['1','2','3','4','5+'],
     sizeCustom:'Індивідуальний розмір',
@@ -267,17 +375,18 @@ const translations = {
 
     /* 4 Робочий час */
     secWork:'Робочий час',
-    hintWork:'Вноси кожен етап окремо. Пасивний час очікування (випікання, охолодження, вистоювання) можна позначити як такий, що не оплачується.',
+    hintWork:'Зніми пташку, якщо в цей час ти не стоїш біля торта — наприклад під час випікання. Час на декорування вноситься вище, біля кожного елемента декору.',
     btnAddWork:'Додати етап',
     sumWorkActual:'Фактичний робочий час', sumWorkBillable:'Оплачуваний робочий час',
     rActivity:'Етап', rHours:'Години', rMinutes:'Хвилини',
     rBillable:'оплачується', rRate:'Ставка за годину', rWorkCost:'Вартість роботи',
     phases:{
-      einkauf:'Закупівля', vorbereitung:'Підготовка', backen:'Випікання',
-      abkuehlen:'Охолодження / вистоювання', creme:'Крем / начинка', zusammen:'Збирання',
-      grundierung:'Чорнове вирівнювання', dekoration:'Декорування', verpackung:'Пакування',
-      reinigung:'Прибирання', kommunikation:'Комунікація / замовлення',
-      lieferung:'Доставка', sonstige:'Інша робота'
+      vorbereitung:'Підготовка та закупівля', backen:'Випікання та охолодження',
+      creme:'Крем і начинка', zusammen:'Збирання',
+      dekoration:'Декорування', lieferung:'Пакування та доставка',
+      einkauf:'Закупівля', abkuehlen:'Охолодження', grundierung:'Чорнове вирівнювання',
+      verpackung:'Пакування', reinigung:'Прибирання',
+      kommunikation:'Комунікація', sonstige:'Інша робота'
     },
 
     /* 9 Ефективність */
@@ -303,15 +412,39 @@ const translations = {
       schrift:'Напис', krone:'Корона', bilder:'Їстівні картинки',
       spezial:'Спеціальне виготовлення', sonstiges:'Інше'
     },
-    decoModes:{ material:'Ціна матеріалу', stueck:'Ціна за штуку', zeit:'Витрачений час', kombi:'Матеріал + час' },
+    decoModes:{
+      anteil:'Частина упаковки', stueck:'Ціна за штуку', material:'Фіксована сума',
+      werkzeug:'Інструмент частково', zeit:'Витрачений час', kombi:'Матеріал + час'
+    },
+    rDecoUse:'Витрачено', rDecoPack:'Розмір упаковки', rDecoPackPrice:'Ціна упаковки',
+    rDecoTool:'Ціна придбання', rDecoUses:'Вистачає на (разів)',
+    rDecoFlat:'Сума',
+    hintDecoTypes:'Найшвидше через шаблон — він одразу задає потрібний спосіб розрахунку. Частина упаковки — для ганашу та велюру · Ціна за штуку — для корон і топерів · Інструмент частково — для штампів і форм, які служать багатьом тортам.',
+    hintDecoPack:'Коробки, стрічки та підкладки сюди не належать — їхнє місце у супутніх витратах під «Пакування» та «Підкладка для торта», бо вони потрібні для кожного торта.',
+    fDecoTemplate:'Шаблон',
+    decoTplChoose:'Обрати шаблон …',
+    decoTpl:{
+      ganache:'Ганаш', velours:'Велюрове покриття', fondantdecke:'Мастичне покриття',
+      stempel:'Цукровий штамп', krone:'Корона', topper:'Топер', zuckerblume:'Цукрова квітка',
+      blattgold:'Сусальне золото', essbild:'Їстівна картинка', perlen:'Цукрові перли',
+      farben:'Харчові барвники', airbrush:'Фарба для аерографа', schrift:'Напис від руки',
+      form:'Силіконова форма'
+    },
 
     /* 6 Супутні витрати */
     secOverhead:'Супутні витрати',
-    neben:{
-      verpackung:'Пакування', cakeboard:'Підкладка для торта', strom:'Електроенергія', wasser:'Вода', gas:'Газ',
-      kueche:'Витратні матеріали кухні', werkzeug:'Знос інструментів', lieferung:'Доставка',
-      zahlung:'Комісії за оплату', marketing:'Частка на маркетинг', sonstige:'Інші витрати'
-    },
+    neben:{ energie:'Електрика, вода, газ', sonstige:'Інше' },
+    pack:{ schachtel:'Коробка для торта', band:'Стрічка, бант',
+           unterlage:'Підкладка для торта', sonstiges:'Інше' },
+    secPack:'Пакування',
+    hintPack:'Те, що потрібно для кожного торта. Перераховується клієнту.',
+    sumPack:'Пакування разом',
+    secDelivery:'Доставка',
+    hintDelivery:'Заповнюй лише якщо доставляєш. При самовивозі залиш нулі — врахуй дорогу туди й назад.',
+    fDriveTime:'Час у дорозі туди й назад (хвилин)',
+    sumDelivery:'Доставка разом',
+    kKiloPack:'Пакування',
+    secOther:'Інші витрати',
     secTravel:'Транспортні витрати', fKm:'Кілометри', fKmPrice:'Вартість за км', fTravelCost:'Транспортні витрати',
     hintTravelTime:'Час у дорозі внось як етап «Доставка» у розділі робочого часу.',
     fOverheadPct:'Надбавка на операційні витрати', fOverheadPctShort:'Операційні витрати (%)', fOverheadAmount:'Сума',
@@ -331,8 +464,8 @@ const translations = {
     /* 8 Результат */
     secResult:'Результат',
     kMaterial:'Вартість матеріалів', kLabour:'Вартість роботи', kDeco:'Вартість декору',
-    kOverhead:'Супутні витрати', kCost:'Собівартість', kProfit:'Прибуток',
-    kPrice:'Рекомендована ціна продажу', kPriceShort:'Рекомендована ціна',
+    kOverhead:'Супутні витрати', kCost:'Твої витрати', kProfit:'Залишається',
+    kPrice:'Ціна продажу', kPriceShort:'Ціна продажу',
     kPerPortion:'Ціна за порцію', kPerPortionShort:'За порцію',
     kMinAbs:'Абсолютна мінімальна ціна', kMinAbsSub:'Покриті лише матеріальні витрати — твоя робота безкоштовна.',
     kMinSus:'Стала мінімальна ціна', kMinSusSub:'Витрати + справедлива оплата роботи, без прибутку.',
@@ -351,7 +484,7 @@ const translations = {
     cmpUnderCost:'Увага: ця ціна нижча за твою собівартість {s}.',
 
     /* Внутрішній перегляд */
-    secInternal:'Внутрішній перегляд',
+    secInternal:'Усі цифри докладно',
     iOrder:'Замовлення', iCosts:'Витрати', iTime:'Час', iPricing:'Формування ціни',
     iHoursActual:'Фактичні години', iHoursBillable:'Оплачувані години',
     iHoursCalc:'Розрахункові години', iRate:'Середня ставка',
@@ -437,18 +570,22 @@ const translations = {
  * 2. STAMMDATEN & VORLAGEN
  * ========================================================================== */
 
-/** Reihenfolge der Produktionsphasen (Schlüssel → Übersetzung in translations.phases) */
-const PHASE_KEYS = ['einkauf','vorbereitung','backen','abkuehlen','creme','zusammen',
-  'grundierung','dekoration','verpackung','reinigung','kommunikation','lieferung','sonstige'];
+/** Arbeitsschritte einer Torte. Bewusst kurz gehalten – weitere Zeilen
+ *  fügt Lena bei Bedarf selbst hinzu. */
+const PHASE_KEYS = ['vorbereitung','backen','creme','zusammen','lieferung'];
 
-/** Phasen, die standardmässig NICHT verrechnet werden (passive Wartezeit) */
-const PHASE_NON_BILLABLE = ['backen','abkuehlen'];
+/** Schritte ohne aktive Arbeit: Der Ofen läuft, Lena macht etwas anderes.
+ *  Diese Zeit zählt nicht in den effektiven Stundenlohn. */
+const PHASE_NON_BILLABLE = ['backen'];
 
 const DECO_KEYS = ['fondant','buttercreme','ganache','fruechte','blumen','zuckerblumen','schokolade',
   'blattgold','glitzer','perlen','figuren','topper','schrift','krone','bilder','spezial','sonstiges'];
 
-const NEBEN_KEYS = ['verpackung','cakeboard','strom','wasser','gas','kueche','werkzeug',
-  'lieferung','zahlung','marketing','sonstige'];
+/** Nebenkosten: nur die Posten, die bei jeder Torte wirklich anfallen. */
+const NEBEN_KEYS = ['energie','sonstige'];
+
+/** Verpackung – ein eigener Preisbestandteil, der bei jeder Torte anfällt. */
+const PACK_KEYS = ['schachtel','band','unterlage','sonstiges'];
 
 const UNIT_KEYS = ['g','kg','ml','l','stk','pkg'];
 
@@ -460,7 +597,6 @@ const UNIT_INFO = {
 };
 
 const SIZES = [12,14,16,18,20,22,24,26,28,30];
-const MARGIN_OPTIONS = [10,20,25,30,35,40];
 
 /** Zutaten-Vorlagen mit realistischen Schweizer Detailhandelspreisen (Stand 2026, anpassbar) */
 const INGREDIENT_TEMPLATES = [
@@ -499,16 +635,42 @@ const DEFAULT_COMPANY = {
   taxNote:''
 };
 
+/** Vorlagen für die Dekoration – Lenas wiederkehrende Posten.
+ *  Die Beträge sind Startwerte und müssen einmal an ihre tatsächlichen
+ *  Einkaufspreise angepasst werden; danach stimmen sie dauerhaft.
+ *  Aufbau je Vorlage: Rechenart und die zugehörigen Felder. */
+const DECO_TEMPLATES = [
+  /* Anteil einer Packung: verbraucht ÷ Packungsgrösse × Preis */
+  {key:'ganache',      cat:'ganache',      mode:'anteil',   use:400, pack:1000, material:22.00, minuten:25},
+  {key:'velours',      cat:'spezial',      mode:'anteil',   use:80,  pack:400,  material:28.00, minuten:15},
+  {key:'fondantdecke', cat:'fondant',      mode:'anteil',   use:600, pack:1000, material:12.90, minuten:35},
+  {key:'perlen',       cat:'perlen',       mode:'anteil',   use:30,  pack:100,  material:6.50,  minuten:10},
+  {key:'farben',       cat:'sonstiges',    mode:'anteil',   use:5,   pack:100,  material:24.00, minuten:0},
+  {key:'airbrush',     cat:'spezial',      mode:'anteil',   use:10,  pack:60,   material:9.50,  minuten:10},
+  /* Stückpreis */
+  {key:'krone',        cat:'krone',        mode:'stueck',   material:9.00,  anzahl:1, minuten:10},
+  {key:'topper',       cat:'topper',       mode:'stueck',   material:9.00,  anzahl:1, minuten:5},
+  {key:'blattgold',    cat:'blattgold',    mode:'stueck',   material:12.00, anzahl:1, minuten:15},
+  {key:'essbild',      cat:'bilder',       mode:'stueck',   material:9.50,  anzahl:1, minuten:10},
+  /* Werkzeug: Anschaffungspreis ÷ Einsätze */
+  {key:'stempel',      cat:'spezial',      mode:'werkzeug', material:38.00, einsaetze:50, minuten:10},
+  {key:'form',         cat:'spezial',      mode:'werkzeug', material:24.00, einsaetze:60, minuten:10},
+  /* Reine Arbeit */
+  {key:'zuckerblume',  cat:'zuckerblumen', mode:'zeit',     minuten:25},
+  {key:'schrift',      cat:'schrift',      mode:'zeit',     minuten:15}
+];
+
 /** Werkseinstellungen – Referenzwerte aus dem SHB-Businessplan */
 const DEFAULT_SETTINGS = {
   stundenansatz: 40,      // CHF/h
   kmPreis: 0.70,          // CHF/km
   betriebProzent: 8,      // %
-  marge: 20,              // %
-  aufschlag: 20,          // %
+  grammProPerson: 200,    // g – Erfahrungswert für eine Portion
+  kiloPreis: 55,          // CHF/kg Tortenbasis, Dekoration separat
   waehrung: 'CHF',
   rundung: 2,             // 0 exakt · 1 CHF 1 · 2 CHF 5 · 3 CHF 10
-  sprache: 'de',
+  sprache: '',            // leer = Sprache des Geräts verwenden
+  nextAuftrag: 1,       // fortlaufende Auftragsnummer
   company: {...DEFAULT_COMPANY}
 };
 
@@ -567,32 +729,109 @@ let projects = [];         // gespeicherte Kalkulationen
 let currentProjectId = null;
 let calc = null;           // letztes Rechenergebnis
 
+/* ==========================================================================
+ * 4b. VERLAUF – Schutz vor versehentlichem Datenverlust
+ * --------------------------------------------------------------------------
+ * Vor jedem Schritt, der Eingaben vernichten kann, wird der bisherige
+ * Zustand abgelegt. Der Verlauf liegt zusätzlich im Gerät, damit er auch
+ * ein Schliessen der App übersteht.
+ * ========================================================================== */
+const HISTORY_MAX = 15;
+let history = [];
+
+/** Aktuellen Zustand sichern, bevor etwas verändert wird. */
+function snapshot(label){
+  try{
+    history.push({ label: label || '', at: Date.now(),
+                   state: JSON.parse(JSON.stringify(state)) });
+    while(history.length > HISTORY_MAX) history.shift();
+    saveHistory();
+    updateUndoButton();
+  }catch(e){ console.warn('Verlauf:', e); }
+}
+
+/** Verlauf ablegen. Bei vollem Speicher werden die ältesten Einträge
+ *  verworfen, statt die Sicherung ganz aufzugeben. */
+async function saveHistory(){
+  for(let versuch = 0; versuch < 4; versuch++){
+    const ok = await Store.set('history', history);
+    if(ok) return;
+    if(history.length <= 1) return;
+    history = history.slice(Math.ceil(history.length/2));
+  }
+}
+
+/** Letzten Schritt zurücknehmen. */
+function undo(){
+  if(!history.length){ toast(t('undoNone')); return; }
+  const eintrag = history.pop();
+  state = eintrag.state;
+  saveHistory();
+  renderAll();
+  updateUndoButton();
+  toast(t('undoDone'));
+}
+
+function updateUndoButton(){
+  const b = $('#btnUndo');
+  if(!b) return;
+  /* Immer sichtbar, damit man weiss, dass es ihn gibt – nur ausgegraut,
+     solange nichts zurückzunehmen ist. */
+  b.disabled = history.length === 0;
+  b.title = history.length ? tf('undoReady',{n:history.length}) : t('undoNone');
+}
+
+/** Meldung mit sofortigem Rückgängig – der schnellste Weg zurück. */
+function toastUndo(text){
+  const el = $('#toast');
+  if(!el) return;
+  el.innerHTML = `<span>${escapeHtml(text)}</span>` +
+    `<button type="button" class="toast-undo">${escapeHtml(t('undoOffer'))}</button>`;
+  el.hidden = false;
+  requestAnimationFrame(()=>el.classList.add('show'));
+  const btn = el.querySelector('.toast-undo');
+  btn.onclick = ()=>{ el.classList.remove('show'); setTimeout(()=>el.hidden=true,220); undo(); };
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>{ el.classList.remove('show'); setTimeout(()=>el.hidden=true,220); }, 6000);
+}
+
 /** Erzeugt eine leere Kalkulation mit den Standard-Produktionsphasen. */
+/** Fortlaufende Auftragsnummer: SHB-2026-001 */
+function nextOrderNo(){
+  const jahr = new Date().getFullYear();
+  const n = Math.max(1, num(settings.nextAuftrag) || 1);
+  return `SHB-${jahr}-${String(n).padStart(3,'0')}`;
+}
+
 function newState(){
   const today = new Date().toISOString().slice(0,10);
   return {
-    meta:{ kundenname:'', auftragsnummer:'', bestelldatum:today, lieferdatum:'',
+    meta:{ kundenname:'', auftragsnummer:nextOrderNo(), bestelldatum:today, lieferdatum:'',
            anlass:0, bemerkungen:'', kundenpreis:'' },
-    cake:{ form:0, groesse:'20', groesseCustom:'', hoehe:10, etagen:0, portionen:20 },
+    cake:{ form:0, groesse:'20', groesseCustom:'', hoehe:10, etagen:0, portionen:20,
+           gewicht: 20*settings.grammProPerson/1000 },
     zutaten:[ blankIngredient() ],
     arbeit: PHASE_KEYS.map(k=>({
       key:k, name:'', h:0, m:0,
       billable: !PHASE_NON_BILLABLE.includes(k),
       rate: settings.stundenansatz
     })),
-    eff:{ auto:true, kalk:0 },
-    deko:[ blankDeco() ],
+    deko:[],
     neben: NEBEN_KEYS.reduce((o,k)=>(o[k]=0,o),{}),
-    travel:{ km:0, kmPreis: settings.kmPreis },
+    verpackung: PACK_KEYS.reduce((o,k)=>(o[k]=0,o),{}),
+    travel:{ km:0, kmPreis: settings.kmPreis, minuten:0 },
+    /* Einfache Erfassung ist der Normalfall: zwei Zahlen statt zwei Listen */
+    simple:{ on:true, material:0, stunden:0 },
     betriebProzent: settings.betriebProzent,
-    profit:{ modus:'aufschlag', aufschlag:settings.aufschlag, betrag:80,
-             margeSelect:String(settings.marge), marge:settings.marge },
     rundung: settings.rundung,
     design: null            // Entwurf aus dem Design-Konfigurator
   };
 }
 function blankIngredient(){ return {name:'',menge:'',einheit:'g',pack:'',packEinheit:'g',preis:''}; }
-function blankDeco(){ return {cat:'fondant',desc:'',mode:'material',material:'',anzahl:1,minuten:0,rate:settings.stundenansatz}; }
+function blankDeco(){
+  return {cat:'fondant', desc:'', mode:'stueck', material:'', anzahl:1, minuten:0,
+          use:'', pack:'', einsaetze:20, rate:settings.stundenansatz};
+}
 
 /* ==========================================================================
  * 5. HILFSFUNKTIONEN
@@ -681,6 +920,8 @@ function estimatePortions(cake){
 function calculate(s){
   const warn = [];
 
+  const einfach = !s.simple || s.simple.on !== false;
+
   /* --- 6.1 Materialkosten (Zutaten) ------------------------------------ */
   let material = 0;
   const zutatenCosts = s.zutaten.map(z=>{
@@ -693,6 +934,7 @@ function calculate(s){
     material += cost;
     return {cost, error:false};
   });
+  if(einfach) material = num(s.simple && s.simple.material);
   if(material === 0) warn.push('warnNoMaterial');
 
   /* --- 6.2 Arbeitszeit -------------------------------------------------- */
@@ -707,12 +949,19 @@ function calculate(s){
     return h * num(a.rate);
   });
   // Durchschnittlicher Stundenansatz der verrechenbaren Tätigkeiten
-  const avgRate = hoursBillable > 0 ? div(billableCostRaw, hoursBillable) : num(settings.stundenansatz);
+  let avgRate = hoursBillable > 0 ? div(billableCostRaw, hoursBillable) : num(settings.stundenansatz);
 
-  /* --- 6.3 Effizienz / Lernzeit ---------------------------------------- */
-  const hoursCalc = s.eff.auto ? hoursBillable : num(s.eff.kalk);
-  const labour    = hoursCalc * avgRate;
-  const learnHours = Math.max(0, hoursActual - hoursCalc);
+  /* Einfache Erfassung: eine Stundenzahl zum Standardansatz */
+  if(einfach){
+    hoursBillable = num(s.simple && s.simple.stunden);
+    hoursActual   = hoursBillable;
+    avgRate       = num(settings.stundenansatz);
+  }
+
+  /* --- 6.3 Arbeitskosten ------------------------------------------------
+     Bewertet werden die aktiven Stunden. Backen und Abkühlen zählen nicht,
+     weil Lena in dieser Zeit nicht an der Torte steht. */
+  const labour = hoursBillable * avgRate;
 
   /* --- 6.4 Dekoration --------------------------------------------------- */
   let decoMat = 0, decoTime = 0, decoHours = 0;
@@ -720,68 +969,93 @@ function calculate(s){
     const mat = num(d.material), anz = Math.max(num(d.anzahl),0), min = num(d.minuten);
     let m = 0, z = 0;
     switch(d.mode){
-      case 'stueck': m = mat * anz; break;
-      case 'zeit':   z = div(min,60) * num(d.rate); decoHours += div(min,60); break;
-      case 'kombi':  m = mat * (anz || 1); z = div(min,60) * num(d.rate); decoHours += div(min,60); break;
-      default:       m = mat;                                      // 'material'
+      /* Anteil einer Packung: verbrauchte Menge ÷ Packungsgrösse × Preis.
+         So werden Ganache, Velours-Spray oder Fondant korrekt umgelegt. */
+      case 'anteil':
+        m = div(num(d.use), num(d.pack)) * mat;
+        break;
+      /* Werkzeug wie Zuckerstempel oder Silikonform: der Anschaffungspreis
+         verteilt sich auf die Zahl der Einsätze, nicht auf eine Torte. */
+      case 'werkzeug':
+        m = div(mat, num(d.einsaetze));
+        break;
+      case 'stueck':
+        m = mat * anz;
+        break;
+      case 'zeit':
+        z = div(min,60) * num(d.rate);
+        break;
+      case 'kombi':
+        m = mat * (anz || 1);
+        z = div(min,60) * num(d.rate);
+        break;
+      default:                                   // 'material' = Pauschalbetrag
+        m = mat;
     }
+    /* Zeit zählt bei jeder Rechenart, wenn Minuten erfasst sind */
+    if(d.mode !== 'zeit' && d.mode !== 'kombi' && min > 0){
+      z = div(min,60) * num(d.rate);
+    }
+    if(z > 0) decoHours += div(min,60);
     decoMat += m; decoTime += z;
     return m + z;
   });
   const deco = decoMat + decoTime;
 
-  /* --- 6.5 Nebenkosten -------------------------------------------------- */
-  const travel = num(s.travel.km) * num(s.travel.kmPreis);
-  let nebenDirect = travel;
+  /* --- 6.5 Verpackung und Lieferung -------------------------------------
+     Beides sind eigene Preisbestandteile: Sie kosten Lenas Geld und werden
+     der Kundschaft eins zu eins weiterverrechnet. */
+  let verpack = 0;
+  PACK_KEYS.forEach(k=> verpack += num(s.verpackung[k]));
+
+  const travelKm   = num(s.travel.km) * num(s.travel.kmPreis);
+  const travelMin  = num(s.travel.minuten);
+  const travelTime = div(travelMin,60) * num(settings.stundenansatz);
+  const travel     = travelKm + travelTime;
+
+  /* --- 6.6 Übrige Kosten ------------------------------------------------ */
+  let nebenDirect = 0;
   NEBEN_KEYS.forEach(k=> nebenDirect += num(s.neben[k]));
 
   /* Betriebskosten-Zuschlag auf alle direkten Kosten */
   const betriebPct  = Math.min(num(s.betriebProzent), 100);
-  const betriebBase = material + labour + deco + nebenDirect;
+  const betriebBase = material + labour + deco + verpack + travelKm + nebenDirect;
   const betrieb     = betriebBase * betriebPct/100;
-  const neben       = nebenDirect + betrieb;
+  const neben       = nebenDirect + betrieb + verpack + travelKm;
 
   /* --- 6.6 Selbstkosten -------------------------------------------------- */
-  const selbst = material + labour + deco + neben;
+  const selbst = material + labour + travelTime + deco + neben;
 
   /* Sachkosten = alles ausser der eigenen Arbeitszeit
      (Basis für Mindestpreis und effektiven Stundenlohn) */
-  const sachBase   = material + decoMat + nebenDirect;
+  const sachBase   = material + decoMat + verpack + travelKm + nebenDirect;
   const sachBetr   = sachBase * betriebPct/100;
   const sachkosten = sachBase + sachBetr;
 
-  /* --- 6.7 Gewinn ------------------------------------------------------- */
-  let profit = 0, priceRaw = 0, margeUsed = null, aufschlagUsed = null;
-  if(s.profit.modus === 'marge'){
-    let m = num(s.profit.marge);
-    if(m >= 100){ m = 95; warn.push('warnMarginHigh'); }
-    m = Math.min(m, 95);
-    margeUsed = m;
-    priceRaw  = div(selbst, 1 - m/100);          // Verkaufspreis = Selbstkosten / (1 − Marge)
-    profit    = priceRaw - selbst;
-  } else if(s.profit.modus === 'betrag'){
-    profit    = num(s.profit.betrag);
-    priceRaw  = selbst + profit;
-  } else {
-    aufschlagUsed = num(s.profit.aufschlag);
-    profit    = selbst * aufschlagUsed/100;      // Aufschlag rechnet auf die Kosten
-    priceRaw  = selbst + profit;
-  }
+  /* --- 6.7 Preis nach Kilogramm ------------------------------------------
+     Olenas Marktpreis: die Tortenbasis kostet je Kilogramm, Dekoration und
+     Lieferung kommen separat dazu. Das Gewicht ergibt sich aus den Portionen,
+     sofern es nicht von Hand gesetzt wurde. */
+  const portionen   = Math.max(num(s.cake.portionen), 0);
+  const grammProP   = num(settings.grammProPerson) || 200;
+  const gewicht     = num(s.cake.gewicht) > 0 ? num(s.cake.gewicht) : portionen*grammProP/1000;
+  const kiloPreis   = num(settings.kiloPreis) || 0;
+  const kiloBasis   = gewicht * kiloPreis;
+  const kiloRaw     = kiloBasis + deco + verpack + travel;
 
-  /* --- 6.8 Preis, Rundung, Kennzahlen ----------------------------------- */
-  const price       = roundPrice(priceRaw, s.rundung);
-  const profitFinal = price - selbst;                 // nach Rundung neu bestimmt
+  /* --- 6.8 Verkaufspreis ------------------------------------------------
+     Der Preis ist die Summe aus Tortenbasis, Dekoration und Lieferung.
+     Was davon nach Abzug aller Kosten bleibt, ist der Gewinn. */
+  const price       = roundPrice(kiloRaw, s.rundung);
+  const kiloTotal   = price;
+  const profitFinal = price - selbst;
   const margeFinal  = price > 0 ? profitFinal/price*100 : 0;
 
-  const minAbs = roundPrice(sachkosten, s.rundung);   // nur Sachkosten
-  const minSus = roundPrice(selbst,     s.rundung);   // Kosten + Arbeit, ohne Gewinn
-
-  const portionen   = Math.max(num(s.cake.portionen), 0);
   const perPortion  = div(price, portionen);
   const costPortion = div(selbst, portionen);
 
   /* Effektiver Stundenlohn: was nach allen Sachkosten für die eigene Arbeit bleibt */
-  const totalWorkHours = hoursActual + decoHours;
+  const totalWorkHours = hoursActual + decoHours + div(travelMin,60);
   const wage = div(price - sachkosten, totalWorkHours);
 
   /* --- 6.9 Kundenpreis-Vergleich ---------------------------------------- */
@@ -795,10 +1069,12 @@ function calculate(s){
 
   return {
     material, labour, deco, decoMat, decoTime, neben, nebenDirect, betrieb, betriebPct,
-    selbst, sachkosten, profit:profitFinal, price, priceRaw,
-    minAbs, minSus, perPortion, costPortion,
-    hoursActual, hoursBillable, hoursCalc, learnHours, decoHours, totalWorkHours,
-    avgRate, wage, margeFinal, margeUsed, aufschlagUsed,
+    selbst, sachkosten, profit:profitFinal, price, kiloRaw,
+    verpack, travelKm, travelTime,
+    gewicht, grammProP, kiloPreis, kiloBasis, kiloTotal,
+    perPortion, costPortion,
+    hoursActual, hoursBillable, decoHours, totalWorkHours,
+    avgRate, wage, margeFinal,
     kundenpreis, diff, wageCustomer, travel,
     zutatenCosts, arbeitCosts, dekoCosts, warn
   };
@@ -878,11 +1154,17 @@ function renderWork(){
 function renderDeco(){
   const box = $('#dekoListe');
   const catList  = DECO_KEYS.map(k=>({key:k, label:t('decoCats.'+k)}));
-  const modeList = ['material','stueck','zeit','kombi'].map(k=>({key:k, label:t('decoModes.'+k)}));
+  const modeList = ['anteil','stueck','material','werkzeug','zeit','kombi']
+    .map(k=>({key:k, label:t('decoModes.'+k)}));
   box.innerHTML = state.deko.map((d,i)=>{
+    const isAnteil = d.mode==='anteil', isWerk = d.mode==='werkzeug';
     const showMat = d.mode!=='zeit';
     const showQty = d.mode==='stueck' || d.mode==='kombi';
-    const showMin = d.mode==='zeit'   || d.mode==='kombi';
+    const showMin = true;                        // Zeit ist bei jeder Art erfassbar
+    /* Beschriftung des Betragsfeldes je nach Rechenart */
+    const matLabel = isAnteil ? t('rDecoPackPrice')
+                   : isWerk   ? t('rDecoTool')
+                   : d.mode==='material' ? t('rDecoFlat') : t('rMaterial');
     return `
     <div class="row" data-list="deko" data-i="${i}">
       <button class="row-del" type="button" data-del aria-label="X">×</button>
@@ -893,12 +1175,18 @@ function renderDeco(){
           <input type="text" data-k="desc" value="${escapeHtml(d.desc)}" placeholder="${escapeHtml(t('rDecoDesc'))}"></label>
         <label class="field col-2"><span>${t('rMode')}</span>
           <select data-k="mode">${opts(modeList, d.mode, true)}</select></label>
-        <label class="field"${showMat?'':' hidden'}><span>${t('rMaterial')}</span>
+        <label class="field"${isAnteil?'':' hidden'}><span>${t('rDecoUse')}</span>
+          <input type="number" inputmode="decimal" data-k="use" min="0" step="any" value="${escapeHtml(d.use)}"></label>
+        <label class="field"${isAnteil?'':' hidden'}><span>${t('rDecoPack')}</span>
+          <input type="number" inputmode="decimal" data-k="pack" min="0" step="any" value="${escapeHtml(d.pack)}"></label>
+        <label class="field"${showMat?'':' hidden'}><span>${escapeHtml(matLabel)}</span>
           <span class="input-chf"><em>${settings.waehrung}</em>
             <input type="number" inputmode="decimal" data-k="material" min="0" step="0.05" value="${escapeHtml(d.material)}"></span></label>
+        <label class="field"${isWerk?'':' hidden'}><span>${t('rDecoUses')}</span>
+          <input type="number" inputmode="decimal" data-k="einsaetze" min="1" step="1" value="${escapeHtml(d.einsaetze)}"></label>
         <label class="field"${showQty?'':' hidden'}><span>${t('rPieces')}</span>
           <input type="number" inputmode="decimal" data-k="anzahl" min="0" step="1" value="${escapeHtml(d.anzahl)}"></label>
-        <label class="field"${showMin?'':' hidden'}><span>${t('rMinutes')}</span>
+        <label class="field"><span>${t('rMinutes')}</span>
           <input type="number" inputmode="decimal" data-k="minuten" min="0" step="5" value="${escapeHtml(d.minuten)}"></label>
         <label class="field"${showMin?'':' hidden'}><span>${t('rRate')}</span>
           <span class="input-chf"><em>${settings.waehrung}</em>
@@ -919,6 +1207,17 @@ function renderOverhead(){
   `).join('');
 }
 
+/* ---- 7.4b Verpackung ---- */
+function renderPack(){
+  const box = $('#packListe');
+  if(!box) return;
+  box.innerHTML = PACK_KEYS.map(k=>`
+    <label class="field"><span>${t('pack.'+k)}</span>
+      <span class="input-chf"><em>${settings.waehrung}</em>
+        <input type="number" inputmode="decimal" data-pack="${k}" min="0" step="0.05" value="${escapeHtml(state.verpackung[k])}"></span></label>
+  `).join('');
+}
+
 /* ---- 7.5 Auswahllisten ---- */
 function renderSelects(){
   // Grösse
@@ -927,16 +1226,18 @@ function renderSelects(){
               + `<option value="custom">${escapeHtml(t('sizeCustom'))}</option>`;
   g.value = state.cake.groesse;
 
-  // Zielmarge
-  const m = $('#margeSelect');
-  m.innerHTML = MARGIN_OPTIONS.map(v=>`<option value="${v}">${v} %</option>`).join('')
-              + `<option value="custom">${escapeHtml(t('marginCustom'))}</option>`;
-  m.value = state.profit.margeSelect;
-
   // Zutaten-Vorlagen
   const v = $('#zutatVorlage');
   v.innerHTML = `<option value="">${escapeHtml(t('tplChoose'))}</option>`
               + INGREDIENT_TEMPLATES.map((x,i)=>`<option value="${i}">${escapeHtml(x.name)}</option>`).join('');
+
+  // Dekorations-Vorlagen
+  const dv = $('#dekoVorlage');
+  if(dv){
+    dv.innerHTML = `<option value="">${escapeHtml(t('decoTplChoose'))}</option>`
+      + DECO_TEMPLATES.map((x,i)=>
+          `<option value="${i}">${escapeHtml(t('decoTpl.'+x.key) || x.key)}</option>`).join('');
+  }
 }
 
 /** Alle Formularfelder aus dem Zustand füllen. */
@@ -959,24 +1260,28 @@ function renderForm(){
   $('#etagen').value        = c.etagen;
   $('#portionen').value     = c.portionen;
 
-  $('#effAuto').checked     = state.eff.auto;
-  $('#effKalk').readOnly    = state.eff.auto;
-
   $('#km').value            = state.travel.km;
   $('#kmPreis').value       = state.travel.kmPreis;
+  const _fz=$('#fahrzeit'); if(_fz) _fz.value = state.travel.minuten;
   $('#betriebProzent').value= state.betriebProzent;
+  const sm = $('#simpleMat'), sh = $('#simpleHours');
+  if(sm) sm.value = state.simple.material || '';
+  if(sh) sh.value = state.simple.stunden || '';
+  toggleDetail(!state.simple.on, true);
 
-  $('#aufschlagProzent').value = state.profit.aufschlag;
-  $('#gewinnBetrag').value     = state.profit.betrag;
-  $('#margeProzent').value     = state.profit.marge;
-  $('#margeSelect').value      = state.profit.margeSelect;
-  $('#rundung').value          = state.rundung;
+}
 
-  $$('#gewinnModus .seg-btn').forEach(b=>b.classList.toggle('is-active', b.dataset.mode===state.profit.modus));
-  $('#wrapAufschlag').hidden   = state.profit.modus!=='aufschlag';
-  $('#wrapBetrag').hidden      = state.profit.modus!=='betrag';
-  $('#wrapMarge').hidden       = state.profit.modus!=='marge';
-  $('#wrapMargeCustom').hidden = !(state.profit.modus==='marge' && state.profit.margeSelect==='custom');
+/** Zwischen der einfachen und der genauen Erfassung wechseln. */
+function toggleDetail(detail, nurAnzeige){
+  const box = $('#detailBox'), simple = $('#simpleBox'), btn = $('#btnToggleDetail');
+  if(!box) return;
+  box.hidden = !detail;
+  if(simple) simple.hidden = detail;
+  if(btn) btn.textContent = detail ? t('toSimple') : t('toDetail');
+  if(!nurAnzeige){
+    state.simple.on = !detail;
+    update();
+  }
 }
 
 function renderAll(){
@@ -985,6 +1290,7 @@ function renderAll(){
   renderWork();
   renderDeco();
   renderOverhead();
+  renderPack();
   renderForm();
   update();
 }
@@ -1006,69 +1312,48 @@ function update(){
 
   /* Bereichs-Summen */
   $('#sumZutaten').textContent  = fmt(c.material);
-  $('#sumArbeitIst').textContent  = fmtH(c.hoursActual);
-  $('#sumArbeitVerr').textContent = fmtH(c.hoursBillable);
-  $('#effIst').value  = c.hoursActual.toFixed(2);
-  if(state.eff.auto) $('#effKalk').value = c.hoursCalc.toFixed(2);
-  $('#effHinweis').textContent = c.learnHours > 0.01
-    ? tf('effInfo',{k:fmtH(c.hoursCalc), i:fmtH(c.hoursActual), d:c.learnHours.toFixed(2)})
-    : t('effInfoEqual');
-
-  $('#sumDekoMat').textContent  = fmt(c.decoMat);
-  $('#sumDekoZeit').textContent = fmt(c.decoTime);
+  const _sai=$('#sumArbeitIst'); if(_sai) _sai.textContent = fmtH(c.hoursActual);
+  const _sav=$('#sumArbeitVerr'); if(_sav) _sav.textContent = fmtH(c.hoursBillable);
   $('#sumDeko').textContent     = fmt(c.deco);
 
-  $('#fahrtkosten').value    = fmt(c.travel);
-  $('#betriebBetrag').value  = fmt(c.betrieb);
+  const _fk=$('#fahrtkosten'); if(_fk) _fk.value = fmt(c.travel);
+  const _sp=$('#sumPack');     if(_sp) _sp.textContent = fmt(c.verpack);
+  const _sd=$('#sumDelivery'); if(_sd) _sd.textContent = fmt(c.travel);
+  const _bb=$('#betriebBetrag'); if(_bb) _bb.value = fmt(c.betrieb);
   $('#sumNeben').textContent = fmt(c.neben);
 
   /* Kennzahlen */
-  $('#kMaterial').textContent = fmt(c.material);
-  $('#kArbeit').textContent   = fmt(c.labour);
-  $('#kDeko').textContent     = fmt(c.deco);
-  $('#kNeben').textContent    = fmt(c.neben);
   $('#kSelbst').textContent   = fmt(c.selbst);
   $('#kGewinn').textContent   = fmt(c.profit);
   $('#kPreis').textContent    = fmt(c.price);
   $('#kProPortion').textContent = fmt(c.perPortion);
+  $('#kStundenlohn').textContent = fmt(c.wage);
+  $('#kStundenlohnSub').textContent = c.totalWorkHours > 0
+    ? tf('wageSub',{h:c.totalWorkHours.toFixed(2), z:fmt(settings.stundenansatz)+'/h'})
+    : t('hintNoCosts');
 
-  $('#kMinAbs').textContent = fmt(c.minAbs);
-  $('#kMinSus').textContent = fmt(c.minSus);
-  $('#kRec').textContent    = fmt(c.price);
-
-  $('#kStundenlohn').textContent = fmt(c.wage) + ' / h';
-  $('#kStundenlohnSub').textContent = tf('wageSub',{h:c.totalWorkHours.toFixed(2), z:fmt(settings.stundenansatz)+'/h'});
-
-  /* Sticky-Zusammenfassung */
-  $('#sMaterial').textContent = fmt(c.material);
-  $('#sArbeit').textContent   = fmt(c.labour);
-  $('#sDeko').textContent     = fmt(c.deco);
-  $('#sNeben').textContent    = fmt(c.neben);
-  $('#sSelbst').textContent   = fmt(c.selbst);
-  $('#sGewinn').textContent   = fmt(c.profit);
-  $('#sPreis').textContent    = fmt(c.price);
-  $('#sLohn').textContent     = fmt(c.wage);
-  $('#sPortion').textContent  = fmt(c.perPortion);
-  $('#sStunden').textContent  = fmtH(c.totalWorkHours);
-
-  /* Bottom-Bar */
-  $('#bPreis').textContent    = fmt(c.price);
-  $('#bSelbst').textContent   = fmt(c.selbst);
-  $('#bMaterial').textContent = fmt(c.material);
-  $('#bArbeit').textContent   = fmt(c.labour);
-  $('#bDeko').textContent     = fmt(c.deco);
-  $('#bNeben').textContent    = fmt(c.neben);
-  $('#bGewinn').textContent   = fmt(c.profit);
-  $('#bLohn').textContent     = fmt(c.wage);
+  /* Sticky-Zusammenfassung und Bottom-Bar – dieselbe Gliederung wie das Ergebnis */
+  const setTxt = (id, v)=>{ const el = $(id); if(el) el.textContent = v; };
+  [['#sBasis',  fmt(c.kiloBasis)], ['#sDeko',  fmt(c.deco)],
+   ['#sPack',   fmt(c.verpack)],   ['#sTravel',fmt(c.travel)],
+   ['#sPreis',  fmt(c.price)],     ['#sSelbst',fmt(c.selbst)],
+   ['#sGewinn', fmt(c.profit)],    ['#sLohn',  fmt(c.wage)],
+   ['#sPortion',fmt(c.perPortion)],['#sStunden',fmtH(c.totalWorkHours)],
+   ['#bPreis',  fmt(c.price)],     ['#bGewinn',fmt(c.profit)],
+   ['#bBasis',  fmt(c.kiloBasis)], ['#bDeko',  fmt(c.deco)],
+   ['#bPack',   fmt(c.verpack)],   ['#bTravel',fmt(c.travel)],
+   ['#bSelbst', fmt(c.selbst)],    ['#bLohn',  fmt(c.wage)]
+  ].forEach(([id,v])=>setTxt(id,v));
 
   /* Kopfzeilen-Badges */
-  $('#badgeAuftrag').textContent = state.meta.kundenname || '';
-  $('#badgeTorte').textContent   = tf('projPortions',{n:num(state.cake.portionen)});
-  $('#badgeZutaten').textContent = fmt(c.material);
-  $('#badgeArbeit').textContent  = fmtH(c.hoursActual);
-  $('#badgeDeko').textContent    = fmt(c.deco);
-  $('#badgeNeben').textContent   = fmt(c.neben);
-  $('#badgeGewinn').textContent  = c.margeFinal>0 ? c.margeFinal.toFixed(1)+' %' : '';
+  /* Kurzinfo in den Bereichsköpfen – nur setzen, was es auch gibt */
+  const badge = (id, text)=>{ const el = $(id); if(el) el.textContent = text; };
+  badge('#badgeAuftrag', state.meta.kundenname || '');
+  badge('#badgeTorte',   c.gewicht.toFixed(2) + ' kg');
+  badge('#badgeDeko',    fmt(c.deco));
+  badge('#badgeKosten',  fmt(c.selbst));
+  badge('#badgePack',    fmt(c.verpack));
+  badge('#badgeDelivery',fmt(c.travel));
   const bd = $('#badgeDesign');
   if(bd){
     const d = state.design;
@@ -1076,13 +1361,37 @@ function update(){
     bd.textContent = n ? n + ' ×' : '';
   }
 
-  /* Portionen-Richtwert */
+  /* Aufschlüsselung des Verkaufspreises */
+  const basis = tf('kKiloBase',{kg:c.gewicht.toFixed(2), p:fmt(c.kiloPreis)+'/kg'});
+  const zeilen = [[basis, fmt(c.kiloBasis)]];
+  if(c.deco > 0)    zeilen.push([t('kKiloDeco'),   fmt(c.deco)]);
+  if(c.verpack > 0) zeilen.push([t('kKiloPack'),   fmt(c.verpack)]);
+  if(c.travel > 0)  zeilen.push([t('kKiloTravel'), fmt(c.travel)]);
+  $('#kiloTable').innerHTML =
+    zeilen.map(r=>`<tr><td>${escapeHtml(r[0])}</td><td>${escapeHtml(r[1])}</td></tr>`).join('') +
+    `<tr class="is-total"><td>${escapeHtml(t('kKiloTotal'))}</td><td>${escapeHtml(fmt(c.price))}</td></tr>`;
+
+  /* Basispreis schon im Bereich Torte sichtbar */
+  $('#basisLabel').textContent = basis;
+  $('#sumBasis').textContent   = fmt(c.kiloBasis);
+
+  /* Gewicht und Portionen im Einklang halten */
+  const wIn = $('#gewicht');
+  if(wIn && document.activeElement !== wIn) wIn.value = c.gewicht.toFixed(2);
+  $('#weightHint').textContent = tf('hintWeight',{g:c.grammProP});
+
+  /* Plausibilitätskontrolle: passt die eingetragene Grösse zu den Portionen?
+     Der Preis hängt nicht daran – die Zeile weist nur auf Widersprüche hin. */
   const est = estimatePortions(state.cake);
-  $('#portionsHint').innerHTML = est>0
-    ? tf('portionsHint',{n:est}) + ` <button type="button" class="link-apply" id="applyPortions" style="background:none;border:0;color:var(--gold-deep);text-decoration:underline;padding:0;font-size:12.5px">${escapeHtml(t('portionsApply'))}</button>`
-    : '';
-  const ap = $('#applyPortions');
-  if(ap) ap.onclick = ()=>{ state.cake.portionen = est; $('#portionen').value = est; update(); persist(); };
+  const p   = num(state.cake.portionen);
+  const ph  = $('#portionsHint');
+  if(est > 0 && p > 0){
+    const abweichung = Math.abs(est - p) / Math.max(est, p);
+    ph.textContent = abweichung > 0.35 ? tf('portionsCheckOff',{n:est, p}) : tf('portionsCheck',{n:est});
+    ph.style.color = abweichung > 0.35 ? 'var(--warn)' : '';
+  }else{
+    ph.textContent = ''; ph.style.color = '';
+  }
 
   renderWarnings(c);
   renderCompare(c);
@@ -1097,52 +1406,38 @@ function renderWarnings(c){
   const box  = $('#alertBox');
   const flag = $('#sFlag');
   const bflag= $('#bFlag');
-  const wage = $('#wageBox');
 
   const zielLohn = num(settings.stundenansatz) || 40;
-  const messages = [];
-  let level = 'ok';
+  const hatKosten = c.selbst > 0;
+  const stunden   = c.totalWorkHours;
 
-  // Rote Stufe – wirtschaftlich nicht tragbar
-  if(c.price > 0 && c.price < c.sachkosten){
-    level = 'bad'; messages.push(t('warnBelowMaterial'));
-  }
-  if(c.price > 0 && c.price < c.selbst){
-    level = 'bad'; messages.push(t('warnBelowCost'));
-  }
-  if(c.totalWorkHours > 0 && c.wage < zielLohn*0.5){
-    level = 'bad'; messages.push(tf('warnLowWage',{l:fmt(c.wage)}));
-  }
-  // Orange Stufe – knapp
-  if(level!=='bad' && c.totalWorkHours > 0 && c.wage < zielLohn*0.85){
-    level = 'warn'; messages.push(tf('warnLowWage',{l:fmt(c.wage)}));
-  }
-  if(level!=='bad' && c.price > 0 && c.price < c.minSus){
-    level = 'warn'; messages.push(tf('warnBelowSus',{s:fmt(c.minSus)}));
-  }
-  // Hinweise aus dem Rechenkern
-  c.warn.forEach(k=>{
-    if(k==='warnNoMaterial' || k==='warnNoHours' || k==='warnNoPortions'){
-      if(level==='ok') level='warn';
-    }
-    if(k==='warnMarginHigh') level='warn';
-    messages.push(t(k));
-  });
-  if(c.learnHours > 0.01) messages.push(tf('warnLearn',{d:c.learnHours.toFixed(2)}));
+  let level = 'ok', text = '';
 
-  const title = level==='ok' ? t('flagOk') : level==='warn' ? t('flagWarn') : t('flagBad');
-  const body  = level==='ok' && messages.length===0
-    ? `<p style="margin:0">${escapeHtml(t('okBody'))}</p>`
-    : `<ul>${messages.map(m=>`<li>${escapeHtml(m)}</li>`).join('')}</ul>`;
+  if(!hatKosten){
+    /* Ohne erfasste Kosten lässt sich nichts beurteilen */
+    level = 'warn';
+    text = t('hintNoCosts');
+  }else if(c.profit < 0){
+    level = 'bad';
+    text = tf('badLoss',{g:fmt(Math.abs(c.profit))});
+  }else if(stunden > 0 && c.wage < zielLohn*0.5){
+    level = 'bad';
+    text = tf('badWage',{l:fmt(c.wage)});
+  }else if(stunden > 0 && c.wage < zielLohn*0.85){
+    level = 'warn';
+    text = tf('warnThin',{g:fmt(c.profit), l:fmt(c.wage)});
+  }else{
+    level = 'ok';
+    text = tf('okAll',{g:fmt(c.profit), l:fmt(c.wage)});
+  }
 
   box.className = 'alert show ' + level;
-  box.innerHTML = `<strong>${escapeHtml(title)}</strong>${body}`;
+  box.innerHTML = `<strong>${escapeHtml(
+      level==='ok' ? t('flagOk') : level==='warn' ? t('flagWarn') : t('flagBad'))}</strong>
+    <p style="margin:0">${escapeHtml(text)}</p>`;
 
-  flag.className = 'summary-flag show ' + level;
-  flag.textContent = title + (level==='ok' ? '' : ' · ' + (messages[0]||''));
-  bflag.className = 'bb-flag ' + level;
-
-  wage.className = 'wage-box ' + (c.totalWorkHours===0 ? '' : c.wage >= zielLohn*0.85 ? 'is-ok' : c.wage < zielLohn*0.5 ? 'is-bad' : '');
+  if(flag){ flag.className = 'summary-flag show ' + level; flag.textContent = text; }
+  if(bflag) bflag.className = 'bb-flag ' + level;
 }
 
 /* ---- Kundenpreis-Vergleich ---- */
@@ -1166,45 +1461,34 @@ function renderInternal(c){
   const row  = (l,v)=>`<tr><td>${escapeHtml(l)}</td><td>${escapeHtml(v)}</td></tr>`;
   const head = l=>`<tr class="is-head"><td colspan="2">${escapeHtml(l)}</td></tr>`;
   const tot  = (l,v)=>`<tr class="is-total"><td>${escapeHtml(l)}</td><td>${escapeHtml(v)}</td></tr>`;
-  const occ  = t('occasions')[num(state.meta.anlass)] || '';
-  const shp  = t('shapes')[num(state.cake.form)] || '';
-  const size = state.cake.groesse==='custom' ? state.cake.groesseCustom+' cm' : state.cake.groesse+' cm';
 
   $('#internTable').innerHTML =
-    head(t('iOrder')) +
-    row(t('fCustomer'), state.meta.kundenname || '–') +
-    row(t('fOrderNo'),  state.meta.auftragsnummer || '–') +
-    row(t('fOccasion'), occ) +
-    row(t('fDeliveryDate'), state.meta.lieferdatum || '–') +
-    row(t('fShape'), shp + ' · ' + size + ' · ' + num(state.cake.hoehe) + ' cm') +
-    row(t('fPortions'), String(num(state.cake.portionen))) +
+    head(t('kPrice')) +
+    row(t('kWeight'), c.gewicht.toFixed(2) + ' kg') +
+    row(t('kKiloBase').replace('{kg}', c.gewicht.toFixed(2)).replace('{p}', fmt(c.kiloPreis)+'/kg'), fmt(c.kiloBasis)) +
+    row(t('kKiloDeco'), fmt(c.deco)) +
+    row(t('kKiloTravel'), fmt(c.travel)) +
+    tot(t('kKiloTotal'), fmt(c.price)) +
 
-    head(t('iCosts')) +
+    head(t('secCosts')) +
     row(t('kMaterial'), fmt(c.material)) +
     row(t('sumDecoMat'), fmt(c.decoMat)) +
-    row(t('sumDecoTime'), fmt(c.decoTime)) +
     row(t('kLabour'), fmt(c.labour)) +
     row(t('sumOverhead'), fmt(c.nebenDirect)) +
     row(t('iOverheadPct') + ' (' + c.betriebPct + ' %)', fmt(c.betrieb)) +
     tot(t('kCost'), fmt(c.selbst)) +
 
     head(t('iTime')) +
-    row(t('iHoursActual'),   fmtH(c.totalWorkHours)) +
-    row(t('iHoursBillable'), fmtH(c.hoursBillable)) +
-    row(t('iHoursCalc'),     fmtH(c.hoursCalc)) +
-    row(t('iLearn'),         fmtH(c.learnHours)) +
-    row(t('iRate'),          fmt(c.avgRate) + ' / h') +
+    row(t('sumWorkActual'), fmtH(c.totalWorkHours)) +
+    row(t('sumWorkBillable'), fmtH(c.hoursBillable)) +
+    row(t('iRate'), fmt(c.avgRate) + ' / h') +
 
-    head(t('iPricing')) +
-    row(t('kMinAbs'), fmt(c.minAbs)) +
-    row(t('kMinSus'), fmt(c.minSus)) +
+    head(t('kProfit')) +
     row(t('kProfit'), fmt(c.profit)) +
     row(t('iMargin'), c.margeFinal.toFixed(1) + ' %') +
-    row(t('iMarkup'), (c.selbst>0 ? (c.profit/c.selbst*100).toFixed(1) : '0.0') + ' %') +
     row(t('iCostPerPortion'), fmt(c.costPortion)) +
     row(t('iPerPortion'), fmt(c.perPortion)) +
-    row(t('iWage'), fmt(c.wage) + ' / h') +
-    tot(t('kPrice'), fmt(c.price));
+    tot(t('iWage'), fmt(c.wage) + ' / h');
 }
 
 /* ==========================================================================
@@ -1266,7 +1550,41 @@ async function saveProject(){
   if(i>=0) projects[i] = entry; else projects.unshift(entry);
   currentProjectId = entry.id;
   await Store.set('projects', projects);
+  /* Nummernkreis weiterzählen, damit die nächste Kalkulation eine eigene bekommt */
+  const m = String(state.meta.auftragsnummer||'').match(/(\d+)\s*$/);
+  if(m && num(m[1]) >= num(settings.nextAuftrag)){
+    settings.nextAuftrag = num(m[1]) + 1;
+    await Store.set('settings', settings);
+  }
   toast(t('msgSaved'));
+}
+
+/** Legt die laufende Kalkulation als eigenes Projekt ab, bevor sie
+ *  überschrieben wird. So bleibt sie über «Meine Kalkulationen» erreichbar. */
+async function autoBackup(){
+  const c = calculate(state);
+  const leer = !state.meta.kundenname && !state.zutaten.length && !state.deko.length
+               && c.totalWorkHours === 0;
+  if(leer) return;
+  const entry = {
+    id: 'auto'+Date.now(),
+    name: (state.meta.kundenname || t('projUnnamed')) + ' · ' + t('autoBackup'),
+    datum: new Date().toISOString().slice(0,10),
+    tortentyp: c.gewicht.toFixed(2) + ' kg',
+    portionen: num(state.cake.portionen),
+    preis: c.price, kosten: c.selbst, gewinn: c.profit, stunden: c.totalWorkHours,
+    saved: new Date().toISOString(), auto: true,
+    state: JSON.parse(JSON.stringify(state))
+  };
+  projects.unshift(entry);
+  /* höchstens fünf automatische Sicherungen behalten */
+  const autos = projects.filter(p=>p.auto);
+  if(autos.length > 5){
+    const weg = autos.slice(5).map(p=>p.id);
+    projects = projects.filter(p=>weg.indexOf(p.id) < 0);
+  }
+  await Store.set('projects', projects);
+  toast(t('msgBackupSaved'));
 }
 
 function renderProjects(){
@@ -1494,42 +1812,41 @@ function bindEvents(){
   bindField('#groesseCustom',  v=>state.cake.groesseCustom=v);
   bindField('#hoehe',          v=>state.cake.hoehe=v);
   bindField('#etagen',         v=>state.cake.etagen=v);
-  bindField('#portionen',      (v,el)=>{ const n=num(v); el.classList.toggle('is-error', n<=0); state.cake.portionen=n; });
+  /* Portionen und Gewicht hängen über die Gramm pro Person zusammen.
+     Wer das eine ändert, bekommt das andere nachgeführt. */
+  bindField('#portionen', (v,el)=>{
+    const n = num(v);
+    el.classList.toggle('is-error', n<=0);
+    state.cake.portionen = n;
+    state.cake.gewicht = n * (num(settings.grammProPerson)||200) / 1000;
+  });
+  bindField('#gewicht', (v,el)=>{
+    const kg = num(v);
+    el.classList.toggle('is-error', kg<=0);
+    state.cake.gewicht = kg;
+    const g = num(settings.grammProPerson)||200;
+    const p = Math.round(kg*1000/g);
+    if(p > 0){ state.cake.portionen = p; $('#portionen').value = p; }
+  });
 
   bindField('#km',             v=>state.travel.km=num(v));
   bindField('#kmPreis',        v=>state.travel.kmPreis=num(v));
+  bindField('#simpleMat',   v=>state.simple.material = num(v));
+  bindField('#simpleHours', v=>state.simple.stunden  = num(v));
+  const tg = $('#btnToggleDetail');
+  if(tg) tg.addEventListener('click', ()=>toggleDetail($('#detailBox').hidden));
+
   bindField('#betriebProzent', (v,el)=>{ const n=Math.min(num(v),100); el.classList.toggle('is-error', num(v)>100); state.betriebProzent=n; });
 
-  bindField('#aufschlagProzent', v=>state.profit.aufschlag=num(v));
-  bindField('#gewinnBetrag',     v=>state.profit.betrag=num(v));
-  bindField('#margeProzent',     (v,el)=>{ const n=num(v); el.classList.toggle('is-error', n>=100); state.profit.marge=Math.min(n,95); });
-  bindField('#rundung',          v=>state.rundung=num(v));
 
-  $('#margeSelect').addEventListener('change', e=>{
-    state.profit.margeSelect = e.target.value;
-    $('#wrapMargeCustom').hidden = e.target.value!=='custom';
-    if(e.target.value!=='custom'){ state.profit.marge = num(e.target.value); $('#margeProzent').value = state.profit.marge; }
+  /* Verpackung (delegiert) */
+  const packBox = $('#packListe');
+  if(packBox) packBox.addEventListener('input', e=>{
+    const k = e.target.dataset.pack; if(!k) return;
+    state.verpackung[k] = num(e.target.value);
     update();
   });
-
-  /* Gewinn-Modus */
-  $$('#gewinnModus .seg-btn').forEach(b=>b.addEventListener('click',()=>{
-    state.profit.modus = b.dataset.mode;
-    renderForm(); update();
-  }));
-
-  /* Effizienz */
-  $('#effAuto').addEventListener('change', e=>{
-    state.eff.auto = e.target.checked;
-    $('#effKalk').readOnly = e.target.checked;
-    if(!e.target.checked) state.eff.kalk = num($('#effKalk').value);
-    update();
-  });
-  $('#effKalk').addEventListener('input', e=>{
-    if(state.eff.auto) return;
-    state.eff.kalk = num(e.target.value);
-    update();
-  });
+  bindField('#fahrzeit', v=>state.travel.minuten=num(v));
 
   /* Nebenkosten (delegiert) */
   $('#nebenListe').addEventListener('input', e=>{
@@ -1557,11 +1874,13 @@ function bindEvents(){
     const del = e.target.closest('[data-del]'); if(!del) return;
     const row = del.closest('.row');
     const list = row.dataset.list, i = +row.dataset.i;
+    snapshot('delete');                       // vorher sichern
     state[list].splice(i,1);
     if(list==='zutaten'){ if(!state.zutaten.length) state.zutaten.push(blankIngredient()); renderIngredients(); }
-    if(list==='deko'){    if(!state.deko.length)    state.deko.push(blankDeco());          renderDeco(); }
+    if(list==='deko'){ renderDeco(); }
     if(list==='arbeit'){  renderWork(); }
     update();
+    toastUndo(t('msgRowDeleted'));
   });
 
   /* Zeilen hinzufügen */
@@ -1570,6 +1889,30 @@ function bindEvents(){
   $('#btnArbeit').addEventListener('click',()=>{
     state.arbeit.push({key:'', name:'', h:0, m:0, billable:true, rate:settings.stundenansatz});
     renderWork(); update();
+  });
+
+  /* Dekorations-Vorlage: füllt eine Zeile mit Rechenart und Startwerten */
+  const dv = $('#dekoVorlage');
+  if(dv) dv.addEventListener('change', e=>{
+    const i = e.target.value; if(i==='') return;
+    const tpl = DECO_TEMPLATES[+i];
+    const row = {
+      ...blankDeco(),
+      cat: tpl.cat,
+      desc: t('decoTpl.'+tpl.key) || tpl.key,
+      mode: tpl.mode,
+      material: tpl.material || '',
+      use: tpl.use || '',
+      pack: tpl.pack || '',
+      anzahl: tpl.anzahl || 1,
+      einsaetze: tpl.einsaetze || 20,
+      minuten: tpl.minuten || 0,
+      rate: settings.stundenansatz
+    };
+    const empty = state.deko.findIndex(d=>!d.desc && !num(d.material) && !num(d.minuten));
+    if(empty >= 0) state.deko[empty] = row; else state.deko.push(row);
+    e.target.value = '';
+    renderDeco(); update();
   });
 
   /* Zutaten-Vorlage */
@@ -1585,11 +1928,16 @@ function bindEvents(){
 
   /* --- Aktionen --- */
   $('#btnSave').addEventListener('click', async()=>{ await saveProject(); renderProjects(); });
-  $('#btnDemo').addEventListener('click', ()=>{ loadDemo(); toast(t('msgDemo')); });
-  $('#btnReset').addEventListener('click', ()=>{
-    if(!confirm(t('askReset'))) return;
-    state = newState(); currentProjectId = null; renderAll(); toast(t('msgReset'));
+  $('#btnDemo').addEventListener('click', ()=>{ snapshot('demo'); loadDemo(); toastUndo(t('msgDemo')); });
+  $('#btnNew').addEventListener('click', async ()=>{
+    if(!confirm(t('askNew'))) return;
+    snapshot('new');
+    await autoBackup();                       // vorherige Torte sichern
+    state = newState(); currentProjectId = null;
+    renderAll();
+    toastUndo(t('msgNew'));
   });
+  $('#btnUndo').addEventListener('click', undo);
   $('#btnPrintCalc').addEventListener('click', ()=>{
     $$('.card-head').forEach(h=>h.setAttribute('aria-expanded','true'));
     printWith('print-calc');
@@ -1614,9 +1962,8 @@ function bindEvents(){
     settings.stundenansatz  = num($('#setStundenansatz').value) || DEFAULT_SETTINGS.stundenansatz;
     settings.kmPreis        = num($('#setKmPreis').value);
     settings.betriebProzent = Math.min(num($('#setBetrieb').value),100);
-    settings.marge          = Math.min(num($('#setMarge').value),95);
-    settings.aufschlag      = num($('#setAufschlag').value);
-    settings.waehrung       = $('#setWaehrung').value;
+    settings.grammProPerson = num($('#setGramm').value) || DEFAULT_SETTINGS.grammProPerson;
+    settings.kiloPreis      = num($('#setKiloPreis').value);
     settings.rundung        = num($('#setRundung').value);
     settings.company = {
       name:    $('#coName').value.trim()   || DEFAULT_COMPANY.name,
@@ -1645,9 +1992,10 @@ function bindEvents(){
     const p  = projects.find(x=>x.id===id); if(!p) return;
 
     if(btn.dataset.act==='open'){
+      snapshot('open');
       state = JSON.parse(JSON.stringify(p.state));
       currentProjectId = p.id;
-      closeModal($('#modalProjects')); renderAll(); toast(t('msgLoaded'));
+      closeModal($('#modalProjects')); renderAll(); toastUndo(t('msgLoaded'));
     }
     if(btn.dataset.act==='copy'){
       const copy = JSON.parse(JSON.stringify(p));
@@ -1679,9 +2027,8 @@ function fillSettings(){
   $('#setStundenansatz').value = settings.stundenansatz;
   $('#setKmPreis').value       = settings.kmPreis;
   $('#setBetrieb').value       = settings.betriebProzent;
-  $('#setMarge').value         = settings.marge;
-  $('#setAufschlag').value     = settings.aufschlag;
-  $('#setWaehrung').value      = settings.waehrung;
+  $('#setGramm').value         = settings.grammProPerson;
+  $('#setKiloPreis').value     = settings.kiloPreis;
   $('#setRundung').value       = settings.rundung;
   $('#setSprache').value       = lang;
 
@@ -1713,9 +2060,10 @@ function loadDemo(){
     bestelldatum:new Date().toISOString().slice(0,10),
     lieferdatum:d.toISOString().slice(0,10),
     anlass:0, bemerkungen:'Schokoladenbiskuit, Mascarpone-Füllung, handgefertigte Dekoration, personalisierter Cake Topper.',
-    kundenpreis:150
+    kundenpreis:''
   };
-  state.cake = { form:0, groesse:'20', groesseCustom:'', hoehe:12, etagen:1, portionen:20 };
+  state.cake = { form:0, groesse:'20', groesseCustom:'', hoehe:12, etagen:1,
+                 portionen:20, gewicht: 20*settings.grammProPerson/1000 };
 
   /* Zutaten ≈ CHF 58 */
   state.zutaten = [
@@ -1736,25 +2084,27 @@ function loadDemo(){
   ];
 
   /* Arbeitszeit: total 11 h, davon 5 h passiv (Backen/Abkühlen) → 6 h verrechenbar */
-  const H = {einkauf:[1,0], vorbereitung:[1,0], backen:[1,30], abkuehlen:[3,30], creme:[0,45],
-             zusammen:[0,45], grundierung:[0,30], dekoration:[1,0], verpackung:[0,15],
-             reinigung:[0,30], kommunikation:[0,15], lieferung:[0,0], sonstige:[0,0]};
+  /* Arbeitszeit: gut 6 Stunden aktive Arbeit, das Backen läuft nebenher */
+  const H = {vorbereitung:[0,45], backen:[1,30], creme:[0,30],
+             zusammen:[0,30], lieferung:[0,30]};
   state.arbeit.forEach(a=>{ const v = H[a.key]; if(v){ a.h=v[0]; a.m=v[1]; } a.rate = 40; });
-  state.eff = {auto:true, kalk:6};
 
-  /* Dekoration */
+  /* Dekoration mit den Posten, die bei Lena wirklich anfallen */
   state.deko = [
-    {cat:'krone',    desc:'Goldkrone',            mode:'kombi',    material:8,  anzahl:1, minuten:30, rate:40},
-    {cat:'blattgold',desc:'Blattgold',            mode:'material', material:12, anzahl:1, minuten:0,  rate:40},
-    {cat:'topper',   desc:'Personalisierter Cake Topper', mode:'stueck', material:9, anzahl:1, minuten:0, rate:40}
+    {cat:'ganache', desc:'Ganache-Glasur', mode:'anteil',   use:400, pack:1000, material:22,
+     anzahl:1, minuten:25, einsaetze:20, rate:40},
+    {cat:'krone',   desc:'Goldkrone', mode:'stueck', material:9, anzahl:1,
+     use:'', pack:'', minuten:10, einsaetze:20, rate:40},
+    {cat:'spezial', desc:'Zuckerstempel', mode:'werkzeug', material:38, einsaetze:50,
+     anzahl:1, use:'', pack:'', minuten:10, rate:40}
   ];
 
-  /* Nebenkosten ≈ CHF 25 */
-  state.neben = {verpackung:6, cakeboard:4, strom:5, wasser:1, gas:0, kueche:3,
-                 werkzeug:3, lieferung:0, zahlung:1, marketing:2, sonstige:0};
-  state.travel = {km:0, kmPreis:settings.kmPreis};
+  /* Nebenkosten */
+  state.neben = {energie:5, sonstige:3};
+  state.simple = {on:true, material:58, stunden:5};
+  state.verpackung = {schachtel:4, band:1, unterlage:3, sonstiges:0};
+  state.travel = {km:12, kmPreis:settings.kmPreis, minuten:40};
   state.betriebProzent = 8;
-  state.profit = {modus:'aufschlag', aufschlag:20, betrag:80, margeSelect:'20', marge:20};
   state.rundung = 2;
 
   currentProjectId = null;
@@ -1762,7 +2112,10 @@ function loadDemo(){
 }
 
 /* ---- Start ---- */
+let initDone = false;
 async function init(){
+  if(initDone) return;      // doppelte Aufrufe wirkungslos machen
+  initDone = true;
   const savedSettings = await Store.get('settings');
   if(savedSettings){
     settings = {...DEFAULT_SETTINGS, ...savedSettings,
@@ -1773,10 +2126,11 @@ async function init(){
   const savedLang = await Store.get('lang');
   if(savedLang && translations[savedLang])            lang = savedLang;
   else if(settings.sprache && translations[settings.sprache]) lang = settings.sprache;
-  else if((navigator.language||'').toLowerCase().startsWith('uk')) lang = 'ua';
+  else if(/^(uk|ru)/.test((navigator.language||'').toLowerCase())) lang = 'ua';
   else lang = 'de';
 
   await loadProjects();
+  history = (await Store.get('history')) || [];
 
   const cur = await Store.get('current');
   state = (cur && cur.state) ? cur.state : newState();
@@ -1787,18 +2141,19 @@ async function init(){
   state = {...base, ...state,
     meta:{...base.meta, ...(state.meta||{})},
     cake:{...base.cake, ...(state.cake||{})},
-    eff:{...base.eff, ...(state.eff||{})},
     neben:{...base.neben, ...(state.neben||{})},
     travel:{...base.travel, ...(state.travel||{})},
-    profit:{...base.profit, ...(state.profit||{})}
+    verpackung:{...base.verpackung, ...(state.verpackung||{})},
+    simple:{...base.simple, ...(state.simple||{})}
   };
   if(!Array.isArray(state.zutaten) || !state.zutaten.length) state.zutaten = [blankIngredient()];
-  if(!Array.isArray(state.deko)    || !state.deko.length)    state.deko    = [blankDeco()];
+  if(!Array.isArray(state.deko)) state.deko = [];
   if(!Array.isArray(state.arbeit)  || !state.arbeit.length)  state.arbeit  = base.arbeit;
 
   applyI18n();
   bindEvents();
   renderAll();
+  updateUndoButton();
 }
 
 if(typeof document !== 'undefined'){
@@ -1808,5 +2163,6 @@ if(typeof document !== 'undefined'){
 /* Für Tests in Node exportieren (im Browser wirkungslos) */
 if(typeof module !== 'undefined' && module.exports){
   module.exports = {calculate, roundPrice, estimatePortions, newState, translations,
-                    PHASE_KEYS, NEBEN_KEYS, UNIT_INFO};
+                    PHASE_KEYS, NEBEN_KEYS, UNIT_INFO,
+                    INGREDIENT_TEMPLATES, DECO_TEMPLATES, DEFAULT_SETTINGS};
 }

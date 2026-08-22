@@ -8,7 +8,7 @@
  * Öffnen lädt das iPhone dann automatisch die neue Fassung.
  * ========================================================================== */
 
-const VERSION = 'shb-v4';
+const VERSION = 'shb-v15';
 
 /* Alles, was die App zum Laufen braucht. Die PDF-Bausteine sind bewusst
    dabei, damit auch offline eine Offerte erstellt werden kann. */

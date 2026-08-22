@@ -185,8 +185,11 @@ input,select,textarea{ font:inherit; color:inherit; }
 /* ---------- 6. Cards / Accordion ---------- */
 .card{
   background:var(--surface); border:1px solid var(--line-soft);
-  border-radius:var(--r-lg); box-shadow:var(--shadow-sm); overflow:hidden;
+  border-radius:var(--r-lg); box-shadow:var(--shadow-sm);
+  /* kein overflow:hidden – sonst schneidet die Karte die Hinweisblasen ab */
 }
+.card > .card-head:first-child{ border-radius:var(--r-lg) var(--r-lg) 0 0; }
+.card > .card-body:last-child{ border-radius:0 0 var(--r-lg) var(--r-lg); }
 .card-head{
   width:100%; display:flex; align-items:center; gap:12px;
   padding:15px 16px; background:none; border:0; text-align:left; min-height:56px;
@@ -275,19 +278,24 @@ option{ background:var(--surface-2); color:var(--ink); }
 .hint:last-child{ margin-bottom:0; }
 
 /* Tooltip */
+/* Die Blase öffnet sich nach unten und spannt über die volle Breite des
+   umgebenden Absatzes. Dadurch kann sie weder seitlich noch oben aus der
+   Karte laufen – vorher wurde sie am Kartenrand abgeschnitten. */
+.hint, .subcard h3, .field, .card-title{ position:relative; }
 .tip{
   width:22px; height:22px; flex:none; border-radius:50%; border:1px solid var(--gold-deep);
   background:rgba(217,180,91,.12); color:var(--gold);
   font-size:11px; font-style:italic; line-height:1; display:inline-grid; place-items:center;
-  position:relative; padding:0; vertical-align:middle;
+  position:static; padding:0; vertical-align:middle;
 }
 .tip::after{
-  content:attr(data-text); position:absolute; left:50%; bottom:150%; transform:translateX(-50%);
-  width:min(80vw,300px); padding:11px 13px; border-radius:var(--r-sm);
+  content:attr(data-text); position:absolute;
+  left:0; right:0; width:auto; top:calc(100% + 8px);
+  padding:12px 14px; border-radius:var(--r-md);
   background:#0E0D0B; color:var(--ink); font-size:12.5px; font-style:normal;
-  line-height:1.45; text-align:left; letter-spacing:0;
-  border:1px solid var(--line);
-  opacity:0; visibility:hidden; transition:opacity .16s; z-index:40; pointer-events:none;
+  line-height:1.5; text-align:left; letter-spacing:0;
+  border:1px solid var(--gold-deep);
+  opacity:0; visibility:hidden; transition:opacity .16s; z-index:60; pointer-events:none;
   box-shadow:var(--shadow-md);
 }
 .tip:hover::after,.tip:focus-visible::after,.tip.is-open::after{ opacity:1; visibility:visible; }
@@ -948,3 +956,103 @@ option{ background:var(--surface-2); color:var(--ink); }
   }
   body.print-offer .offer-rows td{ border-bottom-color:#DDD !important; }
 }
+
+/* ==========================================================================
+   18. Bereiche farblich unterscheiden
+   Jeder Posten bekommt einen eigenen, sehr zurückhaltenden Farbton, damit
+   Lena beim Scrollen jederzeit weiss, wo sie ist. Die Töne liegen als
+   dünner Schleier über der dunklen Fläche – kräftig genug zur Orientierung,
+   schwach genug, damit die ruhige Anmutung erhalten bleibt.
+   Farbe und Streifen stehen je Bereich in einer Regel zusammen.
+   ========================================================================== */
+.card[data-section="auftrag"]{
+  background:linear-gradient(0deg, rgba(155,180,203,0.05), rgba(155,180,203,0.05)), #201D19;
+  border-left:3px solid #3A342D;
+}
+.card[data-section="torte"]{
+  background:linear-gradient(0deg, rgba(217,180,91,0.075), rgba(217,180,91,0.075)), #201D19;
+  border-left:3px solid #C9A227;
+}
+.card[data-section="design"]{
+  background:linear-gradient(0deg, rgba(190,155,186,0.06), rgba(190,155,186,0.06)), #201D19;
+  border-left:3px solid #BE9BBA;
+}
+.card[data-section="deko"]{
+  background:linear-gradient(0deg, rgba(201,166,160,0.075), rgba(201,166,160,0.075)), #201D19;
+  border-left:3px solid #C9A6A0;
+}
+.card[data-section="verpackung"]{
+  background:linear-gradient(0deg, rgba(157,183,154,0.07), rgba(157,183,154,0.07)), #201D19;
+  border-left:3px solid #9DB79A;
+}
+.card[data-section="lieferung"]{
+  background:linear-gradient(0deg, rgba(155,180,203,0.075), rgba(155,180,203,0.075)), #201D19;
+  border-left:3px solid #9BB4CB;
+}
+.card[data-section="kosten"]{
+  background:linear-gradient(0deg, rgba(255,255,255,0.028), rgba(255,255,255,0.028)), #201D19;
+  border-left:3px solid #3A342D;
+}
+.card[data-section="ergebnis"]{
+  background:linear-gradient(0deg, rgba(217,180,91,0.05), rgba(217,180,91,0.05)), #201D19;
+  border-left:3px solid #E8CE8A;
+}
+.card[data-section="buch"]{
+  background:linear-gradient(0deg, rgba(190,155,186,0.05), rgba(190,155,186,0.05)), #201D19;
+  border-left:3px solid #BE9BBA;
+}
+
+/* Nummer und Titel nehmen den Ton des Bereichs auf */
+.card[data-section="deko"]       .card-num{ border-color:#C9A6A0; color:#DCB8B1; }
+.card[data-section="verpackung"] .card-num{ border-color:#9DB79A; color:#B4CBB1; }
+.card[data-section="lieferung"]  .card-num{ border-color:#9BB4CB; color:#B7CBDD; }
+.card[data-section="kosten"]     .card-num{ border-color:#3A342D; color:#9E9284; }
+.card[data-section="kosten"]     .card-title{ color:#D2C7B8; }
+
+/* Summenzeile eines Preisbestandteils hervorheben */
+.card[data-section="torte"] .sum-line b,
+.card[data-section="deko"] .sum-line b,
+.card[data-section="verpackung"] .sum-line b,
+.card[data-section="lieferung"] .sum-line b{ color:#E8CE8A; }
+
+/* Eingebettete Blöcke etwas heller als der jeweilige Bereich */
+.card[data-section] .subcard{ background:rgba(255,255,255,.03); }
+.card[data-section] .row{ background:rgba(255,255,255,.038); }
+
+/* Auf Papier ohne Farbschleier und ohne Streifen */
+@media print{
+  .card[data-section]{ background:#fff !important; border-left:0 !important; }
+  .card[data-section] .subcard,
+  .card[data-section] .row{ background:#fff !important; }
+  .tip::after{ display:none !important; }
+}
+
+/* Zuklappbarer Detailbereich */
+.det{ padding:0; }
+.det > summary{
+  list-style:none; cursor:pointer; padding:14px;
+  font-family:var(--serif); font-size:16px; color:var(--gold-2);
+  display:flex; align-items:center; justify-content:space-between; min-height:48px;
+}
+.det > summary::-webkit-details-marker{ display:none; }
+.det > summary::after{
+  content:''; width:8px; height:8px; flex:none;
+  border-right:1.5px solid var(--ink-4); border-bottom:1.5px solid var(--ink-4);
+  transform:rotate(45deg); transition:transform .2s;
+}
+.det[open] > summary::after{ transform:rotate(-135deg); }
+.det > table{ padding:0 14px 14px; width:calc(100% - 28px); }
+
+/* Meldung mit sofortigem Rückgängig */
+.toast{ display:flex; align-items:center; gap:14px; }
+.toast-undo{
+  border:1px solid var(--gold); background:none; color:var(--gold-2);
+  border-radius:999px; padding:6px 14px; font-size:12.5px; white-space:nowrap;
+  pointer-events:auto; min-height:34px;
+}
+.toast.show{ pointer-events:auto; }
+#btnUndo{ border-color:var(--gold-deep); color:var(--gold-2); }
+
+/* Rückgängig bleibt immer sichtbar – ausgegraut, wenn nichts ansteht */
+#btnUndo{ border-color:var(--gold-deep); color:var(--gold-2); }
+#btnUndo:disabled{ opacity:.35; border-color:var(--line); color:var(--ink-4); pointer-events:none; }

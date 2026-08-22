@@ -67,9 +67,9 @@
   <div class="action-inner">
     <button class="btn btn-primary"  id="btnSave"     type="button"><span data-i18n="actSave">Kalkulation speichern</span></button>
     <button class="btn btn-outline"  id="btnOffer"    type="button"><span data-i18n="actOffer">Kundenangebot erstellen</span></button>
-    <button class="btn btn-outline"  id="btnPrintCalc" type="button"><span data-i18n="actPrintCalc">Kalkulation drucken</span></button>
-    <button class="btn btn-outline"  id="btnDemo"     type="button"><span data-i18n="actDemo">Beispiel laden</span></button>
-    <button class="btn btn-quiet"    id="btnReset"    type="button"><span data-i18n="actReset">Zurücksetzen</span></button>
+    <button class="btn btn-outline"  id="btnBuchInvoice" type="button"><span data-i18n="bInvoiceShort">Rechnung erstellen</span></button>
+    <button class="btn btn-outline"  id="btnUndo"     type="button" disabled><span data-i18n="actUndo">Rückgängig</span></button>
+    <button class="btn btn-outline"  id="btnNew"      type="button"><span data-i18n="actNew">Neue Torte</span></button>
   </div>
 </div>
 
@@ -93,19 +93,16 @@
         <div class="grid-2">
           <label class="field"><span data-i18n="fCustomer">Kundenname</span>
             <input type="text" id="kundenname" data-i18n-ph="phCustomer" placeholder="z. B. Familie Meier"></label>
-          <label class="field"><span data-i18n="fOrderNo">Auftragsnummer</span>
-            <input type="text" id="auftragsnummer" placeholder="SHB-2026-001"></label>
-          <label class="field"><span data-i18n="fOrderDate">Bestelldatum</span>
-            <input type="date" id="bestelldatum"></label>
-          <label class="field"><span data-i18n="fDeliveryDate">Lieferdatum</span>
-            <input type="date" id="lieferdatum"></label>
           <label class="field"><span data-i18n="fOccasion">Anlass</span>
             <select id="anlass" data-i18n-options="occasions"></select></label>
-          <label class="field"><span data-i18n="fWishPrice">Gewünschter Kundenpreis (optional)</span>
-            <span class="input-chf"><em>CHF</em><input type="number" inputmode="decimal" id="kundenpreis" min="0" step="0.05" placeholder="0.00"></span></label>
+          <label class="field"><span data-i18n="fDeliveryDate">Lieferdatum</span>
+            <input type="date" id="lieferdatum"></label>
+          <label class="field"><span data-i18n="fOrderNo">Auftragsnummer</span>
+            <input type="text" id="auftragsnummer" placeholder="SHB-2026-001"></label>
         </div>
         <label class="field"><span data-i18n="fNotes">Bemerkungen</span>
           <textarea id="bemerkungen" rows="2" data-i18n-ph="phNotes" placeholder="Wünsche, Farben, Allergien …"></textarea></label>
+        <input type="hidden" id="bestelldatum">
       </div>
     </section>
 
@@ -119,248 +116,185 @@
       </button>
       <div class="card-body">
         <div class="grid-2">
-          <label class="field"><span data-i18n="fShape">Form</span>
-            <select id="form" data-i18n-options="shapes"></select></label>
-          <label class="field"><span data-i18n="fSize">Durchmesser / Grösse</span>
-            <select id="groesse" data-i18n-options="sizes"></select></label>
-          <label class="field" id="wrapGroesseCustom" hidden><span data-i18n="fSizeCustom">Individuelle Grösse (cm)</span>
-            <input type="number" inputmode="decimal" id="groesseCustom" min="0" step="1" placeholder="0"></label>
-          <label class="field"><span data-i18n="fHeight">Höhe (cm)</span>
-            <input type="number" inputmode="decimal" id="hoehe" min="0" step="0.5" value="10"></label>
-          <label class="field"><span data-i18n="fTiers">Anzahl Etagen</span>
-            <select id="etagen" data-i18n-options="tiers"></select></label>
           <label class="field"><span data-i18n="fPortions">Portionen (Personen)</span>
             <input type="number" inputmode="decimal" id="portionen" min="1" step="1" value="20"></label>
+          <label class="field"><span data-i18n="fWeight">Gewicht (kg)</span>
+            <input type="number" inputmode="decimal" id="gewicht" min="0" step="0.1" value="4"></label>
         </div>
-        <p class="hint" id="portionsHint"></p>
-      </div>
-    </section>
+        <p class="hint" id="weightHint"></p>
+        <div class="sum-line"><span id="basisLabel"></span><b id="sumBasis">CHF 0.00</b></div>
 
-    <!-- TORTEN-DESIGN -->
-    <section class="card" data-section="design">
-      <button class="card-head" type="button" aria-expanded="true">
-        <span class="card-num card-num-ico" aria-hidden="true">✎</span>
-        <span class="card-title" data-i18n="secDesign">Torten-Design</span>
-        <span class="card-badge" id="badgeDesign"></span>
-        <span class="chev" aria-hidden="true"></span>
-      </button>
-      <div class="card-body">
-        <p class="hint" data-i18n="designHint">Entwirf die Torte, lege Fotos und Schriftzug fest und schicke der Kundschaft eine Vorschau.</p>
-        <div class="design-preview" id="designPreview"></div>
-        <div class="row-tools">
-          <button class="btn btn-primary" id="btnDesign" type="button" data-i18n="designOpen">Design öffnen</button>
-          <button class="btn btn-outline" id="btnDesignToCalc" type="button" data-i18n="dToCalc">Dekoration in die Kalkulation übernehmen</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- 3 · ZUTATEN -->
-    <section class="card" data-section="zutaten">
-      <button class="card-head" type="button" aria-expanded="true">
-        <span class="card-num">3</span>
-        <span class="card-title" data-i18n="secIngredients">Zutaten</span>
-        <span class="card-badge" id="badgeZutaten"></span>
-        <span class="chev" aria-hidden="true"></span>
-      </button>
-      <div class="card-body">
-        <p class="hint" data-i18n="hintIngredients">Verbrauchspreis = verwendete Menge ÷ Packungsgrösse × Einkaufspreis.</p>
-        <div class="rows" id="zutatenListe"></div>
-        <div class="row-tools">
-          <button class="btn btn-add" id="btnZutat" type="button">+ <span data-i18n="btnAddIngredient">Zutat hinzufügen</span></button>
-          <label class="field field-inline">
-            <span data-i18n="fTemplate">Vorlage</span>
-            <select id="zutatVorlage"></select>
-          </label>
-        </div>
-        <div class="sum-line"><span data-i18n="sumIngredients">Gesamtkosten Zutaten</span><b id="sumZutaten">CHF 0.00</b></div>
-      </div>
-    </section>
-
-    <!-- 4 · ARBEITSZEIT -->
-    <section class="card" data-section="arbeit">
-      <button class="card-head" type="button" aria-expanded="true">
-        <span class="card-num">4</span>
-        <span class="card-title" data-i18n="secWork">Arbeitszeit</span>
-        <span class="card-badge" id="badgeArbeit"></span>
-        <span class="chev" aria-hidden="true"></span>
-      </button>
-      <div class="card-body">
-        <p class="hint" data-i18n="hintWork">Trage jede Tätigkeit einzeln ein. Passive Wartezeit (Backen, Kühlen, Ruhezeit) kannst du als nicht verrechenbar markieren.</p>
-        <div class="rows rows-work" id="arbeitListe"></div>
-        <button class="btn btn-add" id="btnArbeit" type="button">+ <span data-i18n="btnAddWork">Tätigkeit hinzufügen</span></button>
-
-        <div class="sum-grid">
-          <div><span data-i18n="sumWorkActual">Tatsächliche Arbeitszeit</span><b id="sumArbeitIst">0.00 h</b></div>
-          <div><span data-i18n="sumWorkBillable">Verrechenbare Arbeitszeit</span><b id="sumArbeitVerr">0.00 h</b></div>
-        </div>
-
-        <!-- 9 · Effizienz / Lernzeit -->
         <div class="subcard">
-          <h3 data-i18n="secEfficiency">Lernzeit / Effizienz
-            <button class="tip" type="button" data-tip="tipEfficiency" aria-label="Info">i</button>
-          </h3>
-          <p class="hint" data-i18n="hintEfficiency">Wenn du für eine Dekoration heute 8 Stunden brauchst, eine erfahrene Konditorin aber 5 Stunden, sollte der Kunde nicht die volle Lernzeit bezahlen.</p>
+          <h3 data-i18n="secCakeDesc">Angaben für Offerte und Entwurf</h3>
+          <p class="hint" data-i18n="hintCakeDesc">Diese Angaben beeinflussen den Preis nicht.</p>
           <div class="grid-2">
-            <label class="field"><span data-i18n="fActualHours">Tatsächliche Arbeitszeit (h)</span>
-              <input type="number" inputmode="decimal" id="effIst" step="0.25" min="0" readonly></label>
-            <label class="field"><span data-i18n="fCalcHours">Kalkulatorisch verrechenbare Zeit (h)</span>
-              <input type="number" inputmode="decimal" id="effKalk" step="0.25" min="0"></label>
+            <label class="field"><span data-i18n="fShape">Form</span>
+              <select id="form" data-i18n-options="shapes"></select></label>
+            <label class="field"><span data-i18n="fSize">Durchmesser / Grösse</span>
+              <select id="groesse" data-i18n-options="sizes"></select></label>
+            <label class="field" id="wrapGroesseCustom" hidden><span data-i18n="fSizeCustom">Individuelle Grösse (cm)</span>
+              <input type="number" inputmode="decimal" id="groesseCustom" min="0" step="1" placeholder="0"></label>
+            <label class="field"><span data-i18n="fHeight">Höhe (cm)</span>
+              <input type="number" inputmode="decimal" id="hoehe" min="0" step="0.5" value="10"></label>
+            <label class="field"><span data-i18n="fTiers">Anzahl Etagen</span>
+              <select id="etagen" data-i18n-options="tiers"></select></label>
           </div>
-          <label class="check"><input type="checkbox" id="effAuto" checked>
-            <span data-i18n="fEffAuto">Automatisch aus verrechenbarer Arbeitszeit übernehmen</span></label>
-          <p class="hint" id="effHinweis"></p>
+          <p class="hint" id="portionsHint"></p>
         </div>
       </div>
     </section>
 
-    <!-- 5 · DEKORATION -->
+    <!-- 3 · DEKORATION -->
     <section class="card" data-section="deko">
       <button class="card-head" type="button" aria-expanded="true">
-        <span class="card-num">5</span>
+        <span class="card-num">3</span>
         <span class="card-title" data-i18n="secDeco">Dekoration</span>
         <span class="card-badge" id="badgeDeko"></span>
         <span class="chev" aria-hidden="true"></span>
       </button>
       <div class="card-body">
-        <p class="hint" data-i18n="hintDeco">Berechne je Position nach Materialpreis, Stückpreis, Zeitaufwand – oder kombiniert (Material + Zeit).</p>
+        <p class="hint" data-i18n="hintDecoTypes">Am schnellsten geht es über die Vorlage – sie bringt die richtige Rechenart gleich mit.</p>
         <div class="rows rows-deco" id="dekoListe"></div>
-        <button class="btn btn-add" id="btnDeko" type="button">+ <span data-i18n="btnAddDeco">Dekoration hinzufügen</span></button>
-        <div class="sum-grid">
-          <div><span data-i18n="sumDecoMat">Dekorationsmaterial</span><b id="sumDekoMat">CHF 0.00</b></div>
-          <div><span data-i18n="sumDecoTime">Dekorationsarbeit</span><b id="sumDekoZeit">CHF 0.00</b></div>
-          <div><span data-i18n="sumDecoTotal">Dekoration total</span><b id="sumDeko">CHF 0.00</b></div>
+        <div class="row-tools">
+          <button class="btn btn-add" id="btnDeko" type="button">+ <span data-i18n="btnAddDeco">Dekoration hinzufügen</span></button>
+          <label class="field field-inline">
+            <span data-i18n="fDecoTemplate">Vorlage</span>
+            <select id="dekoVorlage"></select>
+          </label>
         </div>
+        <div class="sum-line"><span data-i18n="sumDecoTotal">Dekoration total</span><b id="sumDeko">CHF 0.00</b></div>
       </div>
     </section>
 
-    <!-- 6 · NEBENKOSTEN -->
-    <section class="card" data-section="neben">
+    <!-- 4 · VERPACKUNG -->
+    <section class="card card-price" data-section="verpackung">
+      <button class="card-head" type="button" aria-expanded="true">
+        <span class="card-num">4</span>
+        <span class="card-title" data-i18n="secPack">Verpackung</span>
+        <span class="card-badge" id="badgePack"></span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <p class="hint" data-i18n="hintPack">Was bei jeder Torte an Verpackung anfällt. Wird dem Kunden weiterverrechnet.</p>
+        <div class="grid-2" id="packListe"></div>
+        <div class="sum-line"><span data-i18n="sumPack">Verpackung total</span><b id="sumPack">CHF 0.00</b></div>
+      </div>
+    </section>
+
+    <!-- 5 · LIEFERUNG -->
+    <section class="card card-price" data-section="lieferung">
+      <button class="card-head" type="button" aria-expanded="true">
+        <span class="card-num">5</span>
+        <span class="card-title" data-i18n="secDelivery">Lieferung</span>
+        <span class="card-badge" id="badgeDelivery"></span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <p class="hint" data-i18n="hintDelivery">Nur ausfüllen, wenn du lieferst. Bei Abholung alles auf 0 lassen – denk an Hin- und Rückweg.</p>
+        <div class="grid-3">
+          <label class="field"><span data-i18n="fKm">Kilometer</span>
+            <input type="number" inputmode="decimal" id="km" min="0" step="0.5" value="0"></label>
+          <label class="field"><span data-i18n="fKmPrice">Kosten pro km</span>
+            <span class="input-chf"><em>CHF</em><input type="number" inputmode="decimal" id="kmPreis" min="0" step="0.05"></span></label>
+          <label class="field"><span data-i18n="fDriveTime">Fahrzeit hin und zurück (Minuten)</span>
+            <input type="number" inputmode="decimal" id="fahrzeit" min="0" step="5" value="0"></label>
+        </div>
+        <div class="sum-line"><span data-i18n="sumDelivery">Lieferung total</span><b id="sumDelivery">CHF 0.00</b></div>
+      </div>
+    </section>
+
+    <!-- 6 · KOSTENKONTROLLE -->
+    <section class="card" data-section="kosten">
       <button class="card-head" type="button" aria-expanded="true">
         <span class="card-num">6</span>
-        <span class="card-title" data-i18n="secOverhead">Nebenkosten</span>
-        <span class="card-badge" id="badgeNeben"></span>
+        <span class="card-title" data-i18n="secCosts">Was es dich kostet</span>
+        <span class="card-badge" id="badgeKosten"></span>
         <span class="chev" aria-hidden="true"></span>
       </button>
       <div class="card-body">
-        <div class="grid-2" id="nebenListe"></div>
+        <p class="hint" data-i18n="hintSimple">Zwei Zahlen genügen. Wenn du es einmal genau wissen willst, schalte unten auf die ausführliche Erfassung um.</p>
 
-        <div class="subcard">
-          <h3 data-i18n="secTravel">Fahrtkosten</h3>
-          <div class="grid-3">
-            <label class="field"><span data-i18n="fKm">Kilometer</span>
-              <input type="number" inputmode="decimal" id="km" min="0" step="0.5" value="0"></label>
-            <label class="field"><span data-i18n="fKmPrice">Kosten pro km</span>
-              <span class="input-chf"><em>CHF</em><input type="number" inputmode="decimal" id="kmPreis" min="0" step="0.05"></span></label>
-            <label class="field"><span data-i18n="fTravelCost">Fahrtkosten</span>
-              <input type="text" id="fahrtkosten" readonly></label>
-          </div>
-          <p class="hint" data-i18n="hintTravelTime">Die Fahrzeit erfasst du als Tätigkeit «Lieferung» im Bereich Arbeitszeit.</p>
-        </div>
-
-        <div class="subcard">
-          <h3 data-i18n="fOverheadPct">Betriebskosten-Zuschlag
-            <button class="tip" type="button" data-tip="tipOverhead" aria-label="Info">i</button>
-          </h3>
+        <!-- Einfache Erfassung: zwei Zahlen -->
+        <div id="simpleBox">
           <div class="grid-2">
-            <label class="field"><span data-i18n="fOverheadPctShort">Betriebskosten (%)</span>
-              <span class="input-chf"><input type="number" inputmode="decimal" id="betriebProzent" min="0" max="100" step="0.5"><em>%</em></span></label>
-            <label class="field"><span data-i18n="fOverheadAmount">Betrag</span>
-              <input type="text" id="betriebBetrag" readonly></label>
+            <label class="field"><span data-i18n="fSimpleMat">Material und Zutaten</span>
+              <span class="input-chf"><em>CHF</em>
+                <input type="number" inputmode="decimal" id="simpleMat" min="0" step="1" placeholder="60"></span></label>
+            <label class="field"><span data-i18n="fSimpleHours">Arbeitszeit (Stunden)</span>
+              <input type="number" inputmode="decimal" id="simpleHours" min="0" step="0.5" placeholder="5"></label>
           </div>
         </div>
 
-        <div class="sum-line"><span data-i18n="sumOverhead">Nebenkosten total</span><b id="sumNeben">CHF 0.00</b></div>
+        <!-- Genaue Erfassung: Listen -->
+        <div id="detailBox" hidden>
+          <div class="subcard">
+            <h3 data-i18n="secIngredients">Zutaten</h3>
+            <div class="rows" id="zutatenListe"></div>
+            <div class="row-tools">
+              <button class="btn btn-add" id="btnZutat" type="button">+ <span data-i18n="btnAddIngredient">Zutat hinzufügen</span></button>
+              <label class="field field-inline">
+                <span data-i18n="fTemplate">Vorlage</span>
+                <select id="zutatVorlage"></select>
+              </label>
+            </div>
+            <div class="sum-line"><span data-i18n="sumIngredients">Zutaten total</span><b id="sumZutaten">CHF 0.00</b></div>
+          </div>
+
+          <div class="subcard">
+            <h3 data-i18n="secWork">Arbeitszeit</h3>
+            <p class="hint" data-i18n="hintWork">Häkchen weg, wenn du in dieser Zeit nicht an der Torte stehst.</p>
+            <div class="rows rows-work" id="arbeitListe"></div>
+            <button class="btn btn-add" id="btnArbeit" type="button">+ <span data-i18n="btnAddWork">Tätigkeit hinzufügen</span></button>
+            <div class="sum-grid">
+              <div><span data-i18n="sumWorkActual">Gesamtzeit</span><b id="sumArbeitIst">0.00 h</b></div>
+              <div><span data-i18n="sumWorkBillable">Aktive Arbeit</span><b id="sumArbeitVerr">0.00 h</b></div>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn btn-quiet" id="btnToggleDetail" type="button" data-i18n="toDetail">Genauer erfassen</button>
+
+        <div class="subcard">
+          <h3 data-i18n="secOther">Weitere Kosten</h3>
+          <div class="grid-2" id="nebenListe"></div>
+          <label class="field"><span data-i18n="fOverheadPctShort">Betriebskosten (%)</span>
+            <span class="input-chf"><input type="number" inputmode="decimal" id="betriebProzent" min="0" max="100" step="0.5"><em>%</em></span></label>
+          <p class="hint"><button class="tip" type="button" data-tip="tipOverhead" aria-label="Info">i</button>
+            <span data-i18n="tipOverhead">Anteil an deinen laufenden Kosten.</span></p>
+          <input type="hidden" id="fahrtkosten">
+          <input type="hidden" id="betriebBetrag">
+          <div class="sum-line"><span data-i18n="sumOverhead">Weitere Kosten total</span><b id="sumNeben">CHF 0.00</b></div>
+        </div>
       </div>
     </section>
 
-    <!-- 7 · GEWINN & MARGE -->
-    <section class="card" data-section="gewinn">
-      <button class="card-head" type="button" aria-expanded="true">
-        <span class="card-num">7</span>
-        <span class="card-title" data-i18n="secProfit">Gewinn &amp; Marge</span>
-        <span class="card-badge" id="badgeGewinn"></span>
-        <span class="chev" aria-hidden="true"></span>
-      </button>
-      <div class="card-body">
-        <div class="seg" role="radiogroup" id="gewinnModus">
-          <button type="button" class="seg-btn is-active" data-mode="aufschlag" data-i18n="modeMarkup">Gewinnaufschlag</button>
-          <button type="button" class="seg-btn" data-mode="betrag" data-i18n="modeAmount">Gewinnbetrag</button>
-          <button type="button" class="seg-btn" data-mode="marge" data-i18n="modeMargin">Zielmarge</button>
-        </div>
-        <p class="hint"><button class="tip" type="button" data-tip="tipMarkupMargin" aria-label="Info">i</button>
-          <span data-i18n="hintMarkupMargin">Aufschlag rechnet auf die Kosten, Marge rechnet vom Verkaufspreis. 20 % Aufschlag ≠ 20 % Marge.</span></p>
-
-        <div class="grid-2">
-          <label class="field" id="wrapAufschlag"><span data-i18n="fMarkupPct">Gewinnaufschlag (%)</span>
-            <span class="input-chf"><input type="number" inputmode="decimal" id="aufschlagProzent" min="0" step="1"><em>%</em></span></label>
-          <label class="field" id="wrapBetrag" hidden><span data-i18n="fProfitAmount">Gewünschter Gewinn</span>
-            <span class="input-chf"><em>CHF</em><input type="number" inputmode="decimal" id="gewinnBetrag" min="0" step="1" value="80"></span></label>
-          <label class="field" id="wrapMarge" hidden><span data-i18n="fTargetMargin">Zielmarge</span>
-            <select id="margeSelect"></select></label>
-          <label class="field" id="wrapMargeCustom" hidden><span data-i18n="fMarginCustom">Individuelle Marge (%)</span>
-            <span class="input-chf"><input type="number" inputmode="decimal" id="margeProzent" min="0" max="95" step="0.5"><em>%</em></span></label>
-          <label class="field"><span data-i18n="fRounding">Preis runden</span>
-            <select id="rundung" data-i18n-options="roundings"></select></label>
-        </div>
-      </div>
-    </section>
-
-    <!-- 8 · ERGEBNIS -->
+    <!-- 7 · ERGEBNIS -->
     <section class="card card-result" data-section="ergebnis" id="resultCard">
       <button class="card-head" type="button" aria-expanded="true">
-        <span class="card-num">8</span>
+        <span class="card-num">7</span>
         <span class="card-title" data-i18n="secResult">Ergebnis</span>
         <span class="chev" aria-hidden="true"></span>
       </button>
       <div class="card-body">
 
-        <!-- Warnsystem -->
-        <div class="alert" id="alertBox" role="status"></div>
-
-        <!-- Kennzahlen -->
-        <div class="kpi-grid">
-          <div class="kpi"><span data-i18n="kMaterial">Materialkosten</span><b id="kMaterial">CHF 0.00</b></div>
-          <div class="kpi"><span data-i18n="kLabour">Arbeitskosten</span><b id="kArbeit">CHF 0.00</b></div>
-          <div class="kpi"><span data-i18n="kDeco">Dekorationskosten</span><b id="kDeko">CHF 0.00</b></div>
-          <div class="kpi"><span data-i18n="kOverhead">Nebenkosten</span><b id="kNeben">CHF 0.00</b></div>
-          <div class="kpi kpi-strong"><span data-i18n="kCost">Selbstkosten</span><b id="kSelbst">CHF 0.00</b></div>
-          <div class="kpi kpi-strong"><span data-i18n="kProfit">Gewinn</span><b id="kGewinn">CHF 0.00</b></div>
-        </div>
-
         <div class="price-hero">
-          <span class="price-label" data-i18n="kPrice">Empfohlener Verkaufspreis</span>
+          <span class="price-label" data-i18n="kPrice">Verkaufspreis</span>
           <span class="price-value" id="kPreis">CHF 0.00</span>
           <span class="price-sub"><span data-i18n="kPerPortion">Preis pro Portion</span>: <b id="kProPortion">CHF 0.00</b></span>
         </div>
 
-        <!-- Drei Preisstufen -->
-        <div class="steps">
-          <div class="step step-min">
-            <span data-i18n="kMinAbs">Absoluter Mindestpreis</span>
-            <b id="kMinAbs">CHF 0.00</b>
-            <small data-i18n="kMinAbsSub">Nur Sachkosten gedeckt – deine Arbeit ist gratis.</small>
-          </div>
-          <div class="step step-sus">
-            <span data-i18n="kMinSus">Nachhaltiger Mindestpreis</span>
-            <b id="kMinSus">CHF 0.00</b>
-            <small data-i18n="kMinSusSub">Kosten + faire Bezahlung deiner Arbeit, ohne Gewinn.</small>
-          </div>
-          <div class="step step-rec">
-            <span data-i18n="kRec">Empfohlener Verkaufspreis</span>
-            <b id="kRec">CHF 0.00</b>
-            <small data-i18n="kRecSub">Kosten + Arbeit + Gewinn.</small>
-          </div>
-        </div>
+        <table class="table-internal"><tbody id="kiloTable"></tbody></table>
 
-        <!-- Effektiver Stundenlohn -->
-        <div class="wage-box" id="wageBox">
-          <span data-i18n="kWage">Effektiver Stundenlohn bei diesem Preis</span>
-          <b id="kStundenlohn">CHF 0.00 / h</b>
-          <small id="kStundenlohnSub"></small>
-        </div>
+        <div class="alert" id="alertBox" role="status"></div>
 
-        <!-- Kundenpreis-Vergleich -->
-        <div class="subcard" id="compareBox">
+        <div class="kpi-grid">
+          <div class="kpi"><span data-i18n="kCost">Deine Kosten</span><b id="kSelbst">CHF 0.00</b></div>
+          <div class="kpi kpi-strong"><span data-i18n="kProfit">Es bleibt</span><b id="kGewinn">CHF 0.00</b></div>
+          <div class="kpi"><span data-i18n="kWageShort">Stundenlohn</span><b id="kStundenlohn">CHF 0.00</b></div>
+        </div>
+        <p class="hint" id="kStundenlohnSub"></p>
+
+        <div class="subcard">
           <h3 data-i18n="secCompare">Kundenpreis vergleichen</h3>
           <div class="grid-2">
             <label class="field"><span data-i18n="fPlannedPrice">Geplanter Kundenpreis</span>
@@ -369,42 +303,18 @@
               <input type="text" id="differenz" readonly></label>
           </div>
           <p class="hint" id="compareHint"></p>
+          <input type="hidden" id="kundenpreis">
         </div>
-      </div>
-    </section>
 
-    <!-- BUCHHALTUNG -->
-    <section class="card" data-section="buch">
-      <button class="card-head" type="button" aria-expanded="true">
-        <span class="card-num card-num-ico" aria-hidden="true">▦</span>
-        <span class="card-title" data-i18n="secBuch">Buchhaltung</span>
-        <span class="card-badge" id="badgeBuch"></span>
-        <span class="chev" aria-hidden="true"></span>
-      </button>
-      <div class="card-body">
-        <p class="hint" data-i18n="buchHint">Rechnungen stellen, Ausgaben erfassen und jederzeit sehen, was unter dem Strich bleibt.</p>
-        <div id="buchSummary"></div>
-        <div class="row-tools">
-          <button class="btn btn-primary" id="btnBuchInvoice" type="button" data-i18n="bNewInvoice">Rechnung aus dieser Kalkulation</button>
-          <button class="btn btn-outline" id="btnBuch" type="button" data-i18n="buchOpen">Buchhaltung öffnen</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- 23 · INTERNE ANSICHT (nur Druck/Detail) -->
-    <section class="card" data-section="intern">
-      <button class="card-head" type="button" aria-expanded="false">
-        <span class="card-num">9</span>
-        <span class="card-title" data-i18n="secInternal">Interne Ansicht</span>
-        <span class="chev" aria-hidden="true"></span>
-      </button>
-      <div class="card-body">
-        <table class="table-internal"><tbody id="internTable"></tbody></table>
+        <details class="subcard det">
+          <summary data-i18n="secInternal">Alle Zahlen im Detail</summary>
+          <table class="table-internal"><tbody id="internTable"></tbody></table>
+        </details>
       </div>
     </section>
 
     <footer class="app-foot no-print">
-      <span data-i18n="footNote">Alle Berechnungen erfolgen lokal auf deinem Gerät. Daten werden im Browser gespeichert.</span>
+      <span data-i18n="footNote">Alle Berechnungen erfolgen lokal auf deinem Gerät.</span>
     </footer>
   </div>
 
@@ -413,17 +323,19 @@
     <div class="summary">
       <h2 data-i18n="sumTitle">Aktuelle Kalkulation</h2>
       <dl>
-        <div><dt data-i18n="kMaterial">Material</dt><dd id="sMaterial">CHF 0.00</dd></div>
-        <div><dt data-i18n="kLabour">Arbeit</dt><dd id="sArbeit">CHF 0.00</dd></div>
-        <div><dt data-i18n="kDeco">Dekoration</dt><dd id="sDeko">CHF 0.00</dd></div>
-        <div><dt data-i18n="kOverhead">Nebenkosten</dt><dd id="sNeben">CHF 0.00</dd></div>
-        <div class="dl-strong"><dt data-i18n="kCost">Selbstkosten</dt><dd id="sSelbst">CHF 0.00</dd></div>
-        <div><dt data-i18n="kProfit">Gewinn</dt><dd id="sGewinn">CHF 0.00</dd></div>
+        <div><dt data-i18n="kKiloBaseShort">Tortenbasis</dt><dd id="sBasis">CHF 0.00</dd></div>
+        <div><dt data-i18n="kKiloDeco">Dekoration</dt><dd id="sDeko">CHF 0.00</dd></div>
+        <div><dt data-i18n="kKiloPack">Verpackung</dt><dd id="sPack">CHF 0.00</dd></div>
+        <div><dt data-i18n="kKiloTravel">Lieferung</dt><dd id="sTravel">CHF 0.00</dd></div>
       </dl>
       <div class="summary-price">
-        <span data-i18n="kPriceShort">Empfohlener Preis</span>
+        <span data-i18n="kPriceShort">Verkaufspreis</span>
         <b id="sPreis">CHF 0.00</b>
       </div>
+      <dl>
+        <div><dt data-i18n="kCost">Deine Kosten</dt><dd id="sSelbst">CHF 0.00</dd></div>
+        <div class="dl-strong"><dt data-i18n="kProfit">Es bleibt</dt><dd id="sGewinn">CHF 0.00</dd></div>
+      </dl>
       <div class="summary-meta">
         <div><span data-i18n="kWageShort">Stundenlohn</span><b id="sLohn">CHF 0.00</b></div>
         <div><span data-i18n="kPerPortionShort">Pro Portion</span><b id="sPortion">CHF 0.00</b></div>
@@ -432,28 +344,29 @@
       <div class="summary-flag" id="sFlag"></div>
     </div>
   </aside>
+
 </main>
 
 <!-- Mobile Bottom-Bar -->
 <div class="bottom-bar no-print" id="bottomBar">
   <button class="bb-toggle" id="bbToggle" type="button" aria-expanded="false">
     <span class="bb-main">
-      <span class="bb-lbl" data-i18n="kPriceShort">Empfohlener Preis</span>
+      <span class="bb-lbl" data-i18n="kPriceShort">Verkaufspreis</span>
       <b id="bPreis">CHF 0.00</b>
     </span>
     <span class="bb-side">
-      <span class="bb-lbl" data-i18n="kCost">Selbstkosten</span>
-      <b id="bSelbst">CHF 0.00</b>
+      <span class="bb-lbl" data-i18n="kProfit">Es bleibt</span>
+      <b id="bGewinn">CHF 0.00</b>
     </span>
     <span class="bb-flag" id="bFlag"></span>
     <span class="bb-chev" aria-hidden="true"></span>
   </button>
   <div class="bb-detail" id="bbDetail">
-    <div><span data-i18n="kMaterial">Material</span><b id="bMaterial">CHF 0.00</b></div>
-    <div><span data-i18n="kLabour">Arbeit</span><b id="bArbeit">CHF 0.00</b></div>
-    <div><span data-i18n="kDeco">Dekoration</span><b id="bDeko">CHF 0.00</b></div>
-    <div><span data-i18n="kOverhead">Nebenkosten</span><b id="bNeben">CHF 0.00</b></div>
-    <div><span data-i18n="kProfit">Gewinn</span><b id="bGewinn">CHF 0.00</b></div>
+    <div><span data-i18n="kKiloBaseShort">Tortenbasis</span><b id="bBasis">CHF 0.00</b></div>
+    <div><span data-i18n="kKiloDeco">Dekoration</span><b id="bDeko">CHF 0.00</b></div>
+    <div><span data-i18n="kKiloPack">Verpackung</span><b id="bPack">CHF 0.00</b></div>
+    <div><span data-i18n="kKiloTravel">Lieferung</span><b id="bTravel">CHF 0.00</b></div>
+    <div><span data-i18n="kCost">Deine Kosten</span><b id="bSelbst">CHF 0.00</b></div>
     <div><span data-i18n="kWageShort">Stundenlohn</span><b id="bLohn">CHF 0.00</b></div>
   </div>
 </div>
@@ -475,14 +388,10 @@
           <span class="input-chf"><em>CHF</em><input type="number" inputmode="decimal" id="setKmPreis" min="0" step="0.05"></span></label>
         <label class="field"><span data-i18n="setOverhead">Betriebskosten (%)</span>
           <span class="input-chf"><input type="number" inputmode="decimal" id="setBetrieb" min="0" max="100" step="0.5"><em>%</em></span></label>
-        <label class="field"><span data-i18n="setMargin">Gewünschte Marge (%)</span>
-          <span class="input-chf"><input type="number" inputmode="decimal" id="setMarge" min="0" max="95" step="0.5"><em>%</em></span></label>
-        <label class="field"><span data-i18n="setMarkup">Standard-Aufschlag (%)</span>
-          <span class="input-chf"><input type="number" inputmode="decimal" id="setAufschlag" min="0" step="1"><em>%</em></span></label>
-        <label class="field"><span data-i18n="setCurrency">Standardwährung</span>
-          <select id="setWaehrung">
-            <option value="CHF">CHF</option><option value="EUR">EUR</option><option value="UAH">UAH</option>
-          </select></label>
+        <label class="field"><span data-i18n="setGram">Gramm pro Person</span>
+          <span class="input-chf"><input type="number" inputmode="decimal" id="setGramm" min="50" max="500" step="10"><em>g</em></span></label>
+        <label class="field"><span data-i18n="setKilo">Kilopreis (CHF/kg)</span>
+          <span class="input-chf"><em>CHF</em><input type="number" inputmode="decimal" id="setKiloPreis" min="0" step="1"></span></label>
         <label class="field"><span data-i18n="setRounding">Rundungsregel</span>
           <select id="setRundung" data-i18n-options="roundings"></select></label>
         <label class="field"><span data-i18n="setLang">Sprache</span>
@@ -521,8 +430,10 @@
           <textarea id="coAllergen" rows="3"></textarea></label>
       </div>
     </div>
-    <footer class="modal-foot">
+    <footer class="modal-foot modal-foot-wrap">
       <button class="btn btn-quiet" type="button" data-close data-i18n="btnClose">Schliessen</button>
+      <button class="btn btn-outline" id="btnDemo" type="button" data-i18n="actDemo">Beispiel laden</button>
+      <button class="btn btn-outline" id="btnPrintCalc" type="button" data-i18n="actPrintCalc">Kalkulation drucken</button>
       <button class="btn btn-primary" id="btnSaveSettings" type="button" data-i18n="btnSaveSettings">Einstellungen speichern</button>
     </footer>
   </div>

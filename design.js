@@ -52,7 +52,7 @@ const DESIGN_TX = {
     dLayerDown:'Nach hinten', dDuplicate:'Duplizieren', dDelete:'Entfernen',
     dNotes:'Notizen zur Umsetzung',
     dExportPng:'Bild speichern', dExportPdf:'Vorlage als PDF', dSend:'An Kundschaft senden',
-    dToCalc:'Dekoration in die Kalkulation übernehmen',
+    dToCalc:'Dekoration in die Kalkulation übernehmen', dToCalcShort:'Dekoration übernehmen',
     dToCalcDone:'{n} Positionen in den Dekorationsbereich übernommen.',
     dToCalcNone:'Keine Dekorationselemente im Entwurf.',
     /* Fotobearbeitung */
@@ -105,14 +105,14 @@ const DESIGN_TX = {
     dLayerDown:'Назад', dDuplicate:'Дублювати', dDelete:'Видалити',
     dNotes:'Нотатки щодо виконання',
     dExportPng:'Зберегти зображення', dExportPdf:'Шаблон у PDF', dSend:'Надіслати клієнту',
-    dToCalc:'Перенести декор у розрахунок',
+    dToCalc:'Перенести декор у розрахунок', dToCalcShort:'Перенести декор',
     dToCalcDone:'{n} позицій перенесено до розділу декору.',
     dToCalcNone:'В ескізі немає елементів декору.',
     pTitle:'Редагувати фото', pCrop:'Обрізати', pRotate:'Повернути',
     pBright:'Яскравість', pContrast:'Контраст', pSat:'Насиченість',
     pCut:'Вирізати фон', pCutAuto:'Прибрати фон автоматично',
     pCutPick:'Натисни на фон', pCutPickOn:'Натисни на фон у зображенні',
-    pTolerance:'Допуск', pFeather:'Мʼякий край', pEraser:'Стерти', pRestore:'Повернути',
+    pTolerance:'Допуск', pFeather:'М’який край', pEraser:'Стерти', pRestore:'Повернути',
     pBrush:'Розмір пензля', pReset:'Скинути', pApply:'Застосувати',
     pRound:'Обрізати колом', pCutHint:'Найкраще виходить із фото на спокійному однотонному тлі.',
     tplTitle:'Шаблон торта', tplCustomer:'Ескіз для', tplSpecs:'Будова',
@@ -122,7 +122,7 @@ const DESIGN_TX = {
     tplTier:'Ярус {n}', tplShape:'Форма', tplPortions:'Порції', tplDelivery:'Дата доставки',
     shareTitle:'Ескіз торта Sweet Home Bakery',
     shareText:'Доброго дня, {name}! Ось як я уявляю ваш торт. З найкращими побажаннями',
-    errStorage:'Памʼять переповнена. Прибери одне фото або обери менші зображення.',
+    errStorage:'Пам’ять переповнена. Прибери одне фото або обери менші зображення.',
     errPhoto:'Не вдалося завантажити зображення.'
   }
 };

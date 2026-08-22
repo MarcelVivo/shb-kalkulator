@@ -51,6 +51,7 @@ function buildEditor(){
 
       <footer class="modal-foot modal-foot-wrap">
         <button class="btn btn-quiet"   type="button" data-close data-i18n="btnClose">Schliessen</button>
+        <button class="btn btn-outline" type="button" id="btnDesignToCalc" data-i18n="dToCalcShort">Dekoration übernehmen</button>
         <button class="btn btn-outline" type="button" id="btnDesignPng" data-i18n="dExportPng">Bild speichern</button>
         <button class="btn btn-outline" type="button" id="btnDesignPdf" data-i18n="dExportPdf">Vorlage als PDF</button>
         <button class="btn btn-primary" type="button" id="btnDesignShare" data-i18n="dSend">An Kundschaft senden</button>
@@ -90,6 +91,7 @@ function buildEditor(){
   $$('#modalDesign, #modalPhoto').forEach(m=>{
     m.addEventListener('click', e=>{ if(e.target.closest('[data-close]')) closeModal(m); });
   });
+  $('#btnDesignToCalc').addEventListener('click', ()=>{ design = state.design || D.blankDesign(); toCalculation(); });
   $('#btnDesignPng').addEventListener('click', exportPng);
   $('#btnDesignPdf').addEventListener('click', ()=>exportPdf('intern'));
   $('#btnDesignShare').addEventListener('click', ()=>exportPdf('kunde'));
@@ -845,8 +847,6 @@ document.addEventListener('DOMContentLoaded', ()=>{
   if(btn) btn.addEventListener('click', open);
   const nav = $('#btnDesignNav');
   if(nav) nav.addEventListener('click', open);
-  const btnCalc = $('#btnDesignToCalc');
-  if(btnCalc) btnCalc.addEventListener('click', ()=>{ design = state.design || D.blankDesign(); toCalculation(); });
   setTimeout(updateCard, 60);
 });
 
