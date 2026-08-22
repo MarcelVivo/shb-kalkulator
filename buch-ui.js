@@ -746,6 +746,8 @@ async function open(){
 document.addEventListener('DOMContentLoaded', async ()=>{
   const btn = $('#btnBuch');
   if(btn) btn.addEventListener('click', open);
+  const nav = $('#btnBuchNav');
+  if(nav) nav.addEventListener('click', open);
   const btnInv = $('#btnBuchInvoice');
   if(btnInv) btnInv.addEventListener('click', async ()=>{ await open(); createInvoice(); });
   books = (await Store.get('books')) || B.blankBooks();

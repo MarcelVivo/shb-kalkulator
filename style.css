@@ -119,11 +119,11 @@ input,select,textarea{ font:inherit; color:inherit; }
 }
 .brand-sub{ font-size:10px; letter-spacing:.13em; text-transform:uppercase; color:var(--ink-4); }
 
-.header-tools{ display:flex; align-items:center; gap:4px; }
+.header-tools{ display:flex; align-items:center; gap:2px; }
 .btn-ghost{
   border:1px solid transparent; background:none; border-radius:999px;
-  min-width:44px; min-height:44px;                 /* Apple-Touch-Ziel */
-  padding:0 10px; color:var(--ink-2);
+  min-width:42px; min-height:44px;                 /* Apple-Touch-Ziel */
+  padding:0 7px; color:var(--ink-2);
   display:inline-flex; align-items:center; justify-content:center; gap:7px;
   font-size:13px; transition:background .16s, color .16s;
 }
@@ -818,6 +818,17 @@ option{ background:var(--surface-2); color:var(--ink); }
 /* ==========================================================================
    16. Responsive
    ========================================================================== */
+
+/* Vier Werkzeugknöpfe im Kopf brauchen Platz – auf schmalen Geräten
+   weicht zuerst der Untertitel, dann der Markenname. */
+@media (max-width:520px){
+  .brand-sub{ display:none; }
+  .brand-name{ font-size:17px; }
+}
+@media (max-width:400px){
+  .brand-text{ display:none; }
+  .header-tools .ico{ font-size:16px; }
+}
 
 /* iPhone SE / kleine Geräte */
 @media (max-width:380px){

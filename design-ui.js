@@ -843,6 +843,8 @@ function seedFromCalcSafe(){ design = state.design; try{ seedFromCalc(); }catch(
 document.addEventListener('DOMContentLoaded', ()=>{
   const btn = $('#btnDesign');
   if(btn) btn.addEventListener('click', open);
+  const nav = $('#btnDesignNav');
+  if(nav) nav.addEventListener('click', open);
   const btnCalc = $('#btnDesignToCalc');
   if(btnCalc) btnCalc.addEventListener('click', ()=>{ design = state.design || D.blankDesign(); toCalculation(); });
   setTimeout(updateCard, 60);
