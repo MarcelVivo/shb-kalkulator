@@ -31,7 +31,11 @@ const TX = {
     bNoInvoices:'Noch keine Rechnungen.', bNoEntries:'Noch keine Belege.',
     bEntryKind:'Art', bIncome:'Einnahme', bExpenseOne:'Ausgabe',
     bDate:'Datum', bAmount:'Betrag', bCategory:'Kategorie', bParty:'Lieferant / Kunde',
-    bPayment:'Zahlungsart', bReceipt:'Beleg', bReceiptAdd:'Belegfoto', bNote:'Notiz',
+    bPayment:'Zahlungsart', bReceipt:'Beleg', bReceiptAdd:'Beleg anhängen', bNote:'Notiz',
+    bReceiptHint:'Foto oder PDF – zum Beispiel die Quittung vom Einkauf.',
+    bReceiptRemove:'Beleg entfernen', bReceiptPdf:'PDF-Beleg',
+    errReceipt:'Diese Datei lässt sich nicht anhängen. Möglich sind Fotos und PDF.',
+    errReceiptBig:'Der Beleg ist zu gross ({mb} MB). Bitte ein kleineres Foto oder PDF wählen.',
     bLinkOrder:'Zu diesem Auftrag', bSave:'Speichern', bDelete:'Löschen',
     kat:{
       zutaten:'Zutaten', verpackung:'Verpackung', werkzeug:'Werkzeug', geraete:'Geräte',
@@ -86,7 +90,11 @@ const TX = {
     bNoInvoices:'Рахунків ще немає.', bNoEntries:'Документів ще немає.',
     bEntryKind:'Тип', bIncome:'Надходження', bExpenseOne:'Витрата',
     bDate:'Дата', bAmount:'Сума', bCategory:'Категорія', bParty:'Постачальник / клієнт',
-    bPayment:'Спосіб оплати', bReceipt:'Документ', bReceiptAdd:'Фото чека', bNote:'Нотатка',
+    bPayment:'Спосіб оплати', bReceipt:'Документ', bReceiptAdd:'Додати документ', bNote:'Нотатка',
+    bReceiptHint:'Фото або PDF — наприклад чек із закупівлі.',
+    bReceiptRemove:'Видалити документ', bReceiptPdf:'PDF-документ',
+    errReceipt:'Цей файл не вдається додати. Підходять фото та PDF.',
+    errReceiptBig:'Документ завеликий ({mb} МБ). Обери менше фото або PDF.',
     bLinkOrder:'До цього замовлення', bSave:'Зберегти', bDelete:'Видалити',
     kat:{
       zutaten:'Інгредієнти', verpackung:'Пакування', werkzeug:'Інструменти', geraete:'Обладнання',
@@ -163,7 +171,7 @@ function buildUi(){
       </footer>
     </div>
   </div>
-  <input type="file" id="receiptInput" accept="image/*" hidden>`;
+  <input type="file" id="receiptInput" accept="image/*,application/pdf,.pdf,.heic,.heif" hidden>`;
 
   const wrap = document.createElement('div');
   wrap.innerHTML = html;
@@ -338,7 +346,7 @@ function viewEntries(){
           <div class="b-item-title">${escapeHtml(t('kat.'+e.kategorie)||e.kategorie)}
             ${e.gegenpartei?' · '+escapeHtml(e.gegenpartei):''}</div>
           <div class="b-item-meta">${escapeHtml(dat(e.datum))} · ${escapeHtml(t('zahl.'+e.zahlungsart)||e.zahlungsart)}
-            ${e.beleg?' · 📎':''}${e.notiz?' · '+escapeHtml(e.notiz):''}</div>
+            ${e.beleg?' · '+(e.belegTyp==='pdf'?'PDF':'📎'):''}${e.notiz?' · '+escapeHtml(e.notiz):''}</div>
         </div>
         <div class="b-item-sum ${e.art==='einnahme'?'is-in':'is-out'}">
           ${e.art==='einnahme'?'+':'−'} ${escapeHtml(chf(e.betrag))}</div>
@@ -375,9 +383,19 @@ function entryForm(){
         <input type="text" id="eNote" value="${escapeHtml(e.notiz)}"></label>
     </div>
     <div class="b-receipt">
-      ${e.beleg ? `<img src="${e.beleg}" alt="">` : ''}
-      <button type="button" class="btn btn-outline" id="eReceipt">${escapeHtml(t('bReceiptAdd'))}</button>
+      ${e.beleg
+        ? (e.belegTyp === 'pdf'
+            ? `<a class="b-pdf" href="${e.beleg}" target="_blank" rel="noopener">
+                 <span class="b-pdf-ico">PDF</span>
+                 <span>${escapeHtml(e.belegName || t('bReceiptPdf'))}</span></a>`
+            : `<img src="${e.beleg}" alt="">`)
+        : ''}
+      <div class="b-receipt-acts">
+        <button type="button" class="btn btn-outline" id="eReceipt">${escapeHtml(t('bReceiptAdd'))}</button>
+        ${e.beleg ? `<button type="button" class="btn btn-quiet" id="eReceiptDel">${escapeHtml(t('bReceiptRemove'))}</button>` : ''}
+      </div>
     </div>
+    <p class="hint">${escapeHtml(t('bReceiptHint'))}</p>
     <div class="d-acts">
       <button type="button" class="btn btn-quiet" id="eCancel">${escapeHtml(t('btnClose'))}</button>
       <button type="button" class="btn btn-primary" id="eSave">${escapeHtml(t('bSave'))}</button>
@@ -481,6 +499,10 @@ function bind(){
   }));
   on('#eCancel','click', ()=>{ editEntry = null; render(); });
   on('#eReceipt','click', ()=>$('#receiptInput').click());
+  on('#eReceiptDel','click', ()=>{
+    editEntry.beleg = null; editEntry.belegTyp = ''; editEntry.belegName = '';
+    render();
+  });
   on('#eSave','click', ()=>{
     const e = editEntry;
     e.datum = p.querySelector('#eDate').value || B.today();
@@ -590,11 +612,42 @@ async function onReceipt(ev){
   const file = ev.target.files && ev.target.files[0];
   ev.target.value = '';
   if(!file || !editEntry) return;
+
+  const MAX = 3 * 1024 * 1024;                 // 3 MB Rohdatei
+  if(file.size > MAX){
+    toast(tf('errReceiptBig',{mb:(file.size/1048576).toFixed(1)}));
+    return;
+  }
+
+  const istPdf = file.type === 'application/pdf' || /\.pdf$/i.test(file.name);
   try{
-    const cv = await SHB_PHOTO.loadFile(file);
-    editEntry.beleg = await SHB_PHOTO.thumb(cv, 900);
+    if(istPdf){
+      /* PDF unverändert ablegen – es soll sich später öffnen lassen */
+      editEntry.beleg = await datenUrl(file);
+      editEntry.belegTyp = 'pdf';
+      editEntry.belegName = file.name;
+    }else{
+      /* Foto verkleinern, damit der Speicher nicht überläuft */
+      const cv = await SHB_PHOTO.loadFile(file);
+      editEntry.beleg = await SHB_PHOTO.thumb(cv, 900);
+      editEntry.belegTyp = 'bild';
+      editEntry.belegName = file.name;
+    }
     render();
-  }catch(e){ console.error(e); toast(t('errPhoto')); }
+  }catch(e){
+    console.error('Beleg:', e);
+    toast(t('errReceipt'));
+  }
+}
+
+/** Datei als Data-URL einlesen. */
+function datenUrl(file){
+  return new Promise((res, rej)=>{
+    const fr = new FileReader();
+    fr.onload  = ()=>res(fr.result);
+    fr.onerror = ()=>rej(new Error('nicht lesbar'));
+    fr.readAsDataURL(file);
+  });
 }
 
 /* ==========================================================================

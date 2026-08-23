@@ -208,7 +208,7 @@ function blankEntry(art){
     id: nid('e'), art: art||'ausgabe', datum: today(), betrag: 0,
     kategorie: art==='einnahme' ? 'torten' : 'zutaten',
     gegenpartei:'', zahlungsart:'bar', projectId:'', invoiceId:'',
-    beleg:null, notiz:''
+    beleg:null, belegTyp:'', belegName:'', notiz:''
   };
 }
 

@@ -1056,3 +1056,18 @@ option{ background:var(--surface-2); color:var(--ink); }
 /* Rückgängig bleibt immer sichtbar – ausgegraut, wenn nichts ansteht */
 #btnUndo{ border-color:var(--gold-deep); color:var(--gold-2); }
 #btnUndo:disabled{ opacity:.35; border-color:var(--line); color:var(--ink-4); pointer-events:none; }
+
+/* Beleg als PDF */
+.b-receipt-acts{ display:flex; gap:8px; flex-wrap:wrap; }
+.b-pdf{
+  display:flex; align-items:center; gap:10px; text-decoration:none;
+  border:1px solid var(--line); border-radius:var(--r-md);
+  padding:12px 14px; background:var(--surface-3); color:var(--ink-2);
+  font-size:13px; min-height:56px; max-width:100%;
+}
+.b-pdf span:last-child{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.b-pdf-ico{
+  flex:none; font-size:10px; letter-spacing:.06em; font-weight:600;
+  background:var(--bad-bg); color:var(--bad); border:1px solid var(--bad-line);
+  border-radius:6px; padding:4px 7px;
+}
