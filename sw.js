@@ -8,7 +8,7 @@
  * Öffnen lädt das iPhone dann automatisch die neue Fassung.
  * ========================================================================== */
 
-const VERSION = 'shb-v20';
+const VERSION = 'shb-v21';
 
 /* Alles, was die App zum Laufen braucht. Die PDF-Bausteine sind bewusst
    dabei, damit auch offline eine Offerte erstellt werden kann. */
@@ -53,26 +53,74 @@ self.addEventListener('activate', event=>{
   );
 });
 
+/* Die App selbst – Seite, Code, Gestaltung – wird zuerst aus dem Netz geholt.
+   So ist eine Korrektur sofort da und nicht erst beim übernächsten Start.
+   Damit das in einer Küche mit schlechtem Empfang nicht bremst, warten wir
+   höchstens zweieinhalb Sekunden und nehmen dann, was im Gerät liegt.
+
+   Alles Grosse und Unveränderliche – Schriften, PDF-Baustein, Logo – kommt
+   weiterhin sofort aus dem Speicher. Das ist der Löwenanteil der Bytes. */
+const SHELL = /\.(html|js|css)$|\/$/;
+
+/* Fremdbibliotheken und eingebettete Schriften ändern sich nie und wiegen
+   zusammen über ein halbes Megabyte. Die bleiben im Speicher, sonst holt
+   das Handy sie bei jedem Start neu. */
+const UNVERAENDERLICH = ['jspdf.umd.min.js', 'pdf-fonts.js', 'qrcode.js'];
+
+const NETZ_FRIST = 2500;
+
+function ausDemNetz(req){
+  return new Promise((fertig, daneben)=>{
+    const uhr = setTimeout(()=>daneben(new Error('zu langsam')), NETZ_FRIST);
+    fetch(req).then(res=>{ clearTimeout(uhr); fertig(res); },
+                    err=>{ clearTimeout(uhr); daneben(err); });
+  });
+}
+
+function merken(req, res){
+  if(res && res.status === 200 && new URL(req.url).origin === location.origin){
+    const kopie = res.clone();
+    caches.open(VERSION).then(c=>c.put(req, kopie));
+  }
+  return res;
+}
+
 self.addEventListener('fetch', event=>{
   const req = event.request;
   if(req.method !== 'GET') return;
 
-  // Schriften von Google: wenn vorhanden aus dem Zwischenspeicher, sonst laden
+  const pfad     = new URL(req.url).pathname;
+  const eigen    = new URL(req.url).origin === location.origin;
+  const seite    = req.mode === 'navigate';
+  const schwer   = UNVERAENDERLICH.some(n => pfad.endsWith(n));
+  const shell    = eigen && !schwer && (seite || SHELL.test(pfad));
+
+  if(shell){
+    // Zuerst das Netz, im Zweifel der Speicher
+    event.respondWith(
+      ausDemNetz(req)
+        .then(res => merken(req, res))
+        .catch(async ()=>{
+          const hit = await caches.match(req);
+          if(hit) return hit;
+          // Nur beim Aufruf der Seite ist die Startseite die richtige Antwort.
+          // Für ein fehlendes Skript wäre sie es nicht.
+          if(seite){
+            const start = await caches.match('index.html');
+            if(start) return start;
+          }
+          return new Response('', {status:504, statusText:'offline'});
+        })
+    );
+    return;
+  }
+
+  // Alles andere: was im Speicher liegt, kommt sofort
   event.respondWith(
     caches.match(req).then(hit=>{
       if(hit) return hit;
-      return fetch(req).then(res=>{
-        // Erfolgreiche Antworten der eigenen Herkunft mitspeichern
-        if(res && res.status === 200 && new URL(req.url).origin === location.origin){
-          const copy = res.clone();
-          caches.open(VERSION).then(c=>c.put(req, copy));
-        }
-        return res;
-      }).catch(()=>{
-        // Offline und nichts im Speicher: Startseite ausliefern
-        if(req.mode === 'navigate') return caches.match('index.html');
-        return new Response('', {status:504, statusText:'offline'});
-      });
+      return fetch(req).then(res=>merken(req, res)).catch(()=>
+        new Response('', {status:504, statusText:'offline'}));
     })
   );
 });

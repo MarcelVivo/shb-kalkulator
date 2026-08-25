@@ -521,10 +521,23 @@
 <script src="buch-ui.js"></script>
 <script>
 /* Service Worker: nach dem ersten Aufruf funktioniert die App auch ohne Empfang.
-   Läuft nur über https bzw. localhost – bei einer lokalen Datei wird er still übersprungen. */
+   Läuft nur über https bzw. localhost – bei einer lokalen Datei wird er still übersprungen.
+
+   Nachtrag: Bisher brauchte es nach einer neuen Fassung zwei Ladevorgänge –
+   der erste zeigte noch die alte. Wer das nicht weiss, hält die App für
+   kaputt. Übernimmt jetzt eine neue Fassung, laden wir einmal selbst neu.
+   Die Sperre verhindert, dass daraus eine Schleife wird. */
 if('serviceWorker' in navigator && location.protocol.startsWith('http')){
+  let neuGeladen = false;
+  navigator.serviceWorker.addEventListener('controllerchange', ()=>{
+    if(neuGeladen) return;
+    neuGeladen = true;
+    location.reload();
+  });
   window.addEventListener('load', ()=>{
-    navigator.serviceWorker.register('sw.js').catch(err=>console.warn('Service Worker:', err));
+    navigator.serviceWorker.register('sw.js')
+      .then(reg=>{ try{ reg.update(); }catch(e){} })
+      .catch(err=>console.warn('Service Worker:', err));
   });
 }
 </script>
