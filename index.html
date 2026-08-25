@@ -399,6 +399,27 @@
       </div>
       <p class="hint" data-i18n="setHint">Diese Werte gelten als Vorgabe für neue Kalkulationen und werden im Browser gespeichert.</p>
 
+      <div class="subcard" id="syncBox">
+        <h3 data-i18n="secSync">Konto und Abgleich</h3>
+        <p class="hint" id="syncState"></p>
+        <div id="syncLoggedOut" hidden>
+          <p class="hint" data-i18n="syncHint">Melde dich an, damit Handy und Computer dieselben Zahlen zeigen.</p>
+          <div class="grid-2">
+            <label class="field"><span data-i18n="syncMail">E-Mail</span>
+              <input type="email" id="syncMail" autocomplete="username" inputmode="email"></label>
+            <label class="field"><span data-i18n="syncPass">Passwort</span>
+              <input type="password" id="syncPass" autocomplete="current-password"></label>
+          </div>
+          <button class="btn btn-primary" id="btnSyncLogin" type="button" data-i18n="syncLogin">Anmelden</button>
+        </div>
+        <div id="syncLoggedIn" hidden>
+          <div class="d-acts">
+            <button class="btn btn-outline" id="btnSyncNow" type="button" data-i18n="syncNow">Jetzt abgleichen</button>
+            <button class="btn btn-quiet" id="btnSyncLogout" type="button" data-i18n="syncLogout">Abmelden</button>
+          </div>
+        </div>
+      </div>
+
       <div class="subcard">
         <h3 data-i18n="setCompany">Firmendaten für die Offerte</h3>
         <p class="hint" data-i18n="setCompanyHint">Diese Angaben erscheinen im Briefkopf und in der Fusszeile des Offerten-PDF.</p>
@@ -473,6 +494,8 @@
 <!-- Toast -->
 <div class="toast" id="toast" role="status" hidden></div>
 
+<script src="sync-config.js"></script>
+<script src="sync.js"></script>
 <script src="pdf.js"></script>
 <script src="design.js"></script>
 <script src="photo.js"></script>

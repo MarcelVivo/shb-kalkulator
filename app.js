@@ -240,6 +240,17 @@ const translations = {
     setHourly:'Standard-Stundenlohn', setKm:'Kilometerpreis', setOverhead:'Betriebskosten (%)',
     setMargin:'Gewünschte Marge (%)', setMarkup:'Standard-Aufschlag (%)', setCurrency:'Standardwährung',
     setRounding:'Rundungsregel', setLang:'Sprache',
+    secSync:'Konto und Abgleich',
+    syncHint:'Melde dich an, damit Handy und Computer dieselben Zahlen zeigen. Olena und Marcel haben je einen eigenen Zugang und sehen dieselben Daten.',
+    syncOff:'Der Abgleich ist nicht eingerichtet. Die Daten bleiben auf diesem Gerät.',
+    syncMail:'E-Mail', syncPass:'Passwort',
+    syncLogin:'Anmelden', syncLogout:'Abmelden', syncNow:'Jetzt abgleichen',
+    syncAs:'Angemeldet als {mail}',
+    syncStatus:{ aus:'nicht eingerichtet', abgemeldet:'nicht angemeldet', bereit:'abgeglichen',
+                 arbeitet:'gleicht ab …', offline:'kein Netz – wird nachgeholt', fehler:'Abgleich gestört',
+                 keinZugang:'dieser Zugang ist noch nicht freigeschaltet' },
+    syncFail:'Anmeldung fehlgeschlagen. Stimmen E-Mail und Passwort?',
+    syncDone:'Abgeglichen.',
     setHint:'Diese Werte gelten als Vorgabe für neue Kalkulationen und werden im Browser gespeichert.',
     btnClose:'Schliessen', btnSaveSettings:'Einstellungen speichern',
 
@@ -327,7 +338,7 @@ const translations = {
     fWeight:'Вага (кг)',
     hintWeight:'Порції та вага пов’язані: {g} г на особу. Зміни одне — друге підлаштується. Ціна рахується з ваги.',
     secCakeDesc:'Дані для пропозиції та ескізу',
-    hintCakeDesc:'Ці дані не впливають на ціну. Вони зʼявляються у пропозиції та задають яруси в конфігураторі дизайну.'.replace('ʼ','’'),
+    hintCakeDesc:'Ці дані не впливають на ціну. Вони з’являються у пропозиції та задають яруси в конфігураторі дизайну.',
     portionsCheck:'Для перевірки: торт такого розміру зазвичай дає близько {n} порцій.',
     portionsCheckOff:'Для перевірки: торт такого розміру зазвичай дає близько {n} порцій — внесено {p}. Перевір розмір або вагу.',
 
@@ -509,6 +520,17 @@ const translations = {
     setHourly:'Стандартна ставка за годину', setKm:'Вартість за кілометр', setOverhead:'Операційні витрати (%)',
     setMargin:'Бажана маржа (%)', setMarkup:'Стандартна націнка (%)', setCurrency:'Основна валюта',
     setRounding:'Правило округлення', setLang:'Мова',
+    secSync:'Обліковий запис і синхронізація',
+    syncHint:'Увійди, щоб телефон і комп’ютер показували однакові дані. Олена і Марсель мають окремі входи, але бачать ті самі дані.',
+    syncOff:'Синхронізація не налаштована. Дані залишаються на цьому пристрої.',
+    syncMail:'Електронна пошта', syncPass:'Пароль',
+    syncLogin:'Увійти', syncLogout:'Вийти', syncNow:'Синхронізувати зараз',
+    syncAs:'Ви увійшли як {mail}',
+    syncStatus:{ aus:'не налаштовано', abgemeldet:'не виконано вхід', bereit:'синхронізовано',
+                 arbeitet:'синхронізує …', offline:'немає мережі — буде пізніше', fehler:'помилка синхронізації',
+                 keinZugang:'цей вхід ще не активовано' },
+    syncFail:'Не вдалося увійти. Перевір пошту та пароль.',
+    syncDone:'Синхронізовано.',
     setHint:'Ці значення використовуються за замовчуванням для нових розрахунків і зберігаються у браузері.',
     btnClose:'Закрити', btnSaveSettings:'Зберегти налаштування',
 
@@ -714,7 +736,12 @@ const Store = {
   adapter: LocalStorageAdapter,
   use(a){ this.adapter = a; },
   get(k){ return this.adapter.get(k); },
-  set(k,v){ return this.adapter.set(k,v); },
+  set(k,v){
+    const r = this.adapter.set(k,v);
+    /* Dem Abgleich Bescheid geben, falls eingerichtet und angemeldet */
+    if(typeof SHB_SYNC !== 'undefined'){ try{ SHB_SYNC.vorgemerkt(k); }catch(e){} }
+    return r;
+  },
   remove(k){ return this.adapter.remove(k); },
   keys(){ return this.adapter.keys(); }
 };
@@ -1957,6 +1984,32 @@ function bindEvents(){
     if(e.key==='Escape') $$('.modal:not([hidden])').forEach(closeModal);
   });
 
+  /* Konto und Abgleich */
+  const bl = $('#btnSyncLogin');
+  if(bl) bl.addEventListener('click', async ()=>{
+    const mail = $('#syncMail').value.trim(), pass = $('#syncPass').value;
+    if(!mail || !pass) return;
+    bl.disabled = true;
+    try{
+      await SHB_SYNC.anmelden(mail, pass);
+      $('#syncPass').value = '';
+      toast(t('syncDone'));
+    }catch(e){
+      console.warn('Anmeldung:', e.message);
+      toast(t('syncFail'));
+    }finally{ bl.disabled = false; renderSync(); }
+  });
+  const bo = $('#btnSyncLogout');
+  if(bo) bo.addEventListener('click', ()=>{ SHB_SYNC.abmelden(); renderSync(); });
+  const bn = $('#btnSyncNow');
+  if(bn) bn.addEventListener('click', async ()=>{
+    bn.disabled = true;
+    await SHB_SYNC.abgleichen();
+    bn.disabled = false; renderSync();
+    toast(t('syncDone'));
+  });
+  if(typeof SHB_SYNC !== 'undefined') SHB_SYNC.beiAenderung(()=>renderSync());
+
   /* Einstellungen speichern */
   $('#btnSaveSettings').addEventListener('click', async()=>{
     settings.stundenansatz  = num($('#setStundenansatz').value) || DEFAULT_SETTINGS.stundenansatz;
@@ -2023,6 +2076,27 @@ function bindEvents(){
   });
 }
 
+/** Zustand des Abgleichs in den Einstellungen anzeigen. */
+function renderSync(){
+  const box = $('#syncBox');
+  if(!box || typeof SHB_SYNC === 'undefined') return;
+  const st  = SHB_SYNC.status;
+  /* Angemeldet heisst: Zugangsdaten stimmen. Bereit heisst zusätzlich, dass
+     die Person zu einem Konto gehört. Wer angemeldet, aber nicht
+     freigeschaltet ist, soll das lesen – nicht erneut das Anmeldefeld sehen. */
+  const an  = SHB_SYNC.angemeldet();
+  const txt = (t('syncStatus') || {})[st] || st;
+
+  $('#syncState').textContent = !SHB_SYNC.konfiguriert()
+    ? t('syncOff')
+    : (an ? tf('syncAs',{mail:SHB_SYNC.benutzer||''}) + ' · ' + txt : txt);
+  $('#syncLoggedOut').hidden = !SHB_SYNC.konfiguriert() || an;
+  $('#syncLoggedIn').hidden  = !an;
+
+  const btnNow = $('#btnSyncNow');
+  if(btnNow) btnNow.disabled = !SHB_SYNC.bereit();
+}
+
 function fillSettings(){
   $('#setStundenansatz').value = settings.stundenansatz;
   $('#setKmPreis').value       = settings.kmPreis;
@@ -2045,6 +2119,7 @@ function fillSettings(){
   $('#coDeposit').value  = co.deposit;
   $('#coTaxNote').value  = co.taxNote;
   $('#coAllergen').value = co.allergen || t('pdfAllergen');
+  renderSync();
 }
 
 /* ---- Beispielkalkulation (Referenz aus dem Briefing) ---------------------
@@ -2111,6 +2186,32 @@ function loadDemo(){
   renderAll();
 }
 
+/** Alles neu aus dem Speicher lesen – wird nach einem Abgleich aufgerufen,
+ *  wenn vom anderen Gerät neuere Daten gekommen sind. */
+async function reloadFromStore(){
+  const savedSettings = await Store.get('settings');
+  if(savedSettings){
+    settings = {...DEFAULT_SETTINGS, ...savedSettings,
+                company:{...DEFAULT_COMPANY, ...(savedSettings.company||{})}};
+  }
+  await loadProjects();
+  const cur = await Store.get('current');
+  if(cur && cur.state){
+    const base = newState();
+    state = {...base, ...cur.state,
+      meta:{...base.meta, ...(cur.state.meta||{})},
+      cake:{...base.cake, ...(cur.state.cake||{})},
+      neben:{...base.neben, ...(cur.state.neben||{})},
+      travel:{...base.travel, ...(cur.state.travel||{})},
+      verpackung:{...base.verpackung, ...(cur.state.verpackung||{})},
+      simple:{...base.simple, ...(cur.state.simple||{})}};
+    currentProjectId = cur.id;
+  }
+  const l = await Store.get('lang');
+  if(l && translations[l] && l !== lang){ lang = l; applyI18n(); }
+  renderAll();
+}
+
 /* ---- Start ---- */
 let initDone = false;
 async function init(){
@@ -2154,6 +2255,7 @@ async function init(){
   bindEvents();
   renderAll();
   updateUndoButton();
+  if(typeof SHB_SYNC !== 'undefined') SHB_SYNC.start();
 }
 
 if(typeof document !== 'undefined'){

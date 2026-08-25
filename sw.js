@@ -8,7 +8,7 @@
  * Öffnen lädt das iPhone dann automatisch die neue Fassung.
  * ========================================================================== */
 
-const VERSION = 'shb-v16';
+const VERSION = 'shb-v19';
 
 /* Alles, was die App zum Laufen braucht. Die PDF-Bausteine sind bewusst
    dabei, damit auch offline eine Offerte erstellt werden kann. */
@@ -25,6 +25,8 @@ const ASSETS = [
   'buch.js',
   'invoice.js',
   'buch-ui.js',
+  'sync.js',
+  'sync-config.js',
   'pdf-fonts.js',
   'jspdf.umd.min.js',
   'shb-logo.png',

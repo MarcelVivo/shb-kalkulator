@@ -807,6 +807,17 @@ document.addEventListener('DOMContentLoaded', async ()=>{
   setTimeout(updateCard, 80);
 });
 
-window.SHB_BUCH_UI = { open, updateCard };
+window.SHB_BUCH_UI = {
+  open, updateCard,
+  /* Nach einem Abgleich die Bücher neu einlesen */
+  async reload(){
+    books = (await Store.get('books')) || B.blankBooks();
+    books = {...B.blankBooks(), ...books,
+             cfg:{...B.blankBooks().cfg, ...(books.cfg||{})},
+             assets:{...B.blankBooks().assets, ...(books.assets||{})}};
+    if(built && !$('#modalBuch').hidden) render();
+    updateCard();
+  }
+};
 
 })();
