@@ -50,6 +50,10 @@
       <button class="btn-ghost" id="btnProjekte" type="button" data-i18n-title="navProjects" title="Meine Kalkulationen">
         <span class="ico" aria-hidden="true">▤</span><span class="btn-label" data-i18n="navProjects">Meine Kalkulationen</span>
       </button>
+      <button class="btn-ghost" id="btnSyncNav" type="button" data-i18n-title="secSync" title="Konto und Abgleich">
+        <span class="ico" aria-hidden="true">☁<span class="sync-dot" id="syncDot" aria-hidden="true"></span></span>
+        <span class="btn-label" data-i18n="navSync">Mein Konto</span>
+      </button>
       <button class="btn-ghost" id="btnSettings" type="button" data-i18n-title="navSettings" title="Einstellungen">
         <span class="ico" aria-hidden="true">⚙</span><span class="btn-label" data-i18n="navSettings">Einstellungen</span>
       </button>
@@ -375,6 +379,37 @@
      MODALE
      ============================================================ -->
 
+<!-- Konto und Abgleich -->
+<div class="modal" id="modalSync" hidden>
+  <div class="modal-box modal-narrow" role="dialog" aria-modal="true">
+    <header class="modal-head"><h2 data-i18n="secSync">Konto und Abgleich</h2>
+      <button class="modal-x" type="button" data-close aria-label="X">×</button></header>
+    <div class="modal-body">
+      <div id="syncBox">
+        <p class="sync-state" id="syncState"></p>
+        <div id="syncLoggedOut" hidden>
+          <p class="hint" data-i18n="syncHint">Melde dich an, damit Handy und Computer dieselben Zahlen zeigen.</p>
+          <label class="field"><span data-i18n="syncMail">E-Mail</span>
+            <input type="email" id="syncMail" autocomplete="username" inputmode="email"
+                   autocapitalize="off" autocorrect="off" spellcheck="false"></label>
+          <label class="field"><span data-i18n="syncPass">Passwort</span>
+            <input type="password" id="syncPass" autocomplete="current-password"></label>
+          <button class="btn btn-primary btn-wide" id="btnSyncLogin" type="button" data-i18n="syncLogin">Anmelden</button>
+        </div>
+        <div id="syncLoggedIn" hidden>
+          <div class="d-acts">
+            <button class="btn btn-outline" id="btnSyncNow" type="button" data-i18n="syncNow">Jetzt abgleichen</button>
+            <button class="btn btn-quiet" id="btnSyncLogout" type="button" data-i18n="syncLogout">Abmelden</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer class="modal-foot">
+      <button class="btn btn-quiet" type="button" data-close data-i18n="btnClose">Schliessen</button>
+    </footer>
+  </div>
+</div>
+
 <!-- Einstellungen -->
 <div class="modal" id="modalSettings" hidden>
   <div class="modal-box" role="dialog" aria-modal="true">
@@ -398,27 +433,6 @@
           <select id="setSprache"><option value="de">Deutsch</option><option value="ua">Українська</option></select></label>
       </div>
       <p class="hint" data-i18n="setHint">Diese Werte gelten als Vorgabe für neue Kalkulationen und werden im Browser gespeichert.</p>
-
-      <div class="subcard" id="syncBox">
-        <h3 data-i18n="secSync">Konto und Abgleich</h3>
-        <p class="hint" id="syncState"></p>
-        <div id="syncLoggedOut" hidden>
-          <p class="hint" data-i18n="syncHint">Melde dich an, damit Handy und Computer dieselben Zahlen zeigen.</p>
-          <div class="grid-2">
-            <label class="field"><span data-i18n="syncMail">E-Mail</span>
-              <input type="email" id="syncMail" autocomplete="username" inputmode="email"></label>
-            <label class="field"><span data-i18n="syncPass">Passwort</span>
-              <input type="password" id="syncPass" autocomplete="current-password"></label>
-          </div>
-          <button class="btn btn-primary" id="btnSyncLogin" type="button" data-i18n="syncLogin">Anmelden</button>
-        </div>
-        <div id="syncLoggedIn" hidden>
-          <div class="d-acts">
-            <button class="btn btn-outline" id="btnSyncNow" type="button" data-i18n="syncNow">Jetzt abgleichen</button>
-            <button class="btn btn-quiet" id="btnSyncLogout" type="button" data-i18n="syncLogout">Abmelden</button>
-          </div>
-        </div>
-      </div>
 
       <div class="subcard">
         <h3 data-i18n="setCompany">Firmendaten für die Offerte</h3>

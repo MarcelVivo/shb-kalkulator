@@ -240,7 +240,7 @@ const translations = {
     setHourly:'Standard-Stundenlohn', setKm:'Kilometerpreis', setOverhead:'Betriebskosten (%)',
     setMargin:'Gewünschte Marge (%)', setMarkup:'Standard-Aufschlag (%)', setCurrency:'Standardwährung',
     setRounding:'Rundungsregel', setLang:'Sprache',
-    secSync:'Konto und Abgleich',
+    secSync:'Konto und Abgleich', navSync:'Mein Konto',
     syncHint:'Melde dich an, damit Handy und Computer dieselben Zahlen zeigen. Olena und Marcel haben je einen eigenen Zugang und sehen dieselben Daten.',
     syncOff:'Der Abgleich ist nicht eingerichtet. Die Daten bleiben auf diesem Gerät.',
     syncMail:'E-Mail', syncPass:'Passwort',
@@ -520,7 +520,7 @@ const translations = {
     setHourly:'Стандартна ставка за годину', setKm:'Вартість за кілометр', setOverhead:'Операційні витрати (%)',
     setMargin:'Бажана маржа (%)', setMarkup:'Стандартна націнка (%)', setCurrency:'Основна валюта',
     setRounding:'Правило округлення', setLang:'Мова',
-    secSync:'Обліковий запис і синхронізація',
+    secSync:'Обліковий запис і синхронізація', navSync:'Мій акаунт',
     syncHint:'Увійди, щоб телефон і комп’ютер показували однакові дані. Олена і Марсель мають окремі входи, але бачать ті самі дані.',
     syncOff:'Синхронізація не налаштована. Дані залишаються на цьому пристрої.',
     syncMail:'Електронна пошта', syncPass:'Пароль',
@@ -1977,6 +1977,8 @@ function bindEvents(){
   /* Modale */
   $('#btnSettings').addEventListener('click', ()=>{ fillSettings(); openModal('#modalSettings'); });
   $('#btnProjekte').addEventListener('click', ()=>{ renderProjects(); openModal('#modalProjects'); });
+  const bsn = $('#btnSyncNav');
+  if(bsn) bsn.addEventListener('click', ()=>{ renderSync(); openModal('#modalSync'); });
   $$('.modal').forEach(m=>{
     m.addEventListener('click', e=>{ if(e.target===m || e.target.closest('[data-close]')) closeModal(m); });
   });
@@ -1993,7 +1995,14 @@ function bindEvents(){
     try{
       await SHB_SYNC.anmelden(mail, pass);
       $('#syncPass').value = '';
-      toast(t('syncDone'));
+      if(SHB_SYNC.bereit()){
+        toast(t('syncDone'));
+        closeModal($('#modalSync'));
+      }else{
+        /* Anmeldung ging, aber der Zugang gehört zu keinem Konto. Das Fenster
+           bleibt offen, damit die Meldung überhaupt gelesen wird. */
+        toast((t('syncStatus')||{}).keinZugang || '');
+      }
     }catch(e){
       console.warn('Anmeldung:', e.message);
       toast(t('syncFail'));
@@ -2095,6 +2104,21 @@ function renderSync(){
 
   const btnNow = $('#btnSyncNow');
   if(btnNow) btnNow.disabled = !SHB_SYNC.bereit();
+
+  /* Der Punkt am Knopf in der Navigation. Grün heisst: alles abgeglichen.
+     Damit sieht sie den Zustand, ohne irgendetwas zu öffnen. */
+  const dot = $('#syncDot');
+  if(dot){
+    const ampel = SHB_SYNC.bereit()
+      ? (st === 'arbeitet' ? 'arbeitet' : (st === 'bereit' ? 'gut' : 'warnung'))
+      : (st === 'aus' ? 'aus' : 'warnung');
+    dot.dataset.stand = ampel;
+  }
+  const navBtn = $('#btnSyncNav');
+  if(navBtn){
+    navBtn.title = !SHB_SYNC.konfiguriert() ? t('syncOff')
+      : (an ? tf('syncAs',{mail:SHB_SYNC.benutzer||''}) + ' · ' + txt : t('secSync') + ' · ' + txt);
+  }
 }
 
 function fillSettings(){
