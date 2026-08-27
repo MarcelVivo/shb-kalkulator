@@ -4,7 +4,7 @@
   "description": "Preisberechnung, Produktionsplanung und Gewinnkontrolle für individuelle Torten.",
   "lang": "de",
   "dir": "ltr",
-  "start_url": "index.html",
+  "start_url": "kalkulator.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",

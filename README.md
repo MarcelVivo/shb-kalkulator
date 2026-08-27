@@ -121,7 +121,7 @@ App dann von selbst.
 
 | Datei | Zweck |
 |---|---|
-| `index.html` | Aufbau der Oberfläche |
+| `kalkulator.html` | Aufbau der Oberfläche |
 | `style.css` | Gestaltung, Dark Edition, iPhone-optimiert |
 | `style-light.css` | helle Fassung, bei Bedarf umbenennen |
 | `app.js` | Übersetzungen, Rechenkern, Bedienung, Projektverwaltung |

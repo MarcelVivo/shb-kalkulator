@@ -1,545 +1,146 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
-<meta name="description" content="Sweet Home Bakery – Torten-Produktionsrechner: Preisberechnung, Produktionsplanung und Gewinnkontrolle für individuelle Torten.">
-<meta name="color-scheme" content="dark">
-<meta name="theme-color" content="#141210">
-<title>Sweet Home Bakery · Torten-Kalkulator</title>
-
-<!-- iPhone: zum Home-Bildschirm hinzufügen (läuft dann ohne Safari-Leisten) -->
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="SHB Kalkulator">
-<meta name="format-detection" content="telephone=no">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="icon" href="shb-icon-192.png" type="image/png">
-<link rel="manifest" href="manifest.json">
-
-<link rel="stylesheet" href="style.css">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta id="meta-description" name="description" content="Handgemachte Torten in Grenchen: individuelle Geburtstags-, Hochzeits- und Motivtorten sowie Fruchtleder ohne Zuckerzusatz. Persönliche Beratung auf Deutsch, Українська und Русский.">
+  <meta name="theme-color" content="#f6ece1">
+  <title id="page-title">Sweet Home Bakery · Torte Grenchen & Solothurn</title>
+  <link rel="icon" href="shb-icon-192.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="public.css">
 </head>
 <body>
-
-<!-- ============================================================
-     KOPFBEREICH  ·  Logo, Sprachschalter, Werkzeuge
-     ============================================================ -->
-<header class="app-header no-print">
-  <div class="header-inner">
-
-    <!-- Original-Logo Sweet Home Bakery -->
-    <a class="brand" href="#" aria-label="Sweet Home Bakery">
-      <img class="brand-mark" src="shb-logo.png" alt="Sweet Home Bakery" width="42" height="42">
-      <span class="brand-text">
-        <span class="brand-name">Sweet Home Bakery</span>
-        <span class="brand-sub" data-i18n="brandSub">Torten-Kalkulator · Grenchen SO</span>
-      </span>
+  <header class="site-header">
+    <a class="wordmark" href="#top" aria-label="Sweet Home Bakery Startseite">
+      <img src="shb-logo.png" alt="" width="44" height="44">
+      <span><strong>Sweet Home</strong><small>Bakery · Grenchen</small></span>
     </a>
-
-    <div class="header-tools">
-      <button class="btn-ghost" id="btnBuchNav" type="button" data-i18n-title="secBuch" title="Buchhaltung">
-        <span class="ico" aria-hidden="true">▦</span><span class="btn-label" data-i18n="secBuch">Buchhaltung</span>
-      </button>
-      <button class="btn-ghost" id="btnDesignNav" type="button" data-i18n-title="secDesign" title="Torten-Design">
-        <span class="ico" aria-hidden="true">✎</span><span class="btn-label" data-i18n="secDesign">Torten-Design</span>
-      </button>
-      <button class="btn-ghost" id="btnProjekte" type="button" data-i18n-title="navProjects" title="Meine Kalkulationen">
-        <span class="ico" aria-hidden="true">▤</span><span class="btn-label" data-i18n="navProjects">Meine Kalkulationen</span>
-      </button>
-      <button class="btn-ghost" id="btnSyncNav" type="button" data-i18n-title="secSync" title="Konto und Abgleich">
-        <span class="ico" aria-hidden="true">☁<span class="sync-dot" id="syncDot" aria-hidden="true"></span></span>
-        <span class="btn-label" data-i18n="navSync">Mein Konto</span>
-      </button>
-      <button class="btn-ghost" id="btnSettings" type="button" data-i18n-title="navSettings" title="Einstellungen">
-        <span class="ico" aria-hidden="true">⚙</span><span class="btn-label" data-i18n="navSettings">Einstellungen</span>
-      </button>
-      <div class="lang-switch" role="group" aria-label="Sprache / Мова">
-        <button type="button" class="lang-btn is-active" data-lang="de">DE</button>
-        <span class="lang-sep" aria-hidden="true">|</span>
-        <button type="button" class="lang-btn" data-lang="ua">UA</button>
-      </div>
+    <a class="nav-admin" href="kalkulator.html">Kalkulator</a>
+    <nav class="main-nav" aria-label="Hauptnavigation">
+      <a id="nav-collection" href="#kollektion">Kollektion</a>
+      <a id="nav-manufactory" href="#manufaktur">Geschichte</a>
+      <a id="nav-config" href="#konfigurator">Wunschstück</a>
+    </nav>
+    <div class="language-switch" aria-label="Sprache">
+      <button class="language-button is-active" type="button" data-language="de">DE</button>
+      <span>/</span>
+      <button class="language-button" type="button" data-language="ua">UA</button>
+      <span>/</span>
+      <button class="language-button" type="button" data-language="ru">RU</button>
     </div>
-  </div>
-</header>
+    <a class="nav-cta" href="#konfigurator"><span class="nav-cta-label">Torte gestalten</span> <span aria-hidden="true">↗</span></a>
+    <button class="menu-toggle" type="button" aria-label="Menü öffnen" aria-expanded="false">☰</button>
+  </header>
 
-<!-- Aktionsleiste -->
-<div class="action-bar no-print">
-  <div class="action-inner">
-    <button class="btn btn-primary"  id="btnSave"     type="button"><span data-i18n="actSave">Kalkulation speichern</span></button>
-    <button class="btn btn-outline"  id="btnOffer"    type="button"><span data-i18n="actOffer">Kundenangebot erstellen</span></button>
-    <button class="btn btn-outline"  id="btnBuchInvoice" type="button"><span data-i18n="bInvoiceShort">Rechnung erstellen</span></button>
-    <button class="btn btn-outline"  id="btnUndo"     type="button" disabled><span data-i18n="actUndo">Rückgängig</span></button>
-    <button class="btn btn-outline"  id="btnNew"      type="button"><span data-i18n="actNew">Neue Torte</span></button>
-  </div>
-</div>
-
-<!-- ============================================================
-     HAUPTBEREICH
-     ============================================================ -->
-<main class="layout">
-
-  <!-- ---------- Formularspalte ---------- -->
-  <div class="col-form">
-
-    <!-- 1 · AUFTRAG -->
-    <section class="card" data-section="auftrag">
-      <button class="card-head" type="button" aria-expanded="true">
-        <span class="card-num">1</span>
-        <span class="card-title" data-i18n="secOrder">Auftrag</span>
-        <span class="card-badge" id="badgeAuftrag"></span>
-        <span class="chev" aria-hidden="true"></span>
-      </button>
-      <div class="card-body">
-        <div class="grid-2">
-          <label class="field"><span data-i18n="fCustomer">Kundenname</span>
-            <input type="text" id="kundenname" data-i18n-ph="phCustomer" placeholder="z. B. Familie Meier"></label>
-          <label class="field"><span data-i18n="fOccasion">Anlass</span>
-            <select id="anlass" data-i18n-options="occasions"></select></label>
-          <label class="field"><span data-i18n="fDeliveryDate">Lieferdatum</span>
-            <input type="date" id="lieferdatum"></label>
-          <label class="field"><span data-i18n="fOrderNo">Auftragsnummer</span>
-            <input type="text" id="auftragsnummer" placeholder="SHB-2026-001"></label>
+  <main id="top">
+    <section class="hero">
+      <div class="hero-pin">
+        <div class="hero-image reveal reveal-delay" id="hero-canvas-wrap">
+          <img id="hero-fallback-img" src="photos/hero-tiara.jpg" alt="Schwarze Torte mit Kristallkrone und &quot;Happy Birthday&quot; Schriftzug">
+          <canvas id="hero-canvas" aria-hidden="true"></canvas>
+          <div class="hero-stamp" aria-hidden="true"><span id="hero-stamp-1">handgemacht</span><strong id="hero-stamp-2">mit Liebe</strong><span id="hero-stamp-3">in Grenchen</span></div>
+          <a class="hero-pill" href="#kollektion"><span class="hero-pill-icon" aria-hidden="true">✦</span><span class="hero-pill-label">Mehr entdecken</span><span class="hero-pill-chevron" aria-hidden="true">⌄</span></a>
         </div>
-        <label class="field"><span data-i18n="fNotes">Bemerkungen</span>
-          <textarea id="bemerkungen" rows="2" data-i18n-ph="phNotes" placeholder="Wünsche, Farben, Allergien …"></textarea></label>
-        <input type="hidden" id="bestelldatum">
+        <div class="hero-tint" aria-hidden="true"></div>
+      </div>
+      <div class="hero-scrim" aria-hidden="true"></div>
+      <div class="hero-copy reveal">
+        <p class="eyebrow">Handgemachte Torten · Grenchen & Solothurn</p>
+        <h1>Ein Anlass.<br><em>Ein Unikat.</em></h1>
+        <p class="hero-intro">Handgemachte Torten und Süsswaren in Premium-Qualität – individuell für Ihren Anlass. Aus meiner Küche für Ihren schönsten Moment, mit persönlicher Beratung auf Deutsch, Українська und Русский.</p>
+        <div class="hero-actions">
+          <a class="button button-dark" href="#konfigurator"><span class="hero-button-label">Wunschstück gestalten</span> <span>↗</span></a>
+          <a class="text-link" href="#kollektion"><span class="hero-link-label">Kollektion entdecken</span> <span>↓</span></a>
+        </div>
+        <div class="hero-note"><span class="note-line"></span><span class="hero-note-copy">Für Hochzeiten, Geburtstage<br>und die kleinen grossen Momente.</span></div>
+      </div>
+
+      <div class="hero-moment" id="hero-moment-2" aria-hidden="true">
+        <p class="eyebrow">Schicht für Schicht</p>
+        <h2>Von Hand<br><em>geschichtet.</em></h2>
+        <p class="hero-moment-copy">Jede Schicht einzeln gebacken, gefüllt und veredelt – bevor sie zu Ihrem Unikat wird.</p>
+      </div>
+
+      <div class="hero-moment hero-moment-photo" id="hero-moment-3" aria-hidden="true">
+        <figure class="hero-moment-card">
+          <img src="photos/moment-marshmallows.jpg" alt="Frisch gespritzte rosa Marshmallows">
+          <figcaption>Aus meiner Küche in Grenchen</figcaption>
+        </figure>
+        <p class="eyebrow">Meine Geschichte</p>
+        <h2>Jede Torte<br><em>erzählt etwas.</em></h2>
+      </div>
+
+      <div class="hero-moment" id="hero-moment-4" aria-hidden="true">
+        <p class="eyebrow">Bereit für Ihren Anlass?</p>
+        <h2>Lassen Sie uns<br><em>gestalten.</em></h2>
+        <p class="hero-moment-copy">Scrollen Sie weiter – oder springen Sie direkt zu Ihrem Wunschstück.</p>
       </div>
     </section>
 
-    <!-- 2 · TORTE -->
-    <section class="card" data-section="torte">
-      <button class="card-head" type="button" aria-expanded="true">
-        <span class="card-num">2</span>
-        <span class="card-title" data-i18n="secCake">Torte</span>
-        <span class="card-badge" id="badgeTorte"></span>
-        <span class="chev" aria-hidden="true"></span>
-      </button>
-      <div class="card-body">
-        <div class="grid-2">
-          <label class="field"><span data-i18n="fPortions">Portionen (Personen)</span>
-            <input type="number" inputmode="decimal" id="portionen" min="1" step="1" value="20"></label>
-          <label class="field"><span data-i18n="fWeight">Gewicht (kg)</span>
-            <input type="number" inputmode="decimal" id="gewicht" min="0" step="0.1" value="4"></label>
-        </div>
-        <p class="hint" id="weightHint"></p>
-        <div class="sum-line"><span id="basisLabel"></span><b id="sumBasis">CHF 0.00</b></div>
+    <section class="marquee" aria-label="Unser Versprechen"><div id="marquee-text">HANDWERK <i>·</i> EHRLICHKEIT <i>·</i> IHRE GESCHICHTE <i>·</i> HANDWERK <i>·</i> EHRLICHKEIT <i>·</i> IHRE GESCHICHTE <i>·</i></div></section>
 
-        <div class="subcard">
-          <h3 data-i18n="secCakeDesc">Angaben für Offerte und Entwurf</h3>
-          <p class="hint" data-i18n="hintCakeDesc">Diese Angaben beeinflussen den Preis nicht.</p>
-          <div class="grid-2">
-            <label class="field"><span data-i18n="fShape">Form</span>
-              <select id="form" data-i18n-options="shapes"></select></label>
-            <label class="field"><span data-i18n="fSize">Durchmesser / Grösse</span>
-              <select id="groesse" data-i18n-options="sizes"></select></label>
-            <label class="field" id="wrapGroesseCustom" hidden><span data-i18n="fSizeCustom">Individuelle Grösse (cm)</span>
-              <input type="number" inputmode="decimal" id="groesseCustom" min="0" step="1" placeholder="0"></label>
-            <label class="field"><span data-i18n="fHeight">Höhe (cm)</span>
-              <input type="number" inputmode="decimal" id="hoehe" min="0" step="0.5" value="10"></label>
-            <label class="field"><span data-i18n="fTiers">Anzahl Etagen</span>
-              <select id="etagen" data-i18n-options="tiers"></select></label>
-          </div>
-          <p class="hint" id="portionsHint"></p>
-        </div>
+    <section class="values section" id="werte">
+      <div class="section-heading reveal"><p class="eyebrow" id="values-eyebrow">Wofür ich stehe</p><h2 id="values-title">Mein Markenkern</h2><p id="values-intro">Der rote Faden hinter jedem Foto, jedem Text und jeder Antwort auf Ihre Nachricht.</p></div>
+      <div class="values-grid">
+        <article class="value-card reveal"><span>01</span><h3 id="value1-title">Handwerk auf Trendniveau</h3><p id="value1-text">Individuelle Designs auf internationalem Trendniveau, fair kalkuliert für die Region.</p></article>
+        <article class="value-card reveal reveal-delay"><span>02</span><h3 id="value2-title">Ehrlich & gesund</h3><p id="value2-text">Ich biete nur an, was ich wirklich kann – und bald auch mein Fruchtleder ganz ohne Zuckerzusatz.</p></article>
+        <article class="value-card reveal reveal-delay-2"><span>03</span><h3 id="value3-title">Mehrsprachig beraten</h3><p id="value3-text">Persönliche Beratung auf Deutsch, Українська und Русский.</p></article>
+        <article class="value-card reveal reveal-delay-2"><span>04</span><h3 id="value4-title">Vollständig gemeldet</h3><p id="value4-text">Registrierter, hygienisch dokumentierter Betrieb mit Allergendeklaration zu jeder Bestellung.</p></article>
       </div>
     </section>
 
-    <!-- 3 · DEKORATION -->
-    <section class="card" data-section="deko">
-      <button class="card-head" type="button" aria-expanded="true">
-        <span class="card-num">3</span>
-        <span class="card-title" data-i18n="secDeco">Dekoration</span>
-        <span class="card-badge" id="badgeDeko"></span>
-        <span class="chev" aria-hidden="true"></span>
-      </button>
-      <div class="card-body">
-        <p class="hint" data-i18n="hintDecoTypes">Am schnellsten geht es über die Vorlage – sie bringt die richtige Rechenart gleich mit.</p>
-        <div class="rows rows-deco" id="dekoListe"></div>
-        <div class="row-tools">
-          <button class="btn btn-add" id="btnDeko" type="button">+ <span data-i18n="btnAddDeco">Dekoration hinzufügen</span></button>
-          <label class="field field-inline">
-            <span data-i18n="fDecoTemplate">Vorlage</span>
-            <select id="dekoVorlage"></select>
-          </label>
-        </div>
-        <div class="sum-line"><span data-i18n="sumDecoTotal">Dekoration total</span><b id="sumDeko">CHF 0.00</b></div>
+    <section class="collection section" id="kollektion">
+      <div class="section-heading reveal"><p class="eyebrow" id="collection-eyebrow">Aus meiner Küche</p><h2 id="collection-title">Die Kollektion</h2><p id="collection-intro">Eine Auswahl meiner liebsten Formen. Jedes Stück lässt sich auf Ihren Anlass, Ihre Farben und Ihre Geschichte abstimmen.</p></div>
+      <div class="collection-grid">
+        <article class="collection-card card-tall reveal"><img id="collection1-img" src="photos/collection-quiet-romance.jpg" alt="Minimalistische weisse Torte mit rotem Herz"><div><span id="collection1-tag">01 · Hochzeit</span><h3>Quiet Romance</h3><a href="#konfigurator"><span id="collection1-cta">Anpassen</span> <span>↗</span></a></div></article>
+        <article class="collection-card reveal reveal-delay"><img id="collection2-img" src="photos/collection-garden-study.jpg" alt="Torte mit Blumendekor und Hasenfigur für Alicia"><div><span id="collection2-tag">02 · Geburtstag</span><h3>Garden Study</h3><a href="#konfigurator"><span id="collection2-cta">Anpassen</span> <span>↗</span></a></div></article>
+        <article class="collection-card reveal reveal-delay-2"><img id="collection3-img" src="photos/collection-dark-velvet.jpg" alt="Schwarze King- und Queen-Torten mit Kronen"><div><span id="collection3-tag">03 · Trendtorte</span><h3>Dark Velvet</h3><a href="#konfigurator"><span id="collection3-cta">Anpassen</span> <span>↗</span></a></div></article>
       </div>
     </section>
 
-    <!-- 4 · VERPACKUNG -->
-    <section class="card card-price" data-section="verpackung">
-      <button class="card-head" type="button" aria-expanded="true">
-        <span class="card-num">4</span>
-        <span class="card-title" data-i18n="secPack">Verpackung</span>
-        <span class="card-badge" id="badgePack"></span>
-        <span class="chev" aria-hidden="true"></span>
-      </button>
-      <div class="card-body">
-        <p class="hint" data-i18n="hintPack">Was bei jeder Torte an Verpackung anfällt. Wird dem Kunden weiterverrechnet.</p>
-        <div class="grid-2" id="packListe"></div>
-        <div class="sum-line"><span data-i18n="sumPack">Verpackung total</span><b id="sumPack">CHF 0.00</b></div>
+    <section class="sortiment section" id="sortiment">
+      <div class="section-heading reveal"><p class="eyebrow" id="sortiment-eyebrow">Auch im Angebot</p><h2 id="sortiment-title">Kleine Köstlichkeiten</h2><p id="sortiment-intro">Nicht jeder Anlass braucht eine ganze Torte.</p></div>
+      <div class="sortiment-grid">
+        <article class="sortiment-card reveal"><h3>Cupcakes</h3><p id="sortiment1-text">Buttercreme-Rose, frische Beeren, feine Dekoration.</p><span id="sortiment1-price">CHF 5–7 / Stück</span></article>
+        <article class="sortiment-card reveal reveal-delay"><h3 id="sortiment2-title">Marshmallows</h3><p id="sortiment2-text">Handgemacht, farbig, in dekorativer Geschenkbox.</p><span id="sortiment2-price">ab CHF 18 / Box</span></article>
+        <article class="sortiment-card reveal reveal-delay-2"><h3 id="sortiment3-title">Trifles</h3><p id="sortiment3-text">Schichtdessert im Glas, z. B. Red Velvet mit Frischkäsecreme.</p><span id="sortiment3-price">CHF 8–10 / Stück</span></article>
       </div>
     </section>
 
-    <!-- 5 · LIEFERUNG -->
-    <section class="card card-price" data-section="lieferung">
-      <button class="card-head" type="button" aria-expanded="true">
-        <span class="card-num">5</span>
-        <span class="card-title" data-i18n="secDelivery">Lieferung</span>
-        <span class="card-badge" id="badgeDelivery"></span>
-        <span class="chev" aria-hidden="true"></span>
-      </button>
-      <div class="card-body">
-        <p class="hint" data-i18n="hintDelivery">Nur ausfüllen, wenn du lieferst. Bei Abholung alles auf 0 lassen – denk an Hin- und Rückweg.</p>
-        <div class="grid-3">
-          <label class="field"><span data-i18n="fKm">Kilometer</span>
-            <input type="number" inputmode="decimal" id="km" min="0" step="0.5" value="0"></label>
-          <label class="field"><span data-i18n="fKmPrice">Kosten pro km</span>
-            <span class="input-chf"><em>CHF</em><input type="number" inputmode="decimal" id="kmPreis" min="0" step="0.05"></span></label>
-          <label class="field"><span data-i18n="fDriveTime">Fahrzeit hin und zurück (Minuten)</span>
-            <input type="number" inputmode="decimal" id="fahrzeit" min="0" step="5" value="0"></label>
-        </div>
-        <div class="sum-line"><span data-i18n="sumDelivery">Lieferung total</span><b id="sumDelivery">CHF 0.00</b></div>
+    <section class="fruit" id="fruchtleder">
+      <div class="fruit-banner reveal">
+        <p class="eyebrow" id="fruit-eyebrow">Für die gesunden Momente · in Vorbereitung</p>
+        <h2 id="fruit-title">Fruchtleder<br><em>ganz ohne Zuckerzusatz.</em></h2>
+        <p id="fruit-copy">100 % Frucht, sonst nichts – der ehrliche Snack für die Znünibox und für alle, die es natürlich mögen. Bald verfügbar.</p>
+        <a class="text-link" href="https://www.instagram.com/sweet_home_bakery_ch/" target="_blank" rel="noopener"><span id="fruit-link">Auf Instagram folgen, um es nicht zu verpassen</span> <span>↗</span></a>
       </div>
     </section>
 
-    <!-- 6 · KOSTENKONTROLLE -->
-    <section class="card" data-section="kosten">
-      <button class="card-head" type="button" aria-expanded="true">
-        <span class="card-num">6</span>
-        <span class="card-title" data-i18n="secCosts">Was es dich kostet</span>
-        <span class="card-badge" id="badgeKosten"></span>
-        <span class="chev" aria-hidden="true"></span>
-      </button>
-      <div class="card-body">
-        <p class="hint" data-i18n="hintSimple">Zwei Zahlen genügen. Wenn du es einmal genau wissen willst, schalte unten auf die ausführliche Erfassung um.</p>
+    <section class="manifesto section" id="manufaktur">
+      <div class="manifesto-image reveal"><img src="photos/manifesto-portrait.jpg" alt="Pinke Torte mit Fotodruck und Wunschkerzen"></div>
+      <div class="manifesto-copy reveal reveal-delay"><p class="eyebrow" id="manufactory-eyebrow">Meine Geschichte</p><h2 id="manufactory-title">Von Herzen<br><em>handgemacht.</em></h2><p id="manufactory-copy">Ich bin Olena. Vor einiger Zeit kam ich aus der Ukraine in die Schweiz – mit meinem Backhandwerk im Gepäck. Heute darf ich in meiner Küche in Grenchen für Ihre schönsten Momente backen: Böden, die am selben Tag entstehen, Füllungen nach Saison und Details, die nicht laut sein müssen, um in Erinnerung zu bleiben. Ich biete nur an, was ich wirklich kann – Schritt für Schritt, mit Herz.</p><a class="text-link" href="#konfigurator"><span id="manufactory-link">Mehr über Sweet Home Bakery</span> <span>↗</span></a></div>
+    </section>
 
-        <!-- Einfache Erfassung: zwei Zahlen -->
-        <div id="simpleBox">
-          <div class="grid-2">
-            <label class="field"><span data-i18n="fSimpleMat">Material und Zutaten</span>
-              <span class="input-chf"><em>CHF</em>
-                <input type="number" inputmode="decimal" id="simpleMat" min="0" step="1" placeholder="60"></span></label>
-            <label class="field"><span data-i18n="fSimpleHours">Arbeitszeit (Stunden)</span>
-              <input type="number" inputmode="decimal" id="simpleHours" min="0" step="0.5" placeholder="5"></label>
-          </div>
-        </div>
-
-        <!-- Genaue Erfassung: Listen -->
-        <div id="detailBox" hidden>
-          <div class="subcard">
-            <h3 data-i18n="secIngredients">Zutaten</h3>
-            <div class="rows" id="zutatenListe"></div>
-            <div class="row-tools">
-              <button class="btn btn-add" id="btnZutat" type="button">+ <span data-i18n="btnAddIngredient">Zutat hinzufügen</span></button>
-              <label class="field field-inline">
-                <span data-i18n="fTemplate">Vorlage</span>
-                <select id="zutatVorlage"></select>
-              </label>
-            </div>
-            <div class="sum-line"><span data-i18n="sumIngredients">Zutaten total</span><b id="sumZutaten">CHF 0.00</b></div>
-          </div>
-
-          <div class="subcard">
-            <h3 data-i18n="secWork">Arbeitszeit</h3>
-            <p class="hint" data-i18n="hintWork">Häkchen weg, wenn du in dieser Zeit nicht an der Torte stehst.</p>
-            <div class="rows rows-work" id="arbeitListe"></div>
-            <button class="btn btn-add" id="btnArbeit" type="button">+ <span data-i18n="btnAddWork">Tätigkeit hinzufügen</span></button>
-            <div class="sum-grid">
-              <div><span data-i18n="sumWorkActual">Gesamtzeit</span><b id="sumArbeitIst">0.00 h</b></div>
-              <div><span data-i18n="sumWorkBillable">Aktive Arbeit</span><b id="sumArbeitVerr">0.00 h</b></div>
-            </div>
-          </div>
-        </div>
-
-        <button class="btn btn-quiet" id="btnToggleDetail" type="button" data-i18n="toDetail">Genauer erfassen</button>
-
-        <div class="subcard">
-          <h3 data-i18n="secOther">Weitere Kosten</h3>
-          <div class="grid-2" id="nebenListe"></div>
-          <label class="field"><span data-i18n="fOverheadPctShort">Betriebskosten (%)</span>
-            <span class="input-chf"><input type="number" inputmode="decimal" id="betriebProzent" min="0" max="100" step="0.5"><em>%</em></span></label>
-          <p class="hint"><button class="tip" type="button" data-tip="tipOverhead" aria-label="Info">i</button>
-            <span data-i18n="tipOverhead">Anteil an deinen laufenden Kosten.</span></p>
-          <input type="hidden" id="fahrtkosten">
-          <input type="hidden" id="betriebBetrag">
-          <div class="sum-line"><span data-i18n="sumOverhead">Weitere Kosten total</span><b id="sumNeben">CHF 0.00</b></div>
+    <section class="configurator section" id="konfigurator">
+      <div class="config-header reveal"><div><p class="eyebrow" id="config-eyebrow">Ihr persönliches Wunschstück</p><h2 id="config-title">Gestalten Sie Ihre Torte</h2></div><p class="config-intro" id="config-intro">In wenigen Schritten zu einer ersten Einschätzung. Ich melde mich persönlich, um alle Details mit Ihnen zu verfeinern.</p></div>
+      <div class="config-shell reveal">
+        <div class="config-sidebar"><div class="config-kicker">Konfigurator</div><div class="progress-rail"><span class="progress-fill"></span></div><ol class="step-list"><li class="is-active" data-step-label="1"><span>01</span><strong id="sidebar1-label">Der Anlass</strong><small id="sidebar1-sub">Wofür feiern wir?</small></li><li data-step-label="2"><span>02</span><strong id="sidebar2-label">Die Form</strong><small id="sidebar2-sub">Grösse & Charakter</small></li><li data-step-label="3"><span>03</span><strong id="sidebar3-label">Die Füllung</strong><small id="sidebar3-sub">Unser Geschmack</small></li><li data-step-label="4"><span>04</span><strong id="sidebar4-label">Die Details</strong><small id="sidebar4-sub">Ihre Handschrift</small></li><li data-step-label="5"><span>05</span><strong id="sidebar5-label">Ihre Anfrage</strong><small id="sidebar5-sub">Fast geschafft</small></li></ol><div class="sidebar-foot">Sweet Home Bakery<br><span id="sidebar-foot-location">GRENCHEN · SCHWEIZ</span></div></div>
+        <div class="config-main">
+          <div class="step-panel is-visible" data-step="1"><p class="step-count">Schritt 01 / 05</p><h3>Was dürfen wir feiern?</h3><p class="step-description">Der Anlass gibt Ihrer Torte ihren ersten Charakter.</p><div class="choice-grid choice-grid-occasion"><button class="choice is-selected" data-value="wedding"><span>○</span><span class="choice-label">Hochzeit</span></button><button class="choice" data-value="birthday"><span>✦</span><span class="choice-label">Geburtstag</span></button><button class="choice" data-value="baptism"><span>♧</span><span class="choice-label">Taufe</span></button><button class="choice" data-value="anniversary"><span>◒</span><span class="choice-label">Jubiläum</span></button><button class="choice" data-value="corporate"><span>□</span><span class="choice-label">Business Event</span></button><button class="choice" data-value="other"><span>＋</span><span class="choice-label">Etwas anderes</span></button></div></div>
+          <div class="step-panel" data-step="2"><p class="step-count">Schritt 02 / 05</p><h3>Wie soll sie wirken?</h3><p class="step-description">Wählen Sie die Silhouette, die zu Ihrem Anlass passt.</p><div class="choice-grid shape-grid"><button class="choice shape-choice is-selected" data-value="round"><span class="shape-icon shape-round"></span><span class="choice-label">Rund</span></button><button class="choice shape-choice" data-value="tiered"><span class="shape-icon shape-tiered"></span><span class="choice-label">Mehrstöckig</span></button><button class="choice shape-choice" data-value="heart"><span class="shape-icon shape-heart">♡</span><span class="choice-label">Herzform</span></button><button class="choice shape-choice" data-value="custom"><span class="shape-icon shape-custom">✧</span><span class="choice-label">Individuell</span></button></div><label class="slider-label"><span id="guests-label">Für wie viele Personen?</span> <output id="guest-output">24 Personen</output></label><input class="range" id="guest-range" type="range" min="8" max="120" value="24"><div class="range-ends"><span>8</span><span>120</span></div></div>
+          <div class="step-panel" data-step="3"><p class="step-count">Schritt 03 / 05</p><h3>Welche Füllung spricht Sie an?</h3><p class="step-description">Unsere Kompositionen sind saisonal und werden frisch für Sie zubereitet.</p><div class="filling-list"><label class="filling is-selected" data-value="vanilla-raspberry"><input type="radio" name="filling" value="vanilla-raspberry" checked><span class="filling-swatch swatch-vanilla"></span><span><strong id="filling-vanilla-name">Vanille & Himbeere</strong><small id="filling-vanilla-desc">Madagaskar-Vanille · säuerliche Beeren</small></span><b>+ CHF 0</b></label><label class="filling" data-value="chocolate-caramel"><input type="radio" name="filling" value="chocolate-caramel"><span class="filling-swatch swatch-chocolate"></span><span><strong id="filling-chocolate-name">Schokolade & Salzkaramell</strong><small id="filling-chocolate-desc">70 % Cacao · weiches Karamell</small></span><b>+ CHF 8</b></label><label class="filling" data-value="lemon-elderflower"><input type="radio" name="filling" value="lemon-elderflower"><span class="filling-swatch swatch-lemon"></span><span><strong id="filling-lemon-name">Zitrone & Holunder</strong><small id="filling-lemon-desc">Crème fraîche · Holunderblüte</small></span><b>+ CHF 5</b></label><label class="filling" data-value="pistachio-rose"><input type="radio" name="filling" value="pistachio-rose"><span class="filling-swatch swatch-pistachio"></span><span><strong id="filling-pistachio-name">Pistazie & Rose</strong><small id="filling-pistachio-desc">Geröstete Pistazie · Damaszener Rose</small></span><b>+ CHF 12</b></label></div></div>
+          <div class="step-panel" data-step="4"><p class="step-count">Schritt 04 / 05</p><h3>Was macht sie zu Ihrer?</h3><p class="step-description">Farben, Dekoration und ein Bild als kleine Skizze Ihrer Idee.</p><div class="detail-grid"><label><span id="label-color">Farbwelt</span><select id="color-select"><option id="color-opt-neutral" value="neutral">Neutrale Töne</option><option id="color-opt-blush" value="blush">Puderrosa & Rot</option><option id="color-opt-sage" value="sage">Salbei & Creme</option><option id="color-opt-blue" value="blue">Tiefes Blau</option></select></label><label><span id="label-decoration">Dekoration</span><select id="decoration-select"><option id="decoration-opt-flowers" value="flowers">Frische Blüten</option><option id="decoration-opt-minimal" value="minimal">Minimalistisch</option><option id="decoration-opt-fruit" value="fruit">Früchte der Saison</option><option id="decoration-opt-gold" value="gold">Goldene Details</option></select></label></div><label class="upload-zone" for="reference-image"><input id="reference-image" type="file" accept="image/*"><span class="upload-icon">＋</span><strong id="upload-title">Referenzbild hinzufügen</strong><small id="upload-hint">Ein Bild sagt manchmal mehr als tausend Worte · optional</small><img id="image-preview" alt="Vorschau Ihres Referenzbilds"></label><label class="message-label"><span id="message-label-text">Ihre Idee, Allergien oder besondere Wünsche</span><textarea id="wish-message" rows="4" placeholder="Erzählen Sie uns von Ihrer Vision – und von Allergien oder Unverträglichkeiten ..."></textarea><small class="field-note" id="field-note">Zu jeder Bestellung erhalten Sie eine schriftliche Zutaten- und Allergendeklaration.</small></label></div>
+          <div class="step-panel" data-step="5"><p class="step-count">Schritt 05 / 05</p><h3>Wie dürfen wir Sie erreichen?</h3><p class="step-description">Ich prüfe Ihre Wünsche und melde mich innerhalb von 48 Stunden mit einer persönlichen Einschätzung. Bitte planen Sie mindestens 5–7 Tage Vorlaufzeit ein.</p><div class="summary-box"><div><span id="summary-occasion-label">Anlass</span><strong id="summary-occasion">Hochzeit</strong></div><div><span id="summary-shape-label">Ausführung</span><strong id="summary-shape">Rund · 24 Personen</strong></div><div><span id="summary-filling-label">Füllung</span><strong id="summary-filling">Vanille & Himbeere</strong></div><div><span id="summary-price-label">Ab</span><strong class="summary-price" id="summary-price">CHF 187</strong></div></div><p class="price-note" id="price-note">Berechnet nach Grundpreis CHF 55.–/kg zzgl. Dekoration – transparent und fair.</p><div class="contact-grid"><label><span id="label-name">Vorname & Name</span><input id="contact-name" type="text" autocomplete="name" placeholder="Ihr Name"></label><label><span id="label-email">E-Mail-Adresse</span><input id="contact-email" type="email" autocomplete="email" placeholder="ihre@email.ch"></label><label><span id="label-date">Wunschtermin</span><input id="contact-date" type="date"></label><label><span id="label-phone">Telefon (optional)</span><input id="contact-phone" type="tel" autocomplete="tel" placeholder="079 ..."></label></div><label class="consent"><input id="consent" type="checkbox"> <span id="consent-text">Ich stimme zu, dass Sweet Home Bakery meine Angaben zur Bearbeitung der Anfrage verwenden darf.</span></label><button class="button button-dark submit-button" id="submit-request" type="button">Anfrage senden <span>↗</span></button><p class="form-status" id="form-status" role="status"></p></div>
+          <div class="config-actions"><button class="back-button" type="button" id="back-button">← Zurück</button><span class="action-spacer"></span><button class="button button-dark next-button" type="button" id="next-button">Weiter <span>→</span></button></div>
         </div>
       </div>
     </section>
-
-    <!-- 7 · ERGEBNIS -->
-    <section class="card card-result" data-section="ergebnis" id="resultCard">
-      <button class="card-head" type="button" aria-expanded="true">
-        <span class="card-num">7</span>
-        <span class="card-title" data-i18n="secResult">Ergebnis</span>
-        <span class="chev" aria-hidden="true"></span>
-      </button>
-      <div class="card-body">
-
-        <div class="price-hero">
-          <span class="price-label" data-i18n="kPrice">Verkaufspreis</span>
-          <span class="price-value" id="kPreis">CHF 0.00</span>
-          <span class="price-sub"><span data-i18n="kPerPortion">Preis pro Portion</span>: <b id="kProPortion">CHF 0.00</b></span>
-        </div>
-
-        <table class="table-internal"><tbody id="kiloTable"></tbody></table>
-
-        <div class="alert" id="alertBox" role="status"></div>
-
-        <div class="kpi-grid">
-          <div class="kpi"><span data-i18n="kCost">Deine Kosten</span><b id="kSelbst">CHF 0.00</b></div>
-          <div class="kpi kpi-strong"><span data-i18n="kProfit">Es bleibt</span><b id="kGewinn">CHF 0.00</b></div>
-          <div class="kpi"><span data-i18n="kWageShort">Stundenlohn</span><b id="kStundenlohn">CHF 0.00</b></div>
-        </div>
-        <p class="hint" id="kStundenlohnSub"></p>
-
-        <div class="subcard">
-          <h3 data-i18n="secCompare">Kundenpreis vergleichen</h3>
-          <div class="grid-2">
-            <label class="field"><span data-i18n="fPlannedPrice">Geplanter Kundenpreis</span>
-              <span class="input-chf"><em>CHF</em><input type="number" inputmode="decimal" id="kundenpreis2" min="0" step="0.05" placeholder="0.00"></span></label>
-            <label class="field"><span data-i18n="fDifference">Differenz</span>
-              <input type="text" id="differenz" readonly></label>
-          </div>
-          <p class="hint" id="compareHint"></p>
-          <input type="hidden" id="kundenpreis">
-        </div>
-
-        <details class="subcard det">
-          <summary data-i18n="secInternal">Alle Zahlen im Detail</summary>
-          <table class="table-internal"><tbody id="internTable"></tbody></table>
-        </details>
-      </div>
-    </section>
-
-    <footer class="app-foot no-print">
-      <span data-i18n="footNote">Alle Berechnungen erfolgen lokal auf deinem Gerät.</span>
-    </footer>
-  </div>
-
-  <!-- ---------- Sticky-Zusammenfassung (Desktop) ---------- -->
-  <aside class="col-summary no-print">
-    <div class="summary">
-      <h2 data-i18n="sumTitle">Aktuelle Kalkulation</h2>
-      <dl>
-        <div><dt data-i18n="kKiloBaseShort">Tortenbasis</dt><dd id="sBasis">CHF 0.00</dd></div>
-        <div><dt data-i18n="kKiloDeco">Dekoration</dt><dd id="sDeko">CHF 0.00</dd></div>
-        <div><dt data-i18n="kKiloPack">Verpackung</dt><dd id="sPack">CHF 0.00</dd></div>
-        <div><dt data-i18n="kKiloTravel">Lieferung</dt><dd id="sTravel">CHF 0.00</dd></div>
-      </dl>
-      <div class="summary-price">
-        <span data-i18n="kPriceShort">Verkaufspreis</span>
-        <b id="sPreis">CHF 0.00</b>
-      </div>
-      <dl>
-        <div><dt data-i18n="kCost">Deine Kosten</dt><dd id="sSelbst">CHF 0.00</dd></div>
-        <div class="dl-strong"><dt data-i18n="kProfit">Es bleibt</dt><dd id="sGewinn">CHF 0.00</dd></div>
-      </dl>
-      <div class="summary-meta">
-        <div><span data-i18n="kWageShort">Stundenlohn</span><b id="sLohn">CHF 0.00</b></div>
-        <div><span data-i18n="kPerPortionShort">Pro Portion</span><b id="sPortion">CHF 0.00</b></div>
-        <div><span data-i18n="kHoursShort">Arbeitszeit</span><b id="sStunden">0.00 h</b></div>
-      </div>
-      <div class="summary-flag" id="sFlag"></div>
-    </div>
-  </aside>
-
-</main>
-
-<!-- Mobile Bottom-Bar -->
-<div class="bottom-bar no-print" id="bottomBar">
-  <button class="bb-toggle" id="bbToggle" type="button" aria-expanded="false">
-    <span class="bb-main">
-      <span class="bb-lbl" data-i18n="kPriceShort">Verkaufspreis</span>
-      <b id="bPreis">CHF 0.00</b>
-    </span>
-    <span class="bb-side">
-      <span class="bb-lbl" data-i18n="kProfit">Es bleibt</span>
-      <b id="bGewinn">CHF 0.00</b>
-    </span>
-    <span class="bb-flag" id="bFlag"></span>
-    <span class="bb-chev" aria-hidden="true"></span>
-  </button>
-  <div class="bb-detail" id="bbDetail">
-    <div><span data-i18n="kKiloBaseShort">Tortenbasis</span><b id="bBasis">CHF 0.00</b></div>
-    <div><span data-i18n="kKiloDeco">Dekoration</span><b id="bDeko">CHF 0.00</b></div>
-    <div><span data-i18n="kKiloPack">Verpackung</span><b id="bPack">CHF 0.00</b></div>
-    <div><span data-i18n="kKiloTravel">Lieferung</span><b id="bTravel">CHF 0.00</b></div>
-    <div><span data-i18n="kCost">Deine Kosten</span><b id="bSelbst">CHF 0.00</b></div>
-    <div><span data-i18n="kWageShort">Stundenlohn</span><b id="bLohn">CHF 0.00</b></div>
-  </div>
-</div>
-
-<!-- ============================================================
-     MODALE
-     ============================================================ -->
-
-<!-- Konto und Abgleich -->
-<div class="modal" id="modalSync" hidden>
-  <div class="modal-box modal-narrow" role="dialog" aria-modal="true">
-    <header class="modal-head"><h2 data-i18n="secSync">Konto und Abgleich</h2>
-      <button class="modal-x" type="button" data-close aria-label="X">×</button></header>
-    <div class="modal-body">
-      <div id="syncBox">
-        <p class="sync-state" id="syncState"></p>
-        <div id="syncLoggedOut" hidden>
-          <p class="hint" data-i18n="syncHint">Melde dich an, damit Handy und Computer dieselben Zahlen zeigen.</p>
-          <label class="field"><span data-i18n="syncMail">E-Mail</span>
-            <input type="email" id="syncMail" autocomplete="username" inputmode="email"
-                   autocapitalize="off" autocorrect="off" spellcheck="false"></label>
-          <label class="field"><span data-i18n="syncPass">Passwort</span>
-            <input type="password" id="syncPass" autocomplete="current-password"></label>
-          <button class="btn btn-primary btn-wide" id="btnSyncLogin" type="button" data-i18n="syncLogin">Anmelden</button>
-        </div>
-        <div id="syncLoggedIn" hidden>
-          <div class="d-acts">
-            <button class="btn btn-outline" id="btnSyncNow" type="button" data-i18n="syncNow">Jetzt abgleichen</button>
-            <button class="btn btn-quiet" id="btnSyncLogout" type="button" data-i18n="syncLogout">Abmelden</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <footer class="modal-foot">
-      <button class="btn btn-quiet" type="button" data-close data-i18n="btnClose">Schliessen</button>
-    </footer>
-  </div>
-</div>
-
-<!-- Einstellungen -->
-<div class="modal" id="modalSettings" hidden>
-  <div class="modal-box" role="dialog" aria-modal="true">
-    <header class="modal-head"><h2 data-i18n="navSettings">Einstellungen</h2>
-      <button class="modal-x" type="button" data-close aria-label="X">×</button></header>
-    <div class="modal-body">
-      <div class="grid-2">
-        <label class="field"><span data-i18n="setHourly">Standard-Stundenlohn</span>
-          <span class="input-chf"><em>CHF</em><input type="number" inputmode="decimal" id="setStundenansatz" min="0" step="1"></span></label>
-        <label class="field"><span data-i18n="setKm">Kilometerpreis</span>
-          <span class="input-chf"><em>CHF</em><input type="number" inputmode="decimal" id="setKmPreis" min="0" step="0.05"></span></label>
-        <label class="field"><span data-i18n="setOverhead">Betriebskosten (%)</span>
-          <span class="input-chf"><input type="number" inputmode="decimal" id="setBetrieb" min="0" max="100" step="0.5"><em>%</em></span></label>
-        <label class="field"><span data-i18n="setGram">Gramm pro Person</span>
-          <span class="input-chf"><input type="number" inputmode="decimal" id="setGramm" min="50" max="500" step="10"><em>g</em></span></label>
-        <label class="field"><span data-i18n="setKilo">Kilopreis (CHF/kg)</span>
-          <span class="input-chf"><em>CHF</em><input type="number" inputmode="decimal" id="setKiloPreis" min="0" step="1"></span></label>
-        <label class="field"><span data-i18n="setRounding">Rundungsregel</span>
-          <select id="setRundung" data-i18n-options="roundings"></select></label>
-        <label class="field"><span data-i18n="setLang">Sprache</span>
-          <select id="setSprache"><option value="de">Deutsch</option><option value="ua">Українська</option></select></label>
-      </div>
-      <p class="hint" data-i18n="setHint">Diese Werte gelten als Vorgabe für neue Kalkulationen und werden im Browser gespeichert.</p>
-
-      <div class="subcard">
-        <h3 data-i18n="setCompany">Firmendaten für die Offerte</h3>
-        <p class="hint" data-i18n="setCompanyHint">Diese Angaben erscheinen im Briefkopf und in der Fusszeile des Offerten-PDF.</p>
-        <div class="grid-2">
-          <label class="field"><span data-i18n="coName">Firmenname</span>
-            <input type="text" id="coName" autocomplete="organization"></label>
-          <label class="field"><span data-i18n="coOwner">Name der Konditorin</span>
-            <input type="text" id="coOwner" autocomplete="name"></label>
-          <label class="field"><span data-i18n="coStreet">Strasse und Nummer</span>
-            <input type="text" id="coStreet" autocomplete="street-address"></label>
-          <label class="field"><span data-i18n="coZip">PLZ</span>
-            <input type="text" id="coZip" autocomplete="postal-code"></label>
-          <label class="field"><span data-i18n="coCity">Ort</span>
-            <input type="text" id="coCity" autocomplete="address-level2"></label>
-          <label class="field"><span data-i18n="coPhone">Telefon</span>
-            <input type="tel" id="coPhone" autocomplete="tel" inputmode="tel"></label>
-          <label class="field"><span data-i18n="coMail">E-Mail</span>
-            <input type="email" id="coMail" autocomplete="email" inputmode="email"></label>
-          <label class="field"><span data-i18n="coInsta">Instagram</span>
-            <input type="text" id="coInsta"></label>
-          <label class="field"><span data-i18n="coValidity">Gültigkeit (Tage)</span>
-            <input type="number" inputmode="decimal" id="coValidity" min="0" step="1"></label>
-          <label class="field"><span data-i18n="coDeposit">Anzahlung (%)</span>
-            <span class="input-chf"><input type="number" inputmode="decimal" id="coDeposit" min="0" max="100" step="5"><em>%</em></span></label>
-        </div>
-        <label class="field"><span data-i18n="coTaxNote">Preishinweis / MwSt.</span>
-          <input type="text" id="coTaxNote" data-i18n-ph="phTaxNote" placeholder="z. B. Preise in Schweizer Franken"></label>
-        <label class="field"><span data-i18n="coAllergen">Allergenhinweis</span>
-          <textarea id="coAllergen" rows="3"></textarea></label>
-      </div>
-    </div>
-    <footer class="modal-foot modal-foot-wrap">
-      <button class="btn btn-quiet" type="button" data-close data-i18n="btnClose">Schliessen</button>
-      <button class="btn btn-outline" id="btnDemo" type="button" data-i18n="actDemo">Beispiel laden</button>
-      <button class="btn btn-outline" id="btnPrintCalc" type="button" data-i18n="actPrintCalc">Kalkulation drucken</button>
-      <button class="btn btn-primary" id="btnSaveSettings" type="button" data-i18n="btnSaveSettings">Einstellungen speichern</button>
-    </footer>
-  </div>
-</div>
-
-<!-- Projekte -->
-<div class="modal" id="modalProjects" hidden>
-  <div class="modal-box" role="dialog" aria-modal="true">
-    <header class="modal-head"><h2 data-i18n="navProjects">Meine Kalkulationen</h2>
-      <button class="modal-x" type="button" data-close aria-label="X">×</button></header>
-    <div class="modal-body">
-      <div id="projectList" class="project-list"></div>
-    </div>
-    <footer class="modal-foot">
-      <button class="btn btn-quiet" type="button" data-close data-i18n="btnClose">Schliessen</button>
-    </footer>
-  </div>
-</div>
-
-<!-- Kundenangebot -->
-<div class="modal" id="modalOffer" hidden>
-  <div class="modal-box modal-wide" role="dialog" aria-modal="true">
-    <header class="modal-head no-print"><h2 data-i18n="offerTitle">Kundenangebot</h2>
-      <button class="modal-x" type="button" data-close aria-label="X">×</button></header>
-    <div class="modal-body">
-      <div class="offer" id="offerSheet"></div>
-    </div>
-    <footer class="modal-foot modal-foot-wrap no-print">
-      <button class="btn btn-quiet"   type="button" data-close data-i18n="btnClose">Schliessen</button>
-      <button class="btn btn-outline" id="btnPrintOffer" type="button" data-i18n="actPrintOffer">Kundenangebot drucken</button>
-      <button class="btn btn-outline" id="btnPdfSave"  type="button" data-i18n="actPdfSave">PDF speichern</button>
-      <button class="btn btn-primary" id="btnPdfShare" type="button" data-i18n="actPdfShare">Offerte als PDF senden</button>
-    </footer>
-  </div>
-</div>
-
-<!-- Toast -->
-<div class="toast" id="toast" role="status" hidden></div>
-
-<script src="sync-config.js"></script>
-<script src="sync.js"></script>
-<script src="pdf.js"></script>
-<script src="design.js"></script>
-<script src="photo.js"></script>
-<script src="qrcode.js"></script>
-<script src="buch.js"></script>
-<script src="invoice.js"></script>
-<script src="app.js"></script>
-<script src="design-ui.js"></script>
-<script src="buch-ui.js"></script>
-<script>
-/* Service Worker: nach dem ersten Aufruf funktioniert die App auch ohne Empfang.
-   Läuft nur über https bzw. localhost – bei einer lokalen Datei wird er still übersprungen.
-
-   Nachtrag: Bisher brauchte es nach einer neuen Fassung zwei Ladevorgänge –
-   der erste zeigte noch die alte. Wer das nicht weiss, hält die App für
-   kaputt. Übernimmt jetzt eine neue Fassung, laden wir einmal selbst neu.
-   Die Sperre verhindert, dass daraus eine Schleife wird. */
-if('serviceWorker' in navigator && location.protocol.startsWith('http')){
-  let neuGeladen = false;
-  navigator.serviceWorker.addEventListener('controllerchange', ()=>{
-    if(neuGeladen) return;
-    neuGeladen = true;
-    location.reload();
-  });
-  window.addEventListener('load', ()=>{
-    navigator.serviceWorker.register('sw.js')
-      .then(reg=>{ try{ reg.update(); }catch(e){} })
-      .catch(err=>console.warn('Service Worker:', err));
-  });
-}
-</script>
+  </main>
+  <footer class="site-footer"><div class="footer-top"><div class="footer-brand"><img src="shb-logo.png" alt="" width="52" height="52"><h2>Sweet Home<br><em>Bakery</em></h2></div><p>Handgemachte Torten<br>und Fruchtleder<br>aus Grenchen.</p><div class="footer-links"><a id="footer-link-config" href="#konfigurator">Wunschstück</a><a id="footer-link-collection" href="#kollektion">Kollektion</a><a id="footer-link-contact" href="mailto:hello@sweethomebakery.ch">Kontakt</a></div><div class="footer-social"><span class="footer-social-label" id="footer-social-label">Folgen & Finden</span><a href="https://www.instagram.com/sweet_home_bakery_ch/" target="_blank" rel="noopener">Instagram</a><a id="footer-google" href="https://www.google.com/search?q=Sweet+Home+Bakery+Grenchen" target="_blank" rel="noopener">Auf Google finden</a></div></div><div class="footer-bottom"><span>© 2026 Sweet Home Bakery</span><span>Grenchen · Solothurn</span><span>#SweetHomeBakeryCH</span><a id="footer-admin" href="kalkulator.html">Admin-Zugang</a></div></footer>
+  <script src="public.js"></script>
+  <script type="module" src="hero3d.js"></script>
 </body>
 </html>

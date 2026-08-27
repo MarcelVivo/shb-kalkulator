@@ -8,13 +8,12 @@
  * Öffnen lädt das iPhone dann automatisch die neue Fassung.
  * ========================================================================== */
 
-const VERSION = 'shb-v21';
+const VERSION = 'shb-v22';
 
 /* Alles, was die App zum Laufen braucht. Die PDF-Bausteine sind bewusst
    dabei, damit auch offline eine Offerte erstellt werden kann. */
 const ASSETS = [
-  './',
-  'index.html',
+  'kalkulator.html',
   'style.css',
   'app.js',
   'pdf.js',
@@ -106,7 +105,7 @@ self.addEventListener('fetch', event=>{
           // Nur beim Aufruf der Seite ist die Startseite die richtige Antwort.
           // Für ein fehlendes Skript wäre sie es nicht.
           if(seite){
-            const start = await caches.match('index.html');
+            const start = await caches.match('kalkulator.html');
             if(start) return start;
           }
           return new Response('', {status:504, statusText:'offline'});
