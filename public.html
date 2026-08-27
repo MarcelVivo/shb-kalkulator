@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta id="meta-description" name="description" content="Handgemachte Torten in Grenchen: individuelle Geburtstags-, Hochzeits- und Motivtorten sowie Fruchtleder ohne Zuckerzusatz. Persönliche Beratung auf Deutsch, Українська und Русский.">
+  <meta name="theme-color" content="#f6ece1">
+  <title id="page-title">Sweet Home Bakery · Torte Grenchen & Solothurn</title>
+  <link rel="icon" href="shb-icon-192.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="public.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="wordmark" href="#top" aria-label="Sweet Home Bakery Startseite">
+      <img src="shb-logo.png" alt="" width="44" height="44">
+      <span><strong>Sweet Home</strong><small>Bakery · Grenchen</small></span>
+    </a>
+    <a class="nav-admin" href="index.html">Kalkulator</a>
+    <nav class="main-nav" aria-label="Hauptnavigation">
+      <a id="nav-collection" href="#kollektion">Kollektion</a>
+      <a id="nav-manufactory" href="#manufaktur">Geschichte</a>
+      <a id="nav-config" href="#konfigurator">Wunschstück</a>
+    </nav>
+    <div class="language-switch" aria-label="Sprache">
+      <button class="language-button is-active" type="button" data-language="de">DE</button>
+      <span>/</span>
+      <button class="language-button" type="button" data-language="ua">UA</button>
+      <span>/</span>
+      <button class="language-button" type="button" data-language="ru">RU</button>
+    </div>
+    <a class="nav-cta" href="#konfigurator"><span class="nav-cta-label">Torte gestalten</span> <span aria-hidden="true">↗</span></a>
+    <button class="menu-toggle" type="button" aria-label="Menü öffnen" aria-expanded="false">☰</button>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="hero-pin">
+        <div class="hero-image reveal reveal-delay" id="hero-canvas-wrap">
+          <img id="hero-fallback-img" src="photos/hero-tiara.jpg" alt="Schwarze Torte mit Kristallkrone und &quot;Happy Birthday&quot; Schriftzug">
+          <canvas id="hero-canvas" aria-hidden="true"></canvas>
+          <div class="hero-stamp" aria-hidden="true"><span id="hero-stamp-1">handgemacht</span><strong id="hero-stamp-2">mit Liebe</strong><span id="hero-stamp-3">in Grenchen</span></div>
+          <a class="hero-pill" href="#kollektion"><span class="hero-pill-icon" aria-hidden="true">✦</span><span class="hero-pill-label">Mehr entdecken</span><span class="hero-pill-chevron" aria-hidden="true">⌄</span></a>
+        </div>
+        <div class="hero-tint" aria-hidden="true"></div>
+      </div>
+      <div class="hero-scrim" aria-hidden="true"></div>
+      <div class="hero-copy reveal">
+        <p class="eyebrow">Handgemachte Torten · Grenchen & Solothurn</p>
+        <h1>Ein Anlass.<br><em>Ein Unikat.</em></h1>
+        <p class="hero-intro">Handgemachte Torten und Süsswaren in Premium-Qualität – individuell für Ihren Anlass. Aus meiner Küche für Ihren schönsten Moment, mit persönlicher Beratung auf Deutsch, Українська und Русский.</p>
+        <div class="hero-actions">
+          <a class="button button-dark" href="#konfigurator"><span class="hero-button-label">Wunschstück gestalten</span> <span>↗</span></a>
+          <a class="text-link" href="#kollektion"><span class="hero-link-label">Kollektion entdecken</span> <span>↓</span></a>
+        </div>
+        <div class="hero-note"><span class="note-line"></span><span class="hero-note-copy">Für Hochzeiten, Geburtstage<br>und die kleinen grossen Momente.</span></div>
+      </div>
+
+      <div class="hero-moment" id="hero-moment-2" aria-hidden="true">
+        <p class="eyebrow">Schicht für Schicht</p>
+        <h2>Von Hand<br><em>geschichtet.</em></h2>
+        <p class="hero-moment-copy">Jede Schicht einzeln gebacken, gefüllt und veredelt – bevor sie zu Ihrem Unikat wird.</p>
+      </div>
+
+      <div class="hero-moment hero-moment-photo" id="hero-moment-3" aria-hidden="true">
+        <figure class="hero-moment-card">
+          <img src="photos/moment-marshmallows.jpg" alt="Frisch gespritzte rosa Marshmallows">
+          <figcaption>Aus meiner Küche in Grenchen</figcaption>
+        </figure>
+        <p class="eyebrow">Meine Geschichte</p>
+        <h2>Jede Torte<br><em>erzählt etwas.</em></h2>
+      </div>
+
+      <div class="hero-moment" id="hero-moment-4" aria-hidden="true">
+        <p class="eyebrow">Bereit für Ihren Anlass?</p>
+        <h2>Lassen Sie uns<br><em>gestalten.</em></h2>
+        <p class="hero-moment-copy">Scrollen Sie weiter – oder springen Sie direkt zu Ihrem Wunschstück.</p>
+      </div>
+    </section>
+
+    <section class="marquee" aria-label="Unser Versprechen"><div id="marquee-text">HANDWERK <i>·</i> EHRLICHKEIT <i>·</i> IHRE GESCHICHTE <i>·</i> HANDWERK <i>·</i> EHRLICHKEIT <i>·</i> IHRE GESCHICHTE <i>·</i></div></section>
+
+    <section class="values section" id="werte">
+      <div class="section-heading reveal"><p class="eyebrow" id="values-eyebrow">Wofür ich stehe</p><h2 id="values-title">Mein Markenkern</h2><p id="values-intro">Der rote Faden hinter jedem Foto, jedem Text und jeder Antwort auf Ihre Nachricht.</p></div>
+      <div class="values-grid">
+        <article class="value-card reveal"><span>01</span><h3 id="value1-title">Handwerk auf Trendniveau</h3><p id="value1-text">Individuelle Designs auf internationalem Trendniveau, fair kalkuliert für die Region.</p></article>
+        <article class="value-card reveal reveal-delay"><span>02</span><h3 id="value2-title">Ehrlich & gesund</h3><p id="value2-text">Ich biete nur an, was ich wirklich kann – und bald auch mein Fruchtleder ganz ohne Zuckerzusatz.</p></article>
+        <article class="value-card reveal reveal-delay-2"><span>03</span><h3 id="value3-title">Mehrsprachig beraten</h3><p id="value3-text">Persönliche Beratung auf Deutsch, Українська und Русский.</p></article>
+        <article class="value-card reveal reveal-delay-2"><span>04</span><h3 id="value4-title">Vollständig gemeldet</h3><p id="value4-text">Registrierter, hygienisch dokumentierter Betrieb mit Allergendeklaration zu jeder Bestellung.</p></article>
+      </div>
+    </section>
+
+    <section class="collection section" id="kollektion">
+      <div class="section-heading reveal"><p class="eyebrow" id="collection-eyebrow">Aus meiner Küche</p><h2 id="collection-title">Die Kollektion</h2><p id="collection-intro">Eine Auswahl meiner liebsten Formen. Jedes Stück lässt sich auf Ihren Anlass, Ihre Farben und Ihre Geschichte abstimmen.</p></div>
+      <div class="collection-grid">
+        <article class="collection-card card-tall reveal"><img id="collection1-img" src="photos/collection-quiet-romance.jpg" alt="Minimalistische weisse Torte mit rotem Herz"><div><span id="collection1-tag">01 · Hochzeit</span><h3>Quiet Romance</h3><a href="#konfigurator"><span id="collection1-cta">Anpassen</span> <span>↗</span></a></div></article>
+        <article class="collection-card reveal reveal-delay"><img id="collection2-img" src="photos/collection-garden-study.jpg" alt="Torte mit Blumendekor und Hasenfigur für Alicia"><div><span id="collection2-tag">02 · Geburtstag</span><h3>Garden Study</h3><a href="#konfigurator"><span id="collection2-cta">Anpassen</span> <span>↗</span></a></div></article>
+        <article class="collection-card reveal reveal-delay-2"><img id="collection3-img" src="photos/collection-dark-velvet.jpg" alt="Schwarze King- und Queen-Torten mit Kronen"><div><span id="collection3-tag">03 · Trendtorte</span><h3>Dark Velvet</h3><a href="#konfigurator"><span id="collection3-cta">Anpassen</span> <span>↗</span></a></div></article>
+      </div>
+    </section>
+
+    <section class="sortiment section" id="sortiment">
+      <div class="section-heading reveal"><p class="eyebrow" id="sortiment-eyebrow">Auch im Angebot</p><h2 id="sortiment-title">Kleine Köstlichkeiten</h2><p id="sortiment-intro">Nicht jeder Anlass braucht eine ganze Torte.</p></div>
+      <div class="sortiment-grid">
+        <article class="sortiment-card reveal"><h3>Cupcakes</h3><p id="sortiment1-text">Buttercreme-Rose, frische Beeren, feine Dekoration.</p><span id="sortiment1-price">CHF 5–7 / Stück</span></article>
+        <article class="sortiment-card reveal reveal-delay"><h3 id="sortiment2-title">Marshmallows</h3><p id="sortiment2-text">Handgemacht, farbig, in dekorativer Geschenkbox.</p><span id="sortiment2-price">ab CHF 18 / Box</span></article>
+        <article class="sortiment-card reveal reveal-delay-2"><h3 id="sortiment3-title">Trifles</h3><p id="sortiment3-text">Schichtdessert im Glas, z. B. Red Velvet mit Frischkäsecreme.</p><span id="sortiment3-price">CHF 8–10 / Stück</span></article>
+      </div>
+    </section>
+
+    <section class="fruit" id="fruchtleder">
+      <div class="fruit-banner reveal">
+        <p class="eyebrow" id="fruit-eyebrow">Für die gesunden Momente · in Vorbereitung</p>
+        <h2 id="fruit-title">Fruchtleder<br><em>ganz ohne Zuckerzusatz.</em></h2>
+        <p id="fruit-copy">100 % Frucht, sonst nichts – der ehrliche Snack für die Znünibox und für alle, die es natürlich mögen. Bald verfügbar.</p>
+        <a class="text-link" href="https://www.instagram.com/sweet_home_bakery_ch/" target="_blank" rel="noopener"><span id="fruit-link">Auf Instagram folgen, um es nicht zu verpassen</span> <span>↗</span></a>
+      </div>
+    </section>
+
+    <section class="manifesto section" id="manufaktur">
+      <div class="manifesto-image reveal"><img src="photos/manifesto-portrait.jpg" alt="Pinke Torte mit Fotodruck und Wunschkerzen"></div>
+      <div class="manifesto-copy reveal reveal-delay"><p class="eyebrow" id="manufactory-eyebrow">Meine Geschichte</p><h2 id="manufactory-title">Von Herzen<br><em>handgemacht.</em></h2><p id="manufactory-copy">Ich bin Olena. Vor einiger Zeit kam ich aus der Ukraine in die Schweiz – mit meinem Backhandwerk im Gepäck. Heute darf ich in meiner Küche in Grenchen für Ihre schönsten Momente backen: Böden, die am selben Tag entstehen, Füllungen nach Saison und Details, die nicht laut sein müssen, um in Erinnerung zu bleiben. Ich biete nur an, was ich wirklich kann – Schritt für Schritt, mit Herz.</p><a class="text-link" href="#konfigurator"><span id="manufactory-link">Mehr über Sweet Home Bakery</span> <span>↗</span></a></div>
+    </section>
+
+    <section class="configurator section" id="konfigurator">
+      <div class="config-header reveal"><div><p class="eyebrow" id="config-eyebrow">Ihr persönliches Wunschstück</p><h2 id="config-title">Gestalten Sie Ihre Torte</h2></div><p class="config-intro" id="config-intro">In wenigen Schritten zu einer ersten Einschätzung. Ich melde mich persönlich, um alle Details mit Ihnen zu verfeinern.</p></div>
+      <div class="config-shell reveal">
+        <div class="config-sidebar"><div class="config-kicker">Konfigurator</div><div class="progress-rail"><span class="progress-fill"></span></div><ol class="step-list"><li class="is-active" data-step-label="1"><span>01</span><strong id="sidebar1-label">Der Anlass</strong><small id="sidebar1-sub">Wofür feiern wir?</small></li><li data-step-label="2"><span>02</span><strong id="sidebar2-label">Die Form</strong><small id="sidebar2-sub">Grösse & Charakter</small></li><li data-step-label="3"><span>03</span><strong id="sidebar3-label">Die Füllung</strong><small id="sidebar3-sub">Unser Geschmack</small></li><li data-step-label="4"><span>04</span><strong id="sidebar4-label">Die Details</strong><small id="sidebar4-sub">Ihre Handschrift</small></li><li data-step-label="5"><span>05</span><strong id="sidebar5-label">Ihre Anfrage</strong><small id="sidebar5-sub">Fast geschafft</small></li></ol><div class="sidebar-foot">Sweet Home Bakery<br><span id="sidebar-foot-location">GRENCHEN · SCHWEIZ</span></div></div>
+        <div class="config-main">
+          <div class="step-panel is-visible" data-step="1"><p class="step-count">Schritt 01 / 05</p><h3>Was dürfen wir feiern?</h3><p class="step-description">Der Anlass gibt Ihrer Torte ihren ersten Charakter.</p><div class="choice-grid choice-grid-occasion"><button class="choice is-selected" data-value="wedding"><span>○</span><span class="choice-label">Hochzeit</span></button><button class="choice" data-value="birthday"><span>✦</span><span class="choice-label">Geburtstag</span></button><button class="choice" data-value="baptism"><span>♧</span><span class="choice-label">Taufe</span></button><button class="choice" data-value="anniversary"><span>◒</span><span class="choice-label">Jubiläum</span></button><button class="choice" data-value="corporate"><span>□</span><span class="choice-label">Business Event</span></button><button class="choice" data-value="other"><span>＋</span><span class="choice-label">Etwas anderes</span></button></div></div>
+          <div class="step-panel" data-step="2"><p class="step-count">Schritt 02 / 05</p><h3>Wie soll sie wirken?</h3><p class="step-description">Wählen Sie die Silhouette, die zu Ihrem Anlass passt.</p><div class="choice-grid shape-grid"><button class="choice shape-choice is-selected" data-value="round"><span class="shape-icon shape-round"></span><span class="choice-label">Rund</span></button><button class="choice shape-choice" data-value="tiered"><span class="shape-icon shape-tiered"></span><span class="choice-label">Mehrstöckig</span></button><button class="choice shape-choice" data-value="heart"><span class="shape-icon shape-heart">♡</span><span class="choice-label">Herzform</span></button><button class="choice shape-choice" data-value="custom"><span class="shape-icon shape-custom">✧</span><span class="choice-label">Individuell</span></button></div><label class="slider-label"><span id="guests-label">Für wie viele Personen?</span> <output id="guest-output">24 Personen</output></label><input class="range" id="guest-range" type="range" min="8" max="120" value="24"><div class="range-ends"><span>8</span><span>120</span></div></div>
+          <div class="step-panel" data-step="3"><p class="step-count">Schritt 03 / 05</p><h3>Welche Füllung spricht Sie an?</h3><p class="step-description">Unsere Kompositionen sind saisonal und werden frisch für Sie zubereitet.</p><div class="filling-list"><label class="filling is-selected" data-value="vanilla-raspberry"><input type="radio" name="filling" value="vanilla-raspberry" checked><span class="filling-swatch swatch-vanilla"></span><span><strong id="filling-vanilla-name">Vanille & Himbeere</strong><small id="filling-vanilla-desc">Madagaskar-Vanille · säuerliche Beeren</small></span><b>+ CHF 0</b></label><label class="filling" data-value="chocolate-caramel"><input type="radio" name="filling" value="chocolate-caramel"><span class="filling-swatch swatch-chocolate"></span><span><strong id="filling-chocolate-name">Schokolade & Salzkaramell</strong><small id="filling-chocolate-desc">70 % Cacao · weiches Karamell</small></span><b>+ CHF 8</b></label><label class="filling" data-value="lemon-elderflower"><input type="radio" name="filling" value="lemon-elderflower"><span class="filling-swatch swatch-lemon"></span><span><strong id="filling-lemon-name">Zitrone & Holunder</strong><small id="filling-lemon-desc">Crème fraîche · Holunderblüte</small></span><b>+ CHF 5</b></label><label class="filling" data-value="pistachio-rose"><input type="radio" name="filling" value="pistachio-rose"><span class="filling-swatch swatch-pistachio"></span><span><strong id="filling-pistachio-name">Pistazie & Rose</strong><small id="filling-pistachio-desc">Geröstete Pistazie · Damaszener Rose</small></span><b>+ CHF 12</b></label></div></div>
+          <div class="step-panel" data-step="4"><p class="step-count">Schritt 04 / 05</p><h3>Was macht sie zu Ihrer?</h3><p class="step-description">Farben, Dekoration und ein Bild als kleine Skizze Ihrer Idee.</p><div class="detail-grid"><label><span id="label-color">Farbwelt</span><select id="color-select"><option id="color-opt-neutral" value="neutral">Neutrale Töne</option><option id="color-opt-blush" value="blush">Puderrosa & Rot</option><option id="color-opt-sage" value="sage">Salbei & Creme</option><option id="color-opt-blue" value="blue">Tiefes Blau</option></select></label><label><span id="label-decoration">Dekoration</span><select id="decoration-select"><option id="decoration-opt-flowers" value="flowers">Frische Blüten</option><option id="decoration-opt-minimal" value="minimal">Minimalistisch</option><option id="decoration-opt-fruit" value="fruit">Früchte der Saison</option><option id="decoration-opt-gold" value="gold">Goldene Details</option></select></label></div><label class="upload-zone" for="reference-image"><input id="reference-image" type="file" accept="image/*"><span class="upload-icon">＋</span><strong id="upload-title">Referenzbild hinzufügen</strong><small id="upload-hint">Ein Bild sagt manchmal mehr als tausend Worte · optional</small><img id="image-preview" alt="Vorschau Ihres Referenzbilds"></label><label class="message-label"><span id="message-label-text">Ihre Idee, Allergien oder besondere Wünsche</span><textarea id="wish-message" rows="4" placeholder="Erzählen Sie uns von Ihrer Vision – und von Allergien oder Unverträglichkeiten ..."></textarea><small class="field-note" id="field-note">Zu jeder Bestellung erhalten Sie eine schriftliche Zutaten- und Allergendeklaration.</small></label></div>
+          <div class="step-panel" data-step="5"><p class="step-count">Schritt 05 / 05</p><h3>Wie dürfen wir Sie erreichen?</h3><p class="step-description">Ich prüfe Ihre Wünsche und melde mich innerhalb von 48 Stunden mit einer persönlichen Einschätzung. Bitte planen Sie mindestens 5–7 Tage Vorlaufzeit ein.</p><div class="summary-box"><div><span id="summary-occasion-label">Anlass</span><strong id="summary-occasion">Hochzeit</strong></div><div><span id="summary-shape-label">Ausführung</span><strong id="summary-shape">Rund · 24 Personen</strong></div><div><span id="summary-filling-label">Füllung</span><strong id="summary-filling">Vanille & Himbeere</strong></div><div><span id="summary-price-label">Ab</span><strong class="summary-price" id="summary-price">CHF 187</strong></div></div><p class="price-note" id="price-note">Berechnet nach Grundpreis CHF 55.–/kg zzgl. Dekoration – transparent und fair.</p><div class="contact-grid"><label><span id="label-name">Vorname & Name</span><input id="contact-name" type="text" autocomplete="name" placeholder="Ihr Name"></label><label><span id="label-email">E-Mail-Adresse</span><input id="contact-email" type="email" autocomplete="email" placeholder="ihre@email.ch"></label><label><span id="label-date">Wunschtermin</span><input id="contact-date" type="date"></label><label><span id="label-phone">Telefon (optional)</span><input id="contact-phone" type="tel" autocomplete="tel" placeholder="079 ..."></label></div><label class="consent"><input id="consent" type="checkbox"> <span id="consent-text">Ich stimme zu, dass Sweet Home Bakery meine Angaben zur Bearbeitung der Anfrage verwenden darf.</span></label><button class="button button-dark submit-button" id="submit-request" type="button">Anfrage senden <span>↗</span></button><p class="form-status" id="form-status" role="status"></p></div>
+          <div class="config-actions"><button class="back-button" type="button" id="back-button">← Zurück</button><span class="action-spacer"></span><button class="button button-dark next-button" type="button" id="next-button">Weiter <span>→</span></button></div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer"><div class="footer-top"><div class="footer-brand"><img src="shb-logo.png" alt="" width="52" height="52"><h2>Sweet Home<br><em>Bakery</em></h2></div><p>Handgemachte Torten<br>und Fruchtleder<br>aus Grenchen.</p><div class="footer-links"><a id="footer-link-config" href="#konfigurator">Wunschstück</a><a id="footer-link-collection" href="#kollektion">Kollektion</a><a id="footer-link-contact" href="mailto:hello@sweethomebakery.ch">Kontakt</a></div><div class="footer-social"><span class="footer-social-label" id="footer-social-label">Folgen & Finden</span><a href="https://www.instagram.com/sweet_home_bakery_ch/" target="_blank" rel="noopener">Instagram</a><a id="footer-google" href="https://www.google.com/search?q=Sweet+Home+Bakery+Grenchen" target="_blank" rel="noopener">Auf Google finden</a></div></div><div class="footer-bottom"><span>© 2026 Sweet Home Bakery</span><span>Grenchen · Solothurn</span><span>#SweetHomeBakeryCH</span><a id="footer-admin" href="index.html">Admin-Zugang</a></div></footer>
+  <script src="public.js"></script>
+  <script type="module" src="hero3d.js"></script>
+</body>
+</html>
