@@ -12,7 +12,7 @@
     de: {
       'meta-title':'Sweet Home Bakery · Torte Grenchen & Solothurn','meta-description':'Handgemachte Torten in Grenchen: individuelle Geburtstags-, Hochzeits- und Motivtorten sowie Fruchtleder ohne Zuckerzusatz. Persönliche Beratung auf Deutsch, Українська und Русский.',
       'aria-home':'Sweet Home Bakery Startseite','aria-nav':'Hauptnavigation','aria-language':'Sprache','aria-menu':'Menü öffnen','aria-marquee':'Unser Versprechen',
-      'nav-collection':'Kollektion','nav-manufactory':'Geschichte','nav-config':'Wunschstück','nav-cta':'Torte gestalten',
+      'nav-collection':'Kollektion','nav-manufactory':'Geschichte','nav-config':'Wunschstück','nav-cta':'Torte gestalten','nav-admin':'Kalkulator','aria-admin':'Admin-Bereich: Kalkulator',
       'hero-eyebrow':'Handgemachte Torten · Grenchen & Solothurn','hero-title':'Ein Anlass.|Ein Unikat.','hero-intro':'Handgemachte Torten und Süsswaren in Premium-Qualität – individuell für Ihren Anlass. Aus meiner Küche für Ihren schönsten Moment, mit persönlicher Beratung auf Deutsch, Українська und Русский.','hero-button':'Wunschstück gestalten','hero-link':'Kollektion entdecken','hero-note':'Für Hochzeiten, Geburtstage|und die kleinen grossen Momente.',
       'hero-stamp-1':'handgemacht','hero-stamp-2':'mit Liebe','hero-stamp-3':'in Grenchen','hero-pill':'Mehr entdecken','hero-fallback-alt':'Schwarze Torte mit Kristallkrone und "Happy Birthday" Schriftzug',
       'moment2-eyebrow':'Schicht für Schicht','moment2-title':'Von Hand|geschichtet.','moment2-copy':'Jede Schicht einzeln gebacken, gefüllt und veredelt – bevor sie zu Ihrem Unikat wird.',
@@ -54,7 +54,7 @@
     ua: {
       'meta-title':'Sweet Home Bakery · Торти Гренхен і Золотурн','meta-description':'Домашні торти в Гренхені: індивідуальні торти на день народження, весілля та тематичні торти, а також фруктова пастила без доданого цукру. Особиста консультація німецькою, українською та російською.',
       'aria-home':'Sweet Home Bakery — головна сторінка','aria-nav':'Головна навігація','aria-language':'Мова','aria-menu':'Відкрити меню','aria-marquee':'Наша обіцянка',
-      'nav-collection':'Колекція','nav-manufactory':'Історія','nav-config':'Ваш торт','nav-cta':'Створити торт',
+      'nav-collection':'Колекція','nav-manufactory':'Історія','nav-config':'Ваш торт','nav-cta':'Створити торт','nav-admin':'Калькулятор','aria-admin':'Адмін-зона: Калькулятор',
       'hero-eyebrow':'Домашні торти · Гренхен і Золотурн','hero-title':'Одна подія.|Один шедевр.','hero-intro':'Домашні торти й солодощі преміальної якості — індивідуально для вашої події. З моєї кухні для вашого найкращого моменту, з особистою консультацією німецькою, українською та російською.','hero-button':'Створити свій торт','hero-link':'Відкрити колекцію','hero-note':'Для весіль, днів народження|і маленьких великих моментів.',
       'hero-stamp-1':'ручна робота','hero-stamp-2':'з любов’ю','hero-stamp-3':'у Гренхені','hero-pill':'Дізнатися більше','hero-fallback-alt':'Чорний торт із кришталевою короною та написом "Happy Birthday"',
       'moment2-eyebrow':'Шар за шаром','moment2-title':'Складено|вручну.','moment2-copy':'Кожен шар випікається, наповнюється й оздоблюється окремо — перш ніж стати вашим унікальним тортом.',
@@ -96,7 +96,7 @@
     ru: {
       'meta-title':'Sweet Home Bakery · Торты Гренхен и Золотурн','meta-description':'Домашние торты в Гренхене: индивидуальные торты на день рождения, свадьбу и тематические торты, а также фруктовая пастила без добавленного сахара. Личная консультация на немецком, украинском и русском.',
       'aria-home':'Sweet Home Bakery — главная страница','aria-nav':'Главная навигация','aria-language':'Язык','aria-menu':'Открыть меню','aria-marquee':'Наше обещание',
-      'nav-collection':'Коллекция','nav-manufactory':'История','nav-config':'Ваш торт','nav-cta':'Создать торт',
+      'nav-collection':'Коллекция','nav-manufactory':'История','nav-config':'Ваш торт','nav-cta':'Создать торт','nav-admin':'Калькулятор','aria-admin':'Админ-зона: Калькулятор',
       'hero-eyebrow':'Домашние торты · Гренхен и Золотурн','hero-title':'Один повод.|Один шедевр.','hero-intro':'Домашние торты и сладости премиального качества — индивидуально для вашего события. Из моей кухни для вашего самого прекрасного момента, с личной консультацией на немецком, украинском и русском языках.','hero-button':'Создать свой торт','hero-link':'Смотреть коллекцию','hero-note':'Для свадеб, дней рождения|и маленьких больших моментов.',
       'hero-stamp-1':'ручная работа','hero-stamp-2':'с любовью','hero-stamp-3':'в Гренхене','hero-pill':'Узнать больше','hero-fallback-alt':'Чёрный торт с хрустальной короной и надписью "Happy Birthday"',
       'moment2-eyebrow':'Слой за слоем','moment2-title':'Собрано|вручную.','moment2-copy':'Каждый слой выпекается, наполняется и украшается отдельно — прежде чем стать вашим уникальным тортом.',
@@ -143,7 +143,7 @@
     document.documentElement.lang = next === 'ua' ? 'uk' : (next === 'ru' ? 'ru' : 'de');
     document.querySelectorAll('.language-button').forEach(button => button.classList.toggle('is-active', button.dataset.language === next));
     const selectors = {
-      'nav-collection':'#nav-collection','nav-manufactory':'#nav-manufactory','nav-config':'#nav-config','nav-cta':'.nav-cta-label',
+      'nav-collection':'#nav-collection','nav-manufactory':'#nav-manufactory','nav-config':'#nav-config','nav-cta':'.nav-cta-label','nav-admin':'#nav-admin-label',
       'hero-eyebrow':'.hero .eyebrow','hero-title':'.hero h1','hero-intro':'.hero-intro','hero-button':'.hero-button-label','hero-link':'.hero-link-label','hero-note':'.hero-note-copy',
       'hero-stamp-1':'#hero-stamp-1','hero-stamp-2':'#hero-stamp-2','hero-stamp-3':'#hero-stamp-3','hero-pill':'.hero-pill-label',
       'moment2-eyebrow':'#hero-moment-2 .eyebrow','moment2-title':'#hero-moment-2 h2','moment2-copy':'#hero-moment-2 .hero-moment-copy',
@@ -187,6 +187,7 @@
     document.querySelector('.main-nav').setAttribute('aria-label', translate('aria-nav'));
     document.querySelector('.language-switch').setAttribute('aria-label', translate('aria-language'));
     document.querySelector('.menu-toggle').setAttribute('aria-label', translate('aria-menu'));
+    document.querySelector('.nav-admin').setAttribute('aria-label', translate('aria-admin'));
     document.querySelector('.marquee').setAttribute('aria-label', translate('aria-marquee'));
     document.querySelector('#hero-fallback-img').alt = translate('hero-fallback-alt');
     document.querySelector('#hero-moment-3 img').alt = translate('moment3-alt');
